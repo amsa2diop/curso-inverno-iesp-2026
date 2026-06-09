@@ -1,7 +1,7 @@
 ---
 title: "Como Trabalhar com Dados Raciais no Brasil"
 subtitle: "Escola de Inverno IESP-UERJ · Curso de Metodologia Quantitativa"
-author: "Amsatou Diop"
+author: "Juliana Alves Marques e Amsatou Falilou Diop"
 date: "`r format(Sys.Date(), '%d de %B de %Y')`"
 output:
   html_document:
@@ -10,7 +10,6 @@ output:
       collapsed: false
       smooth_scroll: true
     toc_depth: 3
-    code_folding: show
     theme: flatly
     highlight: tango
     self_contained: true
@@ -19,10 +18,10 @@ output:
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* ── Base ── */
+/* ── Tipografia base ── */
+html { font-size: 17px; }
 body {
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 15.5px;
   color: #2d2d2d;
   line-height: 1.8;
   background-color: #f8f9fb;
@@ -33,76 +32,83 @@ h1, h2, h3, h4 {
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   color: #0f2a4a;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
 }
-h1.title {
-  font-size: 2rem;
-  border-bottom: 3px solid #1a6fa8;
-  padding-bottom: 0.4em;
-  margin-bottom: 0.2em;
-}
-h1 { font-size: 1.7rem; border-left: 4px solid #1a6fa8; padding-left: 0.6em; margin-top: 1.6em; }
-h2 { font-size: 1.3rem;  border-left: 3px solid #5baad4; padding-left: 0.5em; margin-top: 1.4em; }
-h3 { font-size: 1.05rem; color: #1d3557; margin-top: 1.2em; }
+h1.title  { font-size: 1.9rem; border-bottom: 3px solid #1a6fa8; padding-bottom: 0.4em; }
+h1 { font-size: 1.6rem; border-left: 4px solid #1a6fa8; padding-left: 0.6em; margin-top: 1.8em; }
+h2 { font-size: 1.25rem; border-left: 3px solid #5baad4; padding-left: 0.5em; margin-top: 1.5em; }
+h3 { font-size: 1.05rem; color: #1d3557; margin-top: 1.3em; }
 
 /* ── Links ── */
 a { color: #1a6fa8; text-decoration: none; }
 a:hover { color: #0f2a4a; text-decoration: underline; }
 
-/* ── TOC flutuante (tocify) ── */
-.tocify-wrapper {
-  background-color: #f5f8fc !important;
-  border-right: 1px solid #dce6f0 !important;
-  box-shadow: none !important;
+/* ── TOC flutuante ── */
+#TOC {
+  background-color: #f5f8fc;
+  border: none;
+  border-radius: 0;
+  padding: 8px 0;
 }
-.tocify {
-  border: none !important;
-  background: transparent !important;
-}
-.tocify-item > a, .tocify-subheader .tocify-item > a {
+#TOC a {
   color: #0f2a4a !important;
-  font-size: 0.875rem !important;
-  padding: 5px 14px !important;
+  font-size: 0.85rem !important;
 }
-.tocify-item > a:hover {
-  color: #1a6fa8 !important;
-  background-color: #e4eef8 !important;
-}
-.tocify-item.active > a, .tocify-item.active > a:hover {
+#TOC a:hover { color: #1a6fa8 !important; }
+#TOC li.active > a {
   color: #1a6fa8 !important;
   font-weight: 600 !important;
-  background-color: #dce9f5 !important;
-  border-left: 3px solid #1a6fa8 !important;
-  padding-left: 11px !important;
 }
-.tocify-subheader { background: transparent !important; }
-/* ocultar o #TOC estático que rmarkdown gera em paralelo */
-#TOC { display: none; }
 
 /* ── Code ── */
 pre {
   background-color: #f0f4f8;
   border: 1px solid #dce6f0;
   border-radius: 7px;
-  padding: 14px 18px;
-  font-size: 0.93rem;
+  padding: 14px 18px 14px 18px;
+  font-size: 14px;
   line-height: 1.65;
+  position: relative;
 }
 code {
   background-color: #e8f0f8;
   border-radius: 4px;
-  padding: 2px 5px;
-  font-size: 0.93em;
+  padding: 2px 6px;
+  font-size: 0.88em;
   color: #0f2a4a;
 }
-pre code { background: transparent; padding: 0; color: inherit; font-size: inherit; }
+pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 14px;
+}
+
+/* ── Botão copiar ── */
+.copy-btn {
+  position: absolute;
+  top: 7px;
+  right: 9px;
+  background: #1a6fa8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 3px 11px;
+  font-size: 0.75rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity .15s;
+  z-index: 10;
+}
+.copy-btn:hover { opacity: 1; }
 
 /* ── Tabelas ── */
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 1.2em 0;
-  font-size: 0.97rem;
+  font-size: 15.5px;
 }
 thead th {
   background-color: #0f2a4a;
@@ -116,24 +122,51 @@ tbody td { padding: 9px 15px; border-bottom: 1px solid #dce6f0; }
 /* ── Callouts ── */
 .callout-conceito {
   background: #e8f4fd; border-left: 4px solid #1a6fa8;
-  border-radius: 0 7px 7px 0; padding: 13px 17px; margin: 18px 0;
+  border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0;
+  font-size: 0.96rem;
 }
 .callout-aviso {
   background: #fff8e1; border-left: 4px solid #e6a817;
-  border-radius: 0 7px 7px 0; padding: 13px 17px; margin: 18px 0;
+  border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0;
+  font-size: 0.96rem;
 }
 .callout-pratica {
   background: #e8f5e9; border-left: 4px solid #2e7d32;
-  border-radius: 0 7px 7px 0; padding: 13px 17px; margin: 18px 0;
+  border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0;
+  font-size: 0.96rem;
 }
 .callout-exercicio {
   background: #f3e8fd; border-left: 4px solid #6a1b9a;
-  border-radius: 0 7px 7px 0; padding: 13px 17px; margin: 18px 0;
+  border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0;
+  font-size: 0.96rem;
 }
 
 /* ── Layout ── */
-.main-container { max-width: 940px; }
+.main-container { max-width: 960px; }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('pre').forEach(function(pre) {
+    if (!pre.querySelector('code')) return;
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'Copiar';
+    pre.appendChild(btn);
+    btn.addEventListener('click', function() {
+      var text = pre.querySelector('code').innerText;
+      navigator.clipboard.writeText(text).then(function() {
+        btn.textContent = 'Copiado!';
+        btn.style.background = '#2e7d32';
+        setTimeout(function() {
+          btn.textContent = 'Copiar';
+          btn.style.background = '';
+        }, 2000);
+      });
+    });
+  });
+});
+</script>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -151,14 +184,9 @@ knitr::opts_chunk$set(
 
 # Apresentação
 
-Este material orienta pesquisadores no uso das principais bases de dados nacionais com abertura por cor ou raça, cobrindo as etapas de coleta via API, consulta a microdados tratados em nuvem e visualização descritiva. A exposição acompanha um fluxo de análise completo: do problema metodológico à produção de estatísticas que evidenciam desigualdades raciais estruturais.
+Este material é o roteiro prático do workshop [**Como Trabalhar com Dados Raciais no Brasil**](https://inverno.iesp.uerj.br/cursos/dados-raciais/), oferecido na Escola de Inverno do IESP-UERJ. O objetivo é mostrar como extrair, organizar e visualizar dados raciais a partir das principais bases públicas brasileiras, usando R.
 
-Ao final deste tutorial, o leitor será capaz de:
-
-- Situar os desafios metodológicos da mensuração da variável **cor ou raça** no Brasil;
-- Coletar dados do **Censo Demográfico 2022** diretamente via API do IBGE com o pacote `sidrar`;
-- Consultar microdados tratados via **Base dos Dados** (Google BigQuery);
-- Construir visualizações descritivas com **ggplot2**.
+Ao longo do tutorial, vamos percorrer três caminhos de coleta: o Censo 2022 via API do IBGE (`sidraR`), o Censo 2022 via Base dos Dados (BigQuery) para comparar as duas rotas chegando ao mesmo resultado, e a PNAD Contínua pelo pacote `PNADcIBGE`.
 
 ---
 
@@ -166,133 +194,136 @@ Ao final deste tutorial, o leitor será capaz de:
 
 ## 1.1 Autodeclaração vs. heteroidentificação
 
-A variável cor ou raça é capturada nas pesquisas domiciliares do IBGE pelo método da **autodeclaração**: o respondente escolhe, entre as cinco categorias do questionário (Branca, Preta, Amarela, Parda ou Indígena), aquela com a qual se identifica. Esse arranjo remonta ao Recenseamento de 1872 e foi consolidado em sua forma atual a partir de 1991, quando o IBGE retomou a pergunta após sua supressão nos censos de 1970 e 1980 — período em que o regime militar resistia à visibilidade estatística das desigualdades raciais.
+Nas pesquisas domiciliares do IBGE, cor ou raça é coletada por **autodeclaração**: o respondente escolhe, entre as cinco categorias do questionário (Branca, Preta, Amarela, Parda ou Indígena), aquela com que se identifica. Esse arranjo foi consolidado no Censo de 1991, após sua supressão nos censos de 1970 e 1980 — período em que o regime militar resistia à visibilidade estatística das desigualdades raciais.
 
-A autodeclaração contrasta com a **heteroidentificação**, método em que um terceiro classifica o indivíduo com base em fenótipo. Cada abordagem captura dimensões distintas: a primeira, a identidade subjetiva; a segunda, a percepção social da aparência. Esse contraste tem implicação direta para pesquisas sobre políticas afirmativas, nas quais a discrepância entre os dois métodos é, em si, objeto de análise.
+A autodeclaração contrasta com a **heteroidentificação**, método em que um terceiro classifica o indivíduo com base na aparência. Os dois métodos capturam coisas diferentes: o primeiro, identidade subjetiva; o segundo, percepção social. Entender essa diferença é condição para interpretar corretamente os dados que vamos trabalhar.
 
 <div class="callout-conceito">
 **Autodeclaração vs. heteroidentificação**
-Na autodeclaração, o próprio respondente se classifica. Na heteroidentificação, um terceiro classifica o indivíduo com base em fenótipo. Os dois métodos produzem distribuições diferentes — o que não representa inconsistência nos dados, mas reflete dimensões distintas do fenômeno racial.
+Na autodeclaração, o próprio respondente se classifica. Na heteroidentificação, um terceiro classifica com base em fenótipo. Os dois métodos produzem distribuições distintas e cada um tem uso adequado conforme o objetivo da pesquisa.
 </div>
 
 | Dimensão | Autodeclaração | Heteroidentificação |
 |---|---|---|
-| Unidade classificadora | O próprio indivíduo | Terceiro(s) |
+| Quem classifica | O próprio indivíduo | Terceiro(s) |
 | Critério | Identidade subjetiva | Aparência fenotípica |
 | Uso principal | Censos, PNADs | Cotas, políticas afirmativas |
 | Variação temporal | Mais sensível a contexto | Mais estável fenotipicamente |
 
 ## 1.2 A categoria analítica "negros"
 
-A operação mais frequente na análise de desigualdade racial no Brasil é a **soma das categorias Preta e Parda** para compor a categoria analítica "negros". O procedimento se justifica historicamente, porque tanto pretos quanto pardos descendem, em graus variados, da população africana escravizada, e estatisticamente, porque Edward Telles (2004) e Carlos Hasenbalg (1979) documentam que as duas categorias ocupam posição estrutural semelhante no mercado de trabalho, no sistema educacional e nos indicadores de renda. Ao agregar Pretos e Pardos, o analista captura a dimensão coletiva da desigualdade em vez de fragmentar o grupo em subconjuntos cujas diferenças internas são menores do que as diferenças em relação aos brancos.
+A operação mais comum na análise de desigualdade racial no Brasil é somar Pretos e Pardos para formar a categoria "negros". O procedimento se justifica porque, como Telles (2004) e Hasenbalg (1979) documentaram, as duas categorias ocupam posição estrutural semelhante no mercado de trabalho, na renda e na escolaridade. A diferença entre Pretos e Pardos tende a ser menor do que a diferença de ambos em relação a Brancos.
 
 <div class="callout-aviso">
 **Atenção ao comunicar resultados**
-Ao somar Pretos e Pardos, nomeie explicitamente a operação na primeira ocorrência do texto: "negros (Pretos e Pardos, conforme categorias censitárias do IBGE)". Nas ocorrências seguintes, use apenas "negros" — sem aspas, sem maiúscula. A distinção entre a categoria analítica e as categorias censitárias de origem deve ser transparente para o leitor.
+Ao somar Pretos e Pardos, deixe claro na primeira vez que aparece no texto: "negros (Pretos e Pardos, conforme categorias do IBGE)". Nas ocorrências seguintes, use só "negros", sem aspas e sem maiúscula.
 </div>
 
 ```{r construcao-negros, eval=FALSE}
-# Construindo a categoria analítica "negros" a partir das categorias censitárias
-df <- df |>
+# Construindo a categoria analítica "negros"
+df <- df %>%
   dplyr::mutate(
-    raca_grupo = dplyr::case_when(
+    grupo = dplyr::case_when(
       cor_raca %in% c("Preta", "Parda") ~ "Negros",
       cor_raca == "Branca"              ~ "Brancos",
       cor_raca == "Amarela"             ~ "Amarelos",
       cor_raca == "Indígena"            ~ "Indígenas",
-      is.na(cor_raca)                   ~ NA_character_,  # preservar NAs explicitamente
-      TRUE                              ~ "Outras/Ignorado"
+      is.na(cor_raca)                   ~ NA_character_,  # preservar NAs
+      TRUE                              ~ "Outras"
     )
   )
 ```
 
 ## 1.3 Marcos legais relevantes
 
-A consolidação de bases de dados com abertura racial acompanhou, e em parte foi impulsionada, pelo avanço do marco legal de ações afirmativas no Brasil:
-
-- **Lei nº 10.639/2003** — Obrigatoriedade do ensino de história e cultura afro-brasileira e africana
-- **Estatuto da Igualdade Racial (Lei nº 12.288/2010)** — Define a população negra e institui obrigações do Estado em diversas áreas de política pública
-- **Lei de Cotas (Lei nº 12.711/2012)** — Reserva de vagas em universidades e institutos federais por critério racial e socioeconômico
-- **Resolução TSE nº 23.610/2019 e atualizações** — Financiamento proporcional de campanha para candidaturas negras
+- **Lei nº 10.639/2003** – obrigatoriedade do ensino de história e cultura afro-brasileira
+- **Estatuto da Igualdade Racial (Lei nº 12.288/2010)** – define a população negra e institui obrigações do Estado
+- **Lei de Cotas (Lei nº 12.711/2012)** – reserva de vagas em universidades e institutos federais
+- **Resolução TSE nº 23.610/2019 e atualizações** – financiamento proporcional para candidaturas negras
 
 ---
 
-# 2 · Fontes de Dados e Documentação
+# 2 · Fontes e Documentação
 
-A análise de desigualdades raciais no Brasil dispõe de três conjuntos de fontes com granularidades distintas. O Censo 2022 oferece cobertura universal; a PNAD Contínua, continuidade temporal; as estatísticas eleitorais do TSE, dados sobre representação política. A leitura das notas metodológicas de cada fonte — antes da coleta — é condição para operacionalizar corretamente a variável cor ou raça em cada base.
+Antes de coletar dados, vale conhecer a documentação. Abaixo estão as fontes usadas neste tutorial, com links para dicionários de variáveis.
 
-## 2.1 IBGE / SIDRA
+## 2.1 IBGE / SIDRA e Censo 2022
 
 | Recurso | Link |
 |---|---|
-| SIDRA — Sistema IBGE de Recuperação Automática | [sidra.ibge.gov.br](https://sidra.ibge.gov.br/) |
-| Censo 2022 — Resultados do Universo | [censo2022.ibge.gov.br](https://censo2022.ibge.gov.br/resultados.html) |
-| Tabela 9605 — População por cor ou raça (Censo 2022) | [sidra.ibge.gov.br/tabela/9605](https://sidra.ibge.gov.br/tabela/9605) |
-| Notas metodológicas do Censo 2022 | [Biblioteca IBGE](https://biblioteca.ibge.gov.br/index.php/biblioteca-catalogo?view=detalhes&id=2102059) |
+| SIDRA – Sistema IBGE de Recuperação Automática | [sidra.ibge.gov.br](https://sidra.ibge.gov.br/) |
+| Tabela 9605 – População por cor ou raça (Censo 2022) | [sidra.ibge.gov.br/tabela/9605](https://sidra.ibge.gov.br/tabela/9605) |
+| Microdados do Censo 2022 | [censo2022.ibge.gov.br/resultados.html](https://censo2022.ibge.gov.br/resultados.html) |
+| Dicionário de variáveis do Censo 2022 | [ftp.ibge.gov.br – Censo 2022 Documentação](https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Microdados/Documentacao/) |
 
 ## 2.2 Base dos Dados
 
 | Recurso | Link |
 |---|---|
 | Catálogo de tabelas tratadas | [basedosdados.org/dataset](https://basedosdados.org/dataset) |
-| PNAD Contínua — Microdados | [br_ibge_pnadc](https://basedosdados.org/dataset/br-ibge-pnadc) |
-| Censo 2022 — Microdados (Universo) | [br_ibge_censo_2022](https://basedosdados.org/dataset/br-ibge-censo-2022) |
-| Documentação do pacote R | [GitHub basedosdados/mais](https://github.com/basedosdados/mais) |
+| Censo 2022 – Microdados | [br_ibge_censo_demografico](https://basedosdados.org/dataset/br-ibge-censo-demografico) |
+| Documentação do pacote R | [github.com/basedosdados/mais](https://github.com/basedosdados/mais) |
 
-## 2.3 Estatísticas Eleitorais (TSE)
+## 2.3 PNAD Contínua
 
 | Recurso | Link |
 |---|---|
-| Repositório de dados eleitorais | [dados.tse.jus.br](https://dados.tse.jus.br/) |
-| Base dos Dados — Candidaturas TSE | [br_tse_eleicoes](https://basedosdados.org/dataset/br-tse-eleicoes) |
+| Página da pesquisa (IBGE) | [ibge.gov.br – PNAD Contínua](https://www.ibge.gov.br/estatisticas/sociais/trabalho/17270-pnad-continua.html) |
+| Microdados e documentação (FTP) | [ftp.ibge.gov.br – PNADC Trimestral](https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Trimestral/Microdados/Documentacao/) |
+| Pacote PNADcIBGE | [CRAN – PNADcIBGE](https://cran.r-project.org/package=PNADcIBGE) |
+
+## 2.4 Estatísticas Eleitorais (TSE)
+
+| Recurso | Link |
+|---|---|
+| Repositório de dados eleitorais | [dadosabertos.tse.jus.br](https://dadosabertos.tse.jus.br/) |
+| Dicionário de candidatos (TSE) | [dadosabertos.tse.jus.br – Candidatos](https://dadosabertos.tse.jus.br/dataset/candidatos-2024) |
+| Base dos Dados – Candidaturas TSE | [br_tse_eleicoes](https://basedosdados.org/dataset/br-tse-eleicoes) |
 
 ---
 
 # 3 · Pacotes Necessários
 
 ```{r pacotes}
-# Instalar pacotes caso necessário (rode uma única vez):
-# install.packages(c("tidyverse", "sidrar", "basedosdados",
-#                    "DBI", "bigrquery", "scales"))
+# Instalar pacotes (rode uma vez, se necessário):
+# install.packages(c("tidyverse", "sidrar", "PNADcIBGE",
+#                    "basedosdados", "DBI", "bigrquery", "scales"))
 
-library(tidyverse)  # dplyr, ggplot2 e demais
-library(sidrar)     # API do IBGE / SIDRA
-library(scales)     # Formatação de escalas em gráficos
+library(tidyverse)   # dplyr, ggplot2 e afins
+library(sidrar)      # API do IBGE / SIDRA
+library(scales)      # Formatação de eixos
 ```
 
 ---
 
-# 4 · Parte 1 — Coleta via API do IBGE (`sidraR`)
+# 4 · Parte 1 – Censo 2022 via `sidraR`
 
-## 4.1 O que é o SIDRA e como funciona o pacote
+## 4.1 Como funciona o pacote
 
-O **SIDRA** (Sistema IBGE de Recuperação Automática) é o portal de disseminação de dados agregados do IBGE. O pacote `sidrar` traduz as queries do SIDRA em chamadas à API diretamente no R, dispensando o download manual de arquivos e permitindo que a coleta seja reprodutível e documentada no próprio script.
-
-A função central é `get_sidra()`. Seus argumentos principais correspondem aos filtros disponíveis na interface web do SIDRA:
+O **SIDRA** é o portal de dados agregados do IBGE. O pacote `sidrar` conecta o R diretamente à API, sem precisar baixar arquivos manualmente. A função central é `get_sidra()`:
 
 ```{r sidra-args-demo, eval=FALSE}
 sidrar::get_sidra(
-  x          = <numero_da_tabela>,       # ID da tabela no SIDRA (ex: 9605)
-  variable   = <codigo_variavel>,        # Código da variável (ex: 93 = pessoas residentes)
-  classific  = c("c<cod>" = "<cats>"),   # Classificações adicionais (ex: sexo, situação do domicílio)
-  geo        = "Brazil",                 # Nível geográfico: "Brazil", "Region", "State", "City"
-  geo.filter = NULL                      # Filtro de unidade específica (ex: código do estado)
+  x        = <numero_da_tabela>,   # ID da tabela no SIDRA (ex: 9605)
+  variable = <codigo_variavel>,    # código da variável (ex: 93 = pessoas residentes)
+  geo      = "Brazil",             # nível geográfico: "Brazil", "Region", "State", "City"
+  geo.filter = NULL                # filtro de unidade específica (opcional)
 )
 ```
 
 <div class="callout-pratica">
-**Como identificar os parâmetros?**
-Acesse [sidra.ibge.gov.br/tabela/9605](https://sidra.ibge.gov.br/tabela/9605), monte a consulta visualmente na interface e clique em **"Link para esta tabela"** — o URL gerado contém todos os parâmetros que `get_sidra()` precisa, em uma sintaxe diretamente mapeável para os argumentos da função.
+**Como achar os parâmetros?**
+Acesse [sidra.ibge.gov.br/tabela/9605](https://sidra.ibge.gov.br/tabela/9605), monte a consulta na interface e clique em **"Link para esta tabela"**. O URL gerado tem os mesmos parâmetros que `get_sidra()` usa.
 </div>
 
-## 4.2 Tabela 9605 — População por cor ou raça (Censo 2022)
+## 4.2 Baixando a Tabela 9605 – Censo 2022
 
 ```{r sidra-raca, cache=TRUE}
-# Tabela 9605: Pessoas residentes por cor ou raça — Censo Demográfico 2022
-# Nível geográfico: Grandes Regiões
+# Tabela 9605: pessoas residentes por cor ou raça – Censo 2022
+# Nível: Grandes Regiões
 pop_raca <- sidrar::get_sidra(
   x        = 9605,
-  variable = 93,       # código 93 = pessoas residentes
+  variable = 93,       # pessoas residentes
   geo      = "Region"
 )
 
@@ -300,18 +331,13 @@ dplyr::glimpse(pop_raca)
 ```
 
 ```{r sidra-limpeza}
-# Selecionar colunas relevantes e remover a linha de total agregado
-pop_raca_clean <- pop_raca |>
+pop_raca_clean <- pop_raca %>%
   dplyr::select(
     regiao    = `Grande Região`,
     cor_raca  = `Cor ou raça`,
     populacao = Valor
-  ) |>
-  dplyr::filter(
-    cor_raca != "Total",
-    !is.na(populacao)
-  ) |>
-  # Construir a categoria analítica "Negros" (Pretos + Pardos)
+  ) %>%
+  dplyr::filter(cor_raca != "Total", !is.na(populacao)) %>%
   dplyr::mutate(
     grupo = dplyr::case_when(
       cor_raca %in% c("Preta", "Parda") ~ "Negros",
@@ -326,13 +352,12 @@ head(pop_raca_clean, 10)
 ```
 
 ```{r sidra-agregado}
-# Agregar por grupo racial e calcular proporção dentro de cada região
-pop_grupo <- pop_raca_clean |>
-  dplyr::group_by(regiao, grupo) |>
-  dplyr::summarise(populacao = sum(populacao, na.rm = TRUE), .groups = "drop") |>
-  dplyr::group_by(regiao) |>
-  dplyr::mutate(proporcao = populacao / sum(populacao)) |>
-  dplyr::ungroup() |>
+pop_grupo <- pop_raca_clean %>%
+  dplyr::group_by(regiao, grupo) %>%
+  dplyr::summarise(populacao = sum(populacao, na.rm = TRUE), .groups = "drop") %>%
+  dplyr::group_by(regiao) %>%
+  dplyr::mutate(proporcao = populacao / sum(populacao)) %>%
+  dplyr::ungroup() %>%
   dplyr::filter(!is.na(grupo))
 
 pop_grupo
@@ -340,22 +365,24 @@ pop_grupo
 
 <div class="callout-exercicio">
 **Exercício 1**
-Modifique a query acima trocando `geo = "Region"` por `geo = "Brazil"` para obter os números nacionais. Qual é a proporção de negros no Brasil segundo o Censo 2022? Compare com a proporção da região Norte — o que explica a diferença?
+Troque `geo = "Region"` por `geo = "Brazil"` para obter os números nacionais. Qual é a proporção de negros no Brasil segundo o Censo 2022? Compare com a região Norte.
 </div>
 
 ---
 
-# 5 · Parte 2 — Consulta via Base dos Dados (BigQuery)
+# 5 · Parte 2 – Censo 2022 via Base dos Dados
 
-## 5.1 O ecossistema Base dos Dados
+O objetivo desta seção é mostrar como chegar ao **mesmo resultado** da Parte 1 por um caminho diferente: consultando os microdados do Censo 2022 tratados na [Base dos Dados](https://basedosdados.org/), que ficam no Google BigQuery.
 
-A [Base dos Dados](https://basedosdados.org/) é uma organização sem fins lucrativos que trata, harmoniza e disponibiliza microdados de bases públicas brasileiras no Google BigQuery. Para pesquisadores, a principal vantagem não é apenas a disponibilidade dos dados, mas a possibilidade de cruzar bases distintas com SQL sem precisar baixar arquivos de dezenas de gigabytes: a computação ocorre na infraestrutura do Google, e apenas os resultados da query são transferidos para o R.
+## 5.1 O que é a Base dos Dados
+
+A Base dos Dados harmoniza e disponibiliza microdados públicos no BigQuery. A principal vantagem é a possibilidade de cruzar bases distintas com SQL sem baixar arquivos de dezenas de gigabytes.
 
 ## 5.2 Configuração inicial
 
 <div class="callout-aviso">
-**Pré-requisito: conta Google e projeto no GCP**
-Para usar o pacote `basedosdados`, são necessários: (1) uma conta Google; (2) um projeto criado no [Google Cloud Platform](https://console.cloud.google.com/) — o nível gratuito oferece 1 TB de consultas por mês sem custo; (3) o pacote `basedosdados` instalado: `install.packages("basedosdados")`.
+**Pré-requisito**
+Você precisa de: (1) conta Google; (2) projeto no [Google Cloud Platform](https://console.cloud.google.com/) — o nível gratuito dá 1 TB/mês de consultas sem custo; (3) `install.packages("basedosdados")`.
 </div>
 
 ```{r bq-config, eval=FALSE}
@@ -363,139 +390,160 @@ library(basedosdados)
 library(DBI)
 library(bigrquery)
 
-# Opção A: autenticação interativa pelo navegador (recomendada para uso local)
+# Autenticação interativa (abre o navegador na primeira vez)
 bigrquery::bq_auth()
 
-# Opção B: autenticação via arquivo JSON de conta de serviço (recomendada para scripts automatizados)
-bigrquery::bq_auth(path = "/caminho/para/suas-credenciais.json")
+# ID do seu projeto no GCP
+basedosdados::set_billing_id("seu-projeto-no-gcp")   # <-- substitua
 
-# Definir o ID do projeto de faturamento no GCP
-basedosdados::set_billing_id("seu-projeto-no-gcp")  # <-- substitua pelo seu ID
-```
-
-## 5.3 Consulta SQL — Rendimento por cor ou raça (PNAD Contínua)
-
-A variável `V2010` na PNAD Contínua codifica cor ou raça (1 = Branca, 2 = Preta, 3 = Amarela, 4 = Parda, 5 = Indígena). A query abaixo extrai rendimento médio e anos de estudo por grupo racial para o 1º trimestre de 2022, excluindo explicitamente os registros com cor ou raça não declarada e renda não informada.
-
-```{r bq-query, eval=FALSE}
 con <- DBI::dbConnect(
   bigrquery::bigquery(),
-  billing = "seu-projeto-no-gcp",  # <-- substitua
+  billing = "seu-projeto-no-gcp",   # <-- substitua
   project = "basedosdados"
 )
+```
 
-query_renda_raca <- "
+## 5.3 Mesma consulta, outro caminho
+
+A query abaixo extrai a distribuição racial do Censo 2022 a partir dos microdados do BigQuery. O resultado deve ser equivalente ao da Tabela 9605 via `sidraR`:
+
+```{r bq-censo, eval=FALSE}
+# Distribuição por cor ou raça – Censo Demográfico 2022
+query_censo_raca <- "
   SELECT
-    CASE V2010
-      WHEN 1 THEN 'Branca'
-      WHEN 2 THEN 'Preta'
-      WHEN 3 THEN 'Amarela'
-      WHEN 4 THEN 'Parda'
-      WHEN 5 THEN 'Indígena'
+    v0606          AS cor_raca_cod,
+    CASE v0606
+      WHEN '1' THEN 'Branca'
+      WHEN '2' THEN 'Preta'
+      WHEN '3' THEN 'Amarela'
+      WHEN '4' THEN 'Parda'
+      WHEN '5' THEN 'Indígena'
       ELSE 'Ignorado'
-    END               AS cor_raca,
-    AVG(VD4016)       AS renda_media,
-    AVG(VD3005)       AS anos_estudo_medio,
-    COUNT(*)          AS n_pessoas
-  FROM `basedosdados.br_ibge_pnadc.microdados`
-  WHERE
-    ano       = 2022
-    AND trimestre = 1
-    AND V2010  IS NOT NULL
-    AND VD4016 IS NOT NULL
-  GROUP BY V2010
-  ORDER BY renda_media DESC
+    END            AS cor_raca,
+    SUM(v0010)     AS populacao   -- peso amostral do Censo
+  FROM `basedosdados.br_ibge_censo_demografico.microdados_pessoa_2022`
+  WHERE v0606 IS NOT NULL
+  GROUP BY v0606
+  ORDER BY populacao DESC
 "
 
-df_renda <- DBI::dbGetQuery(con, query_renda_raca)
-head(df_renda)
+df_censo_bq <- DBI::dbGetQuery(con, query_censo_raca)
+head(df_censo_bq)
 ```
 
-```{r bq-alternativa, eval=FALSE}
-# Alternativa via interface bdplyr, próxima da sintaxe tidyverse
-basedosdados::set_billing_id("seu-projeto-no-gcp")
+```{r bq-comparar, eval=FALSE}
+# Comparar com o resultado via sidraR
+# pop_grupo já tem os dados nacionais se você fez o Exercício 1
 
-df_lazy <- basedosdados::bdplyr("br_ibge_pnadc.microdados") |>
-  dplyr::filter(ano == 2022, trimestre == 1) |>
-  dplyr::select(V2010, VD4016, VD3005) |>
-  dplyr::filter(!is.na(V2010), !is.na(VD4016))
-
-# Transfere o resultado do BigQuery para o ambiente R local
-df_local <- basedosdados::bd_collect(df_lazy)
+df_censo_bq %>%
+  dplyr::mutate(
+    grupo = dplyr::case_when(
+      cor_raca %in% c("Preta", "Parda") ~ "Negros",
+      cor_raca == "Branca"              ~ "Brancos",
+      TRUE                              ~ cor_raca
+    )
+  ) %>%
+  dplyr::group_by(grupo) %>%
+  dplyr::summarise(pop_bq = sum(populacao), .groups = "drop") %>%
+  dplyr::mutate(prop_bq = pop_bq / sum(pop_bq))
 ```
+
+<div class="callout-pratica">
+**Por que os dois caminhos?**
+O `sidraR` é mais simples para dados agregados já prontos. A Base dos Dados é mais indicada quando você quer cruzar variáveis nos microdados, ou combinar o Censo com outra base. Saber os dois abre as opções conforme a pergunta de pesquisa.
+</div>
 
 <div class="callout-exercicio">
 **Exercício 2**
-Modifique a query da seção 5.3 para calcular a renda média também por sexo (`V2007`: 1 = Homem, 2 = Mulher). Com o resultado em mãos: qual combinação de raça e sexo apresenta o menor rendimento médio? Em que medida a desigualdade de gênero se sobrepõe à desigualdade racial?
+Modifique a query do BigQuery para filtrar por `grandes_regioes` e reproduzir o gráfico de composição regional da Parte 1. O nome da coluna de região pode variar no catálogo: consulte a documentação em [basedosdados.org/dataset/br-ibge-censo-demografico](https://basedosdados.org/dataset/br-ibge-censo-demografico).
 </div>
 
 ---
 
-# 6 · Parte 3 — Análise Descritiva e Visualização
+# 6 · Parte 3 – PNAD Contínua via `PNADcIBGE`
 
-## 6.1 Paleta de cores
+O Censo captura a população em um momento específico. A **PNAD Contínua** permite acompanhar tendências ao longo do tempo e trabalhar com variáveis de renda, ocupação e escolaridade que o Censo não cobre com a mesma profundidade.
 
-```{r paleta}
-# Paleta institucional (tons azuis IESP-UERJ)
-cores_raciais <- c(
-  "Negros"    = "#0f2a4a",  # azul-escuro profundo
-  "Brancos"   = "#5baad4",  # azul-claro
-  "Indígenas" = "#7fb3d3",  # azul-médio
-  "Amarelos"  = "#a8c8e8"   # azul-pálido
+## 6.1 Variáveis de interesse
+
+Com base no dicionário da PNADC, as variáveis centrais para análise racial são:
+
+| Variável | Descrição |
+|---|---|
+| `V1028` | Peso do domicílio e das pessoas (usar em médias ponderadas) |
+| `V2007` | Sexo (1 = Homem, 2 = Mulher) |
+| `V2010` | Cor ou raça (1 = Branca, 2 = Preta, 3 = Amarela, 4 = Parda, 5 = Indígena) |
+| `VD3005` | Anos de estudo (0 a 16 ou mais) |
+| `VD4008` | Posição no trabalho principal (setor público, privado etc.) |
+| `VD4009` | Posição na ocupação com detalhe de carteira assinada |
+| `VD4017` | Rendimento mensal efetivo do trabalho principal (R$) |
+
+<div class="callout-aviso">
+**Importante: use o peso ao calcular médias**
+Sempre que calcular médias de variáveis que começam com `VD`, use `V1028` como peso. O uso de `design = FALSE` é adequado para análise descritiva, mas os erros-padrão de modelos de regressão estarão incorretos nesse modo.
+</div>
+
+## 6.2 Baixando e preparando os dados
+
+```{r pnadc-download, eval=FALSE}
+library(PNADcIBGE)
+
+# Baixar PNAD Contínua 2022, 1o trimestre
+# (leva alguns minutos na primeira vez)
+pnadc_raw <- PNADcIBGE::get_pnadc(
+  year    = 2022,
+  quarter = 1,
+  design  = FALSE   # análise descritiva
 )
 ```
 
-## 6.2 Distribuição racial por Grande Região
-
-O gráfico abaixo evidencia a heterogeneidade regional da composição racial brasileira. A diferença entre Norte/Nordeste e Sul, onde a proporção de negros cai acentuadamente, reflete tanto os padrões históricos de colonização quanto os fluxos migratórios do século XX.
-
-```{r grafico-distribuicao, fig.height=5.5, fig.width=9}
-ordem_regioes <- c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")
-
-pop_grupo |>
-  dplyr::filter(grupo %in% names(cores_raciais)) |>
+```{r pnadc-prep, eval=FALSE}
+pnadc <- pnadc_raw %>%
+  dplyr::select(V1028, V2007, V2010, VD3005, VD4008, VD4017) %>%
   dplyr::mutate(
-    regiao = factor(regiao, levels = ordem_regioes),
-    grupo  = factor(grupo,  levels = names(cores_raciais))
-  ) |>
-  ggplot(aes(x = regiao, y = proporcao, fill = grupo)) +
-  geom_col(position = "fill", width = 0.72) +
-  geom_text(
-    aes(label = scales::percent(proporcao, accuracy = 0.1)),
-    position = position_fill(vjust = 0.5),
-    color = "white", size = 3.3, fontface = "bold"
-  ) +
-  scale_y_continuous(labels = scales::percent_format()) +
-  scale_fill_manual(values = cores_raciais, name = NULL) +
-  labs(
-    title   = "Composição racial por Grande Região — Censo 2022",
-    subtitle = "Categoria 'Negros' = Pretos + Pardos (categorias censitárias IBGE)",
-    x = NULL, y = "Proporção da população",
-    caption = "Fonte: IBGE, Censo Demográfico 2022 (Tabela 9605 / SIDRA)."
-  ) +
-  theme_minimal(base_family = "sans") +
-  theme(
-    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 14),
-    plot.subtitle      = element_text(color = "#4a6580", size = 11),
-    plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
-    axis.text.x        = element_text(color = "#0f2a4a", face = "bold", size = 11),
-    axis.text.y        = element_text(color = "#555555"),
-    legend.position    = "right",
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor   = element_blank(),
-    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
-    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
-  )
+    # Categoria analítica
+    grupo = dplyr::case_when(
+      V2010 %in% c("Preta", "Parda") ~ "Negros",
+      V2010 == "Branca"              ~ "Brancos",
+      V2010 == "Amarela"             ~ "Amarelos",
+      V2010 == "Indígena"            ~ "Indígenas",
+      TRUE                           ~ NA_character_
+    ),
+    setor_publico = dplyr::case_when(
+      VD4008 == "Empregado no setor público (inclusive servidor estatutário e militar)" ~ 1L,
+      !is.na(VD4008) ~ 0L,
+      TRUE ~ NA_integer_
+    )
+  ) %>%
+  dplyr::filter(!is.na(grupo))
 ```
 
-## 6.3 Desigualdade de renda por cor ou raça
+## 6.3 Médias ponderadas por cor ou raça
 
-Os dados abaixo são estimativas baseadas na PNAD Contínua 2022 (IBGE, 2022). Substituir por `df_renda` após executar a consulta da seção 5.3.
+```{r pnadc-medias, eval=FALSE}
+# Renda e escolaridade médias por grupo racial, com peso
+renda_raca <- pnadc %>%
+  dplyr::filter(!is.na(VD4017)) %>%
+  dplyr::group_by(grupo) %>%
+  dplyr::summarise(
+    renda_media       = weighted.mean(VD4017, w = V1028, na.rm = TRUE),
+    anos_estudo_medio = weighted.mean(VD3005, w = V1028, na.rm = TRUE),
+    n = dplyr::n(),
+    .groups = "drop"
+  ) %>%
+  dplyr::arrange(dplyr::desc(renda_media))
 
-<div class="callout-aviso">
-**Dados simulados**
-Os valores correspondem a estimativas publicadas em IBGE (2022), *Desigualdades Sociais por Cor ou Raça no Brasil*. Aplicam-se a pessoas de 14 anos ou mais com rendimento habitual do trabalho principal informado, 1º trimestre de 2022.
+renda_raca
+```
+
+<div class="callout-exercicio">
+**Exercício 3**
+Modifique o código acima para calcular a renda média também por sexo (`V2007`). Qual combinação de raça e sexo tem o menor rendimento médio? Em que medida as desigualdades de raça e gênero se sobrepõem?
 </div>
+
+## 6.4 Dados para visualização (simulados)
+
+Os valores abaixo reproduzem as estimativas da PNAD Contínua 2022 e são usados na visualização enquanto você não baixa a base completa. Substitua por `renda_raca` após rodar a seção 6.3.
 
 ```{r dados-simulados}
 df_renda_sim <- tibble::tribble(
@@ -505,50 +553,111 @@ df_renda_sim <- tibble::tribble(
   "Preta",         1563,          8.2,
   "Parda",         1533,          8.0,
   "Indígena",      1248,          7.1
-) |>
+) %>%
   dplyr::mutate(
     grupo    = dplyr::case_when(
       cor_raca %in% c("Preta", "Parda") ~ "Negros",
       TRUE                              ~ cor_raca
     ),
-    cor_raca = fct_reorder(cor_raca, renda_media)
+    cor_raca = forcats::fct_reorder(cor_raca, renda_media)
   )
-
-df_renda_sim
 ```
 
-```{r grafico-renda, fig.height=5, fig.width=8}
-cores_censo <- c(
-  "Branca" = "#5baad4", "Amarela" = "#a8c8e8",
-  "Preta"  = "#0f2a4a", "Parda"   = "#1d3557",
-  "Indígena" = "#7fb3d3"
+---
+
+# 7 · Visualização
+
+## 7.1 Paleta de cores
+
+```{r paleta}
+# Paleta institucional (tons azuis IESP-UERJ)
+cores_grupo <- c(
+  "Negros"    = "#0f2a4a",
+  "Brancos"   = "#5baad4",
+  "Indígenas" = "#7fb3d3",
+  "Amarelos"  = "#a8c8e8"
 )
 
+cores_censo <- c(
+  "Branca"    = "#5baad4",
+  "Amarela"   = "#a8c8e8",
+  "Preta"     = "#0f2a4a",
+  "Parda"     = "#1d3557",
+  "Indígena"  = "#7fb3d3"
+)
+```
+
+## 7.2 Composição racial por Grande Região – Censo 2022
+
+O gráfico abaixo mostra a heterogeneidade regional da composição racial. A diferença entre Norte/Nordeste e Sul reflete padrões históricos de colonização e fluxos migratórios do século XX.
+
+```{r grafico-distribuicao, fig.height=5.5}
+ordem_regioes <- c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")
+
+pop_grupo %>%
+  dplyr::filter(grupo %in% names(cores_grupo)) %>%
+  dplyr::mutate(
+    regiao = factor(regiao, levels = ordem_regioes),
+    grupo  = factor(grupo,  levels = names(cores_grupo))
+  ) %>%
+  ggplot(aes(x = regiao, y = proporcao, fill = grupo)) +
+  geom_col(position = "fill", width = 0.72) +
+  geom_text(
+    aes(label = scales::percent(proporcao, accuracy = 0.1)),
+    position = position_fill(vjust = 0.5),
+    color = "white", size = 3.5, fontface = "bold"
+  ) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(values = cores_grupo, name = NULL) +
+  labs(
+    title    = "Composição racial por Grande Região – Censo 2022",
+    subtitle = "Negros = Pretos + Pardos (categorias censitárias IBGE)",
+    x = NULL, y = "Proporção da população",
+    caption  = "Fonte: IBGE, Censo Demográfico 2022 (Tabela 9605 / SIDRA)."
+  ) +
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 14),
+    plot.subtitle      = element_text(color = "#4a6580", size = 11.5),
+    plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
+    axis.text.x        = element_text(color = "#0f2a4a", face = "bold", size = 12),
+    axis.text.y        = element_text(color = "#555555"),
+    legend.position    = "right",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
+    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+  )
+```
+
+## 7.3 Rendimento por cor ou raça – PNAD Contínua 2022
+
+```{r grafico-renda, fig.height=5}
 ggplot(df_renda_sim, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   geom_col(width = 0.65, show.legend = FALSE) +
   geom_text(
-    aes(label = scales::dollar(renda_media, prefix = "R$ ",
+    aes(label = scales::dollar(renda_media, prefix = "R$ ",
                                big.mark = ".", decimal.mark = ",")),
-    hjust = -0.1, size = 3.8, color = "#0f2a4a", fontface = "bold"
+    hjust = -0.1, size = 4, color = "#0f2a4a", fontface = "bold"
   ) +
   coord_flip(clip = "off") +
   scale_y_continuous(
     limits = c(0, 3900),
-    labels = scales::dollar_format(prefix = "R$ ", big.mark = ".", decimal.mark = ",")
+    labels = scales::dollar_format(prefix = "R$ ", big.mark = ".", decimal.mark = ",")
   ) +
   scale_fill_manual(values = cores_censo) +
   labs(
-    title   = "Rendimento médio mensal por cor ou raça — Brasil, 2022",
+    title    = "Rendimento médio mensal por cor ou raça – Brasil, 2022",
     subtitle = "Trabalho principal; pessoas de 14 anos ou mais com rendimento informado",
     x = NULL, y = "Rendimento médio (R$)",
-    caption = "Fonte: IBGE, PNAD Contínua 2022 (estimativas).\nNota: valores simulados para fins didáticos."
+    caption  = "Fonte: IBGE, PNAD Contínua 2022.\nNota: valores baseados em estimativas para fins didáticos."
   ) +
   theme_minimal(base_family = "sans") +
   theme(
     plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
-    plot.subtitle      = element_text(color = "#4a6580", size = 10.5),
+    plot.subtitle      = element_text(color = "#4a6580", size = 11),
     plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
-    axis.text.y        = element_text(color = "#0f2a4a", face = "bold", size = 11),
+    axis.text.y        = element_text(color = "#0f2a4a", face = "bold", size = 12),
     axis.text.x        = element_text(color = "#555555"),
     panel.grid.major.y = element_blank(),
     panel.grid.minor   = element_blank(),
@@ -557,51 +666,48 @@ ggplot(df_renda_sim, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   )
 ```
 
-## 6.4 Razão de desigualdade branco-negro
+## 7.4 Razão de desigualdade
 
-```{r razao-desigualdade}
-# Razão entre rendimento médio de brancos e de negros (Pretos + Pardos)
-razao <- df_renda_sim |>
-  dplyr::group_by(grupo) |>
-  dplyr::summarise(renda_grupo = mean(renda_media), .groups = "drop") |>
-  dplyr::filter(grupo %in% c("Brancos", "Negros")) |>
+```{r razao}
+razao <- df_renda_sim %>%
+  dplyr::group_by(grupo) %>%
+  dplyr::summarise(renda_grupo = mean(renda_media), .groups = "drop") %>%
+  dplyr::filter(grupo %in% c("Brancos", "Negros")) %>%
   dplyr::summarise(
     razao = renda_grupo[grupo == "Brancos"] / renda_grupo[grupo == "Negros"]
-  ) |>
+  ) %>%
   dplyr::pull(razao)
 
 cat(sprintf(
-  "Para cada R$ 1,00 recebido por negros, brancos recebem, em média, R$ %.2f\n",
+  "Para cada R$ 1,00 recebido por negros, brancos recebem, em média, R$ %.2f\n",
   razao
 ))
 ```
 
 <div class="callout-exercicio">
-**Exercício 3 — Desafio**
-Replique o cálculo da razão de desigualdade para escolaridade: use `anos_estudo_medio` em vez de `renda_media`. Construa também um gráfico de dispersão com `renda_media` no eixo X e `anos_estudo_medio` no eixo Y, identificando cada ponto com o nome da categoria censitária. O que o padrão encontrado diz sobre a relação entre educação e renda por raça no Brasil?
+**Exercício 4 – Desafio**
+Repita o cálculo da razão de desigualdade para anos de estudo, usando `anos_estudo_medio`. Construa também um gráfico de dispersão com `renda_media` no eixo X e `anos_estudo_medio` no Y, identificando cada ponto pelo nome da categoria censitária. O que o padrão sugere sobre a relação entre educação e renda por raça?
 </div>
 
 ---
 
-# 7 · Boas Práticas e Próximos Passos
+# 8 · Boas Práticas
 
-## 7.1 Checklist metodológico
+## 8.1 Checklist antes de publicar
 
-Antes de publicar análises com dados raciais, verifique:
-
-- [ ] A variável é autodeclaração ou heteroidentificação? Isso está explícito no texto?
-- [ ] A categoria "negros" está definida como soma de Pretos e Pardos, com menção explícita na primeira ocorrência?
-- [ ] Os `NA`s da variável cor ou raça foram tratados de forma transparente — não removidos silenciosamente?
+- [ ] A variável é autodeclaração ou heteroidentificação? Está explícito no texto?
+- [ ] A categoria "negros" está definida como Pretos + Pardos, com menção na primeira ocorrência?
+- [ ] Os `NA`s foram tratados de forma transparente, não removidos silenciosamente?
 - [ ] O tamanho amostral de cada grupo está reportado?
-- [ ] O ano de referência e a edição da pesquisa estão citados?
+- [ ] Ano de referência e edição da pesquisa estão citados?
 
-## 7.2 Recursos para aprofundamento
+## 8.2 Referências
 
-- Telles, E. (2004). *Race in Another America: The Significance of Skin Color in Brazil*. Princeton University Press.
+- Telles, E. (2004). *Race in Another America*. Princeton University Press.
 - Hasenbalg, C. (1979). *Discriminação e Desigualdades Raciais no Brasil*. Graal.
 - IBGE (2022). [Desigualdades Sociais por Cor ou Raça no Brasil](https://biblioteca.ibge.gov.br/index.php/biblioteca-catalogo?view=detalhes&id=2101935).
-- Pacote [`electionsBR`](https://cran.r-project.org/package=electionsBR) — dados eleitorais do TSE com abertura por raça.
-- Pacote [`PNADcIBGE`](https://cran.r-project.org/package=PNADcIBGE) — leitura de microdados da PNAD Contínua com design amostral complexo.
+- Pacote [`PNADcIBGE`](https://cran.r-project.org/package=PNADcIBGE)
+- Pacote [`electionsBR`](https://cran.r-project.org/package=electionsBR) – dados eleitorais do TSE
 
 ---
 
