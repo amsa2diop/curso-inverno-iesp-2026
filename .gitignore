@@ -1,0 +1,22 @@
+# Arquivos de ambiente e credenciais
+*.json
+.Renviron
+.Rprofile
+
+# Arquivos temporários do R
+*.Rhistory
+*.RData
+*.Rproj.user/
+.Rcheck/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arquivos grandes de dados (baixar via script)
+*.xls
+*.xlsx
+*.csv
+*.rds
+*.feather
