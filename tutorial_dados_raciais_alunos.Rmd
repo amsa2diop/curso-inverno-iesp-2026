@@ -5,7 +5,9 @@ date: "`r format(Sys.Date(), '%d de %B de %Y')`"
 output:
   html_document:
     toc: true
-    toc_float: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
     toc_depth: 2
     code_folding: show
     theme: flatly
@@ -15,28 +17,81 @@ output:
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
-body { font-family: 'Inter', Arial, sans-serif; font-size: 15px; color: #2d2d2d; line-height: 1.75; background: #f8f9fb; }
+
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 15.5px;
+  color: #2d2d2d;
+  line-height: 1.8;
+  background: #f8f9fb;
+}
 h1, h2, h3 { color: #0f2a4a; font-weight: 600; }
-h1 { border-left: 4px solid #1a6fa8; padding-left: 0.6em; }
-h2 { border-left: 3px solid #5baad4; padding-left: 0.5em; }
-a  { color: #1a6fa8; }
-pre { background: #f0f4f8; border: 1px solid #dce6f0; border-radius: 7px; padding: 14px 18px; font-size: 0.85rem; }
-code { background: #e8f0f8; border-radius: 4px; padding: 1px 5px; font-size: 0.88em; color: #0f2a4a; }
-pre code { background: transparent; padding: 0; color: inherit; }
-.exercicio { background: #e8f5e9; border-left: 4px solid #2e7d32; border-radius: 0 7px 7px 0; padding: 12px 16px; margin: 16px 0; }
-.dica      { background: #e8f4fd; border-left: 4px solid #1a6fa8; border-radius: 0 7px 7px 0; padding: 12px 16px; margin: 16px 0; }
-.atencao   { background: #fff8e1; border-left: 4px solid #f0a500; border-radius: 0 7px 7px 0; padding: 12px 16px; margin: 16px 0; }
-#TOC { background: #0f2a4a; border-radius: 8px; padding: 14px 16px; }
-#TOC a { color: #b8d4ea !important; font-size: 0.88rem; }
-#TOC a:hover { color: #fff !important; }
-.main-container { max-width: 860px; }
+h1 { font-size: 1.7rem; border-left: 4px solid #1a6fa8; padding-left: 0.6em; margin-top: 1.6em; }
+h2 { font-size: 1.3rem;  border-left: 3px solid #5baad4; padding-left: 0.5em; margin-top: 1.4em; }
+a { color: #1a6fa8; }
+
+/* TOC flutuante */
+.tocify-wrapper {
+  background-color: #f5f8fc !important;
+  border-right: 1px solid #dce6f0 !important;
+  box-shadow: none !important;
+}
+.tocify { border: none !important; background: transparent !important; }
+.tocify-item > a, .tocify-subheader .tocify-item > a {
+  color: #0f2a4a !important;
+  font-size: 0.875rem !important;
+  padding: 5px 14px !important;
+}
+.tocify-item > a:hover { color: #1a6fa8 !important; background-color: #e4eef8 !important; }
+.tocify-item.active > a, .tocify-item.active > a:hover {
+  color: #1a6fa8 !important; font-weight: 600 !important;
+  background-color: #dce9f5 !important;
+  border-left: 3px solid #1a6fa8 !important;
+  padding-left: 11px !important;
+}
+.tocify-subheader { background: transparent !important; }
+#TOC { display: none; }
+
+/* Code */
+pre {
+  background: #f0f4f8; border: 1px solid #dce6f0;
+  border-radius: 7px; padding: 14px 18px;
+  font-size: 0.93rem; line-height: 1.65;
+}
+code {
+  background: #e8f0f8; border-radius: 4px;
+  padding: 2px 5px; font-size: 0.93em; color: #0f2a4a;
+}
+pre code { background: transparent; padding: 0; color: inherit; font-size: inherit; }
+
+/* Tabelas */
+table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: 0.97rem; }
+thead th { background-color: #0f2a4a; color: #fff; padding: 10px 15px; text-align: left; }
+tbody tr:nth-child(even) { background-color: #f0f4f8; }
+tbody td { padding: 9px 15px; border-bottom: 1px solid #dce6f0; }
+
+/* Callouts */
+.dica {
+  background: #e8f4fd; border-left: 4px solid #1a6fa8;
+  border-radius: 0 7px 7px 0; padding: 13px 17px; margin: 18px 0;
+}
+.atencao {
+  background: #fff8e1; border-left: 4px solid #e6a817;
+  border-radius: 0 7px 7px 0; padding: 13px 17px; margin: 18px 0;
+}
+.exercicio {
+  background: #f3e8fd; border-left: 4px solid #6a1b9a;
+  border-radius: 0 7px 7px 0; padding: 13px 17px; margin: 18px 0;
+}
+
+.main-container { max-width: 880px; }
 </style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo    = TRUE,
-  warning = FALSE,
-  message = FALSE,
+  echo      = TRUE,
+  warning   = FALSE,
+  message   = FALSE,
   fig.width  = 9,
   fig.height = 5.5,
   fig.align  = "center",
@@ -48,77 +103,71 @@ knitr::opts_chunk$set(
 
 # Antes de começar
 
-Carregue os pacotes necessários. Se algum não estiver instalado, rode `install.packages("nome_do_pacote")` no console.
+Carregue os pacotes. Se algum não estiver instalado, execute `install.packages("nome_do_pacote")` no console antes de prosseguir.
 
 ```{r pacotes}
-library(tidyverse)  # dplyr + ggplot2 + demais
+library(tidyverse)  # dplyr, ggplot2 e demais
 library(sidrar)     # API do IBGE
-library(scales)     # Formatação de eixos
+library(scales)     # Formatação de escalas em gráficos
 ```
 
 ---
 
 # Parte 1 · Censo 2022 via `sidraR`
 
-## 1.1 Sua primeira query no SIDRA
+## 1.1 Baixando os dados
 
-A função `get_sidra()` consulta diretamente a API do IBGE. O exemplo abaixo baixa a **Tabela 9605** — população por cor ou raça do Censo 2022 — para as Grandes Regiões do Brasil.
+A função `get_sidra()` consulta diretamente a API do IBGE. O exemplo abaixo coleta a **Tabela 9605** — população por cor ou raça do Censo 2022 — para as Grandes Regiões do Brasil.
 
 ```{r baixar-dados}
-# Baixar Tabela 9605: população por cor ou raça (Grandes Regiões)
 pop_raca <- sidrar::get_sidra(
-  x        = 9605,    # número da tabela
-  variable = 93,      # código da variável: pessoas residentes
+  x        = 9605,    # número da tabela no SIDRA
+  variable = 93,      # código 93 = pessoas residentes
   geo      = "Region" # nível geográfico: Grande Região
 )
 
-# Ver as primeiras linhas e os nomes das colunas
 glimpse(pop_raca)
 ```
 
 <div class="dica">
-**Dica — Como encontrar o número da tabela?**
-Acesse [sidra.ibge.gov.br](https://sidra.ibge.gov.br/), pesquise pelo tema, monte a tabela visualmente e copie o número que aparece na URL (ex: `/tabela/9605`).
+**Como encontrar o número da tabela?**
+Acesse [sidra.ibge.gov.br](https://sidra.ibge.gov.br/), pesquise pelo tema, monte a consulta visualmente e copie o número que aparece na URL (ex: `/tabela/9605`). O botão "Link para esta tabela" gera uma URL com todos os parâmetros mapeáveis para `get_sidra()`.
 </div>
 
 ## 1.2 Limpeza dos dados
 
 ```{r limpeza}
-pop_clean <- pop_raca |>
-  # Selecionar apenas o que interessa
+pop_raca_clean <- pop_raca |>
   dplyr::select(
-    regiao   = `Grande Região`,
-    cor_raca = `Cor ou raça`,
-    n        = Valor
+    regiao    = `Grande Região`,
+    cor_raca  = `Cor ou raça`,
+    populacao = Valor
   ) |>
-  # Remover a linha de total geral
-  dplyr::filter(cor_raca != "Total", !is.na(n))
+  dplyr::filter(cor_raca != "Total", !is.na(populacao))
 
-head(pop_clean, 8)
+head(pop_raca_clean, 8)
 ```
 
-## 1.3 Construindo a categoria "negros"
+## 1.3 Construindo a categoria analítica "negros"
 
 <div class="atencao">
 **Por que somar Pretos e Pardos?**
-A categoria analítica "negros" (Pretos + Pardos) é amplamente usada em pesquisas de desigualdade racial por refletir posição estrutural semelhante nas duas categorias. Sempre que usar essa soma, informe explicitamente no texto.
+A categoria analítica "negros" (Pretos + Pardos) é amplamente usada em pesquisas de desigualdade racial porque os dois grupos ocupam posição estrutural semelhante no mercado de trabalho, na renda e na escolaridade. Ao agregar as duas categorias, captura-se a dimensão coletiva da desigualdade. Sempre que usar essa soma, informe explicitamente na primeira ocorrência do texto.
 </div>
 
 ```{r grupo-racial}
-pop_grupo <- pop_clean |>
+pop_grupo <- pop_raca_clean |>
   dplyr::mutate(
     grupo = dplyr::case_when(
-      cor_raca %in% c("Preta", "Parda") ~ "Negros",     # soma analítica
+      cor_raca %in% c("Preta", "Parda") ~ "Negros",    # soma analítica
       cor_raca == "Branca"              ~ "Brancos",
       cor_raca == "Amarela"             ~ "Amarelos",
       cor_raca == "Indígena"            ~ "Indígenas",
-      TRUE                              ~ NA_character_  # NAs explícitos
+      TRUE                              ~ NA_character_ # NAs explícitos
     )
   ) |>
-  # Agregar por região e grupo
   dplyr::group_by(regiao, grupo) |>
-  dplyr::summarise(populacao = sum(n, na.rm = TRUE), .groups = "drop") |>
-  # Calcular proporção dentro de cada região
+  dplyr::summarise(populacao = sum(populacao, na.rm = TRUE), .groups = "drop") |>
   dplyr::group_by(regiao) |>
   dplyr::mutate(proporcao = populacao / sum(populacao)) |>
   dplyr::ungroup() |>
@@ -129,7 +178,7 @@ pop_grupo
 
 <div class="exercicio">
 **Exercício 1**
-Repita o código acima trocando `geo = "Region"` por `geo = "Brazil"` na query SIDRA para obter os números nacionais. Qual é a proporção de negros no Brasil segundo o Censo 2022?
+Modifique a query acima trocando `geo = "Region"` por `geo = "Brazil"` para obter os números nacionais. Qual é a proporção de negros no Brasil segundo o Censo 2022? Compare com a proporção da região Norte — o que explica a diferença?
 </div>
 
 ---
@@ -140,7 +189,7 @@ Repita o código acima trocando `geo = "Region"` por `geo = "Brazil"` na query S
 
 <div class="atencao">
 **Pré-requisito**
-Você precisa de: (1) conta Google; (2) projeto criado no [Google Cloud Platform](https://console.cloud.google.com/) (o nível gratuito dá 1 TB/mês de consultas). Anote o **ID do seu projeto** (ex: `meu-projeto-123`).
+São necessários: (1) conta Google; (2) projeto criado no [Google Cloud Platform](https://console.cloud.google.com/) — o nível gratuito oferece 1 TB de consultas por mês sem custo. Anote o **ID do seu projeto** (ex: `meu-projeto-123`).
 </div>
 
 ```{r bq-setup, eval=FALSE}
@@ -148,23 +197,23 @@ library(basedosdados)
 library(DBI)
 library(bigrquery)
 
-# Autenticação (abrirá o navegador na primeira vez)
+# Autenticação interativa (abrirá o navegador na primeira vez)
 bigrquery::bq_auth()
 
-# Defina o ID do SEU projeto no GCP:
-basedosdados::set_billing_id("SEU-PROJETO-AQUI")   # <-- substitua
+# Definir o ID do projeto de faturamento no GCP
+basedosdados::set_billing_id("SEU-PROJETO-AQUI")  # <-- substitua
 
 # Conexão com o projeto basedosdados
 con <- DBI::dbConnect(
   bigrquery::bigquery(),
-  billing = "SEU-PROJETO-AQUI",   # <-- substitua
+  billing = "SEU-PROJETO-AQUI",  # <-- substitua
   project = "basedosdados"
 )
 ```
 
-## 2.2 Consultando rendimento por cor/raça (PNAD Contínua)
+## 2.2 Consulta: rendimento por cor ou raça
 
-A variável `V2010` na PNAD Contínua é o código de cor ou raça (1 = Branca, 2 = Preta, 4 = Parda, 5 = Indígena).
+A variável `V2010` na PNAD Contínua codifica cor ou raça (1 = Branca, 2 = Preta, 3 = Amarela, 4 = Parda, 5 = Indígena).
 
 ```{r bq-query, eval=FALSE}
 query <- "
@@ -172,13 +221,14 @@ query <- "
     CASE V2010
       WHEN 1 THEN 'Branca'
       WHEN 2 THEN 'Preta'
+      WHEN 3 THEN 'Amarela'
       WHEN 4 THEN 'Parda'
       WHEN 5 THEN 'Indígena'
-      WHEN 3 THEN 'Amarela'
-    END                   AS cor_raca,
-    AVG(VD4016)           AS renda_media,
-    AVG(VD3005)           AS anos_estudo_medio,
-    COUNT(*)              AS n
+      ELSE 'Ignorado'
+    END             AS cor_raca,
+    AVG(VD4016)     AS renda_media,
+    AVG(VD3005)     AS anos_estudo_medio,
+    COUNT(*)        AS n
   FROM `basedosdados.br_ibge_pnadc.microdados`
   WHERE
     ano       = 2022
@@ -195,17 +245,16 @@ head(df_renda)
 
 <div class="exercicio">
 **Exercício 2**
-Modifique a query acima para calcular a renda média também por sexo (`V2007`): como a desigualdade racial se combina com a de gênero?
+Modifique a query acima para calcular a renda média também por sexo (`V2007`: 1 = Homem, 2 = Mulher). Qual combinação de raça e sexo apresenta o menor rendimento médio? Em que medida a desigualdade de gênero se sobrepõe à desigualdade racial?
 </div>
 
 ---
 
 # Parte 3 · Visualização com ggplot2
 
-## 3.1 Gráfico de barras empilhadas — composição regional
+## 3.1 Composição racial por Grande Região
 
 ```{r grafico-regional, fig.height=5.5}
-# Paleta de cores harmoniosa (tons azuis institucionais)
 cores <- c(
   "Negros"    = "#0f2a4a",
   "Brancos"   = "#5baad4",
@@ -213,7 +262,6 @@ cores <- c(
   "Amarelos"  = "#a8c8e8"
 )
 
-# Ordenar regiões de Norte para Sul
 ordem_reg <- c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")
 
 pop_grupo |>
@@ -233,27 +281,26 @@ pop_grupo |>
   scale_fill_manual(values = cores, name = NULL) +
   labs(
     title    = "Composição racial por Grande Região — Censo 2022",
-    subtitle = "'Negros' = Pretos + Pardos (categoria analítica)",
+    subtitle = "'Negros' = Pretos + Pardos (categorias censitárias IBGE)",
     x = NULL, y = "Proporção",
     caption  = "Fonte: IBGE, Censo Demográfico 2022 (Tabela 9605 / SIDRA)."
   ) +
   theme_minimal() +
   theme(
-    plot.title    = element_text(color = "#0f2a4a", face = "bold", size = 13),
-    plot.subtitle = element_text(color = "#4a6580", size = 10.5),
-    axis.text.x   = element_text(color = "#0f2a4a", face = "bold"),
+    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
+    plot.subtitle      = element_text(color = "#4a6580", size = 10.5),
+    axis.text.x        = element_text(color = "#0f2a4a", face = "bold"),
     panel.grid.major.x = element_blank(),
     panel.grid.minor   = element_blank(),
     plot.background    = element_rect(fill = "#f8f9fb", color = NA)
   )
 ```
 
-## 3.2 Gráfico de renda (dados simulados)
+## 3.2 Rendimento por cor ou raça (dados simulados)
 
-Enquanto não conectamos ao BigQuery, usamos estimativas baseadas na PNAD Contínua 2022:
+Os valores abaixo são estimativas baseadas na PNAD Contínua 2022. Substituir por `df_renda` após executar a consulta BigQuery da seção 2.2.
 
 ```{r grafico-renda, fig.height=4.5}
-# Estimativas PNAD Contínua 2022 (substituir por df_renda quando disponível)
 df_sim <- tibble::tribble(
   ~cor_raca,   ~renda_media,
   "Branca",        2917,
@@ -265,8 +312,9 @@ df_sim <- tibble::tribble(
   dplyr::mutate(cor_raca = fct_reorder(cor_raca, renda_media))
 
 cores_censo <- c(
-  "Branca" = "#5baad4", "Amarela" = "#a8c8e8", "Preta" = "#0f2a4a",
-  "Parda" = "#1d3557",  "Indígena" = "#7fb3d3"
+  "Branca" = "#5baad4", "Amarela" = "#a8c8e8",
+  "Preta"  = "#0f2a4a", "Parda"   = "#1d3557",
+  "Indígena" = "#7fb3d3"
 )
 
 ggplot(df_sim, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
@@ -277,8 +325,10 @@ ggplot(df_sim, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
     hjust = -0.1, color = "#0f2a4a", fontface = "bold", size = 3.8
   ) +
   coord_flip(clip = "off") +
-  scale_y_continuous(limits = c(0, 3800),
-    labels = scales::dollar_format(prefix = "R$ ", big.mark = ".", decimal.mark = ",")) +
+  scale_y_continuous(
+    limits = c(0, 3900),
+    labels = scales::dollar_format(prefix = "R$ ", big.mark = ".", decimal.mark = ",")
+  ) +
   scale_fill_manual(values = cores_censo) +
   labs(
     title   = "Rendimento médio mensal por cor ou raça — Brasil, 2022",
@@ -287,17 +337,17 @@ ggplot(df_sim, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   ) +
   theme_minimal() +
   theme(
-    plot.title  = element_text(color = "#0f2a4a", face = "bold", size = 13),
-    axis.text.y = element_text(color = "#0f2a4a", face = "bold"),
+    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
+    axis.text.y        = element_text(color = "#0f2a4a", face = "bold"),
     panel.grid.major.y = element_blank(),
     panel.grid.minor   = element_blank(),
-    plot.background = element_rect(fill = "#f8f9fb", color = NA)
+    plot.background    = element_rect(fill = "#f8f9fb", color = NA)
   )
 ```
 
 <div class="exercicio">
 **Exercício 3 — Desafio**
-Calcule a **razão de desigualdade** entre o rendimento médio de brancos e o de negros (Pretos + Pardos juntos). Use `dplyr::summarise()` sobre `df_sim`. O que o número encontrado significa na prática?
+Replique o cálculo da razão de desigualdade para escolaridade: use `anos_estudo_medio` em vez de `renda_media`. Construa também um gráfico de dispersão com `renda_media` no eixo X e `anos_estudo_medio` no eixo Y, identificando cada ponto com o nome da categoria censitária. O que o padrão encontrado diz sobre a relação entre educação e renda por raça no Brasil?
 </div>
 
 ---
