@@ -40,6 +40,26 @@ a { color: #1a6fa8; }
 #TOC a:hover { color: #1a6fa8 !important; }
 #TOC li.active > a { color: #1a6fa8 !important; font-weight: 600 !important; }
 
+/* Botao toggle do TOC */
+#toc-toggle {
+  position: fixed;
+  top: 56px;
+  left: 5px;
+  z-index: 2000;
+  background: #1a6fa8;
+  color: #fff;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  padding: 6px 9px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity .2s;
+}
+#toc-toggle:hover { opacity: 1; }
+.tocify-wrapper.toc-hidden { display: none !important; }
+
 /* Code */
 pre {
   background: #f0f4f8; border: 1px solid #dce6f0;
@@ -87,6 +107,7 @@ tbody td { padding: 9px 15px; border-bottom: 1px solid #dce6f0; }
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // Botão de copiar código
   document.querySelectorAll('pre').forEach(function(pre) {
     if (!pre.querySelector('code')) return;
     var btn = document.createElement('button');
@@ -98,13 +119,24 @@ document.addEventListener('DOMContentLoaded', function() {
       navigator.clipboard.writeText(text).then(function() {
         btn.textContent = 'Copiado!';
         btn.style.background = '#2e7d32';
-        setTimeout(function() {
-          btn.textContent = 'Copiar';
-          btn.style.background = '';
-        }, 2000);
+        setTimeout(function() { btn.textContent = 'Copiar'; btn.style.background = ''; }, 2000);
       });
     });
   });
+
+  // Botão de toggle do TOC
+  var toc = document.querySelector('.tocify-wrapper');
+  if (toc) {
+    var toggle = document.createElement('button');
+    toggle.id = 'toc-toggle';
+    toggle.title = 'Ocultar / mostrar sumário';
+    toggle.textContent = '◀';
+    document.body.appendChild(toggle);
+    toggle.addEventListener('click', function() {
+      toc.classList.toggle('toc-hidden');
+      toggle.textContent = toc.classList.contains('toc-hidden') ? '▶' : '◀';
+    });
+  }
 });
 </script>
 
@@ -124,20 +156,20 @@ knitr::opts_chunk$set(
 
 # Antes de começar
 
-Este material acompanha o workshop [**Como trabalhar com dados raciais no Brasil**](https://inverno.iesp.uerj.br/cursos/dados-raciais/) da Escola de Inverno IESP-UERJ.
+Este material acompanha o workshop [**Como trabalhar com dados raciais no Brasil**](https://inverno.iesp.uerj.br/cursos/dados-raciais/) da Escola de Inverno IESP-UERJ. O objetivo é mostrar como coletar, organizar e visualizar dados raciais das principais bases públicas brasileiras usando R.
 
-A pergunta que vai guiar a aula é:
+Para dar um fio condutor aos exemplos, vamos trabalhar com uma pergunta de pesquisa como ilustração:
 
 > **Municípios com maior proporção de população negra elegem mais candidatos negros?**
 
-Para respondê-la, vamos usar três fontes: o **Censo 2022** (composição racial por município), a **PNADC** (desigualdades nos anos entre censos) e os **dados do TSE 2022** (candidatos por raça). No final, cruzamos tudo isso via Base dos Dados.
+Para respondê-la, precisamos do Censo 2022, da PNADC e dos dados do TSE 2022. No final, cruzamos tudo via Base dos Dados.
 
 Carregue os pacotes. Se algum não estiver instalado, rode `install.packages("nome")` primeiro.
 
 ```{r pacotes}
-library(tidyverse)  # dplyr, ggplot2 e afins
-library(sidrar)     # API do IBGE
-library(scales)     # formatacao de escalas
+library(tidyverse)   # dplyr, ggplot2, forcats e afins
+library(sidrar)      # API do IBGE / SIDRA
+library(scales)      # formatacao de escalas
 ```
 
 ---
@@ -166,8 +198,8 @@ Acesse [sidra.ibge.gov.br](https://sidra.ibge.gov.br/), pesquise pelo tema e cop
 ## 1.2 Limpeza e construção da categoria "negros"
 
 <div class="atencao">
-**Por que somar Pretos e Pardos?**
-A categoria analítica "negros" (Pretos + Pardos) é usada em pesquisas de desigualdade racial porque os dois grupos ocupam posição estrutural semelhante. Sempre que usar essa soma, informe explicitamente na primeira vez que aparece no texto: "negros (Pretos e Pardos, conforme categorias do IBGE)".
+**Por que somar pretos e pardos?**
+A categoria analítica "negros" (pretos + pardos) é usada em pesquisas de desigualdade racial porque os dois grupos ocupam posição estrutural semelhante. Sempre que usar essa soma, informe explicitamente: "negros (pretos e pardos, conforme categorias do IBGE)".
 </div>
 
 ```{r limpeza}
@@ -184,8 +216,8 @@ head(pop_raca_clean, 8)
 
 ```{r grupo-racial}
 pop_grupo <- pop_raca_clean %>%
-  dplyr::mutate(
-    grupo = dplyr::case_when(
+  mutate(
+    grupo = case_when(
       cor_raca %in% c("Preta", "Parda") ~ "Negros",
       cor_raca == "Branca"              ~ "Brancos",
       cor_raca == "Amarela"             ~ "Amarelos",
@@ -193,12 +225,12 @@ pop_grupo <- pop_raca_clean %>%
       TRUE                              ~ NA_character_
     )
   ) %>%
-  dplyr::group_by(regiao, grupo) %>%
-  dplyr::summarise(populacao = sum(populacao, na.rm = TRUE), .groups = "drop") %>%
-  dplyr::group_by(regiao) %>%
-  dplyr::mutate(proporcao = populacao / sum(populacao)) %>%
-  dplyr::ungroup() %>%
-  dplyr::filter(!is.na(grupo))
+  group_by(regiao, grupo) %>%
+  summarise(populacao = sum(populacao, na.rm = TRUE), .groups = "drop") %>%
+  group_by(regiao) %>%
+  mutate(proporcao = populacao / sum(populacao)) %>%
+  ungroup() %>%
+  filter(!is.na(grupo))
 
 pop_grupo
 ```
@@ -212,14 +244,14 @@ Troque `geo = "Region"` por `geo = "Brazil"` para obter os números nacionais. Q
 
 # Parte 2 -- PNADC nos anos intercensitários
 
-O Censo acontece a cada dez anos. Entre 2010 e 2022, por exemplo, só dava para acompanhar renda e escolaridade por raça usando a **PNAD Contínua**, que é coletada todo trimestre. Os códigos abaixo podem ser adaptados para outros anos.
+O Censo acontece a cada dez anos. Entre 2010 e 2022, só dava para acompanhar renda e escolaridade por raça usando a **PNAD Contínua**, coletada todo trimestre. Os códigos abaixo podem ser adaptados para outros anos.
 
 ## 2.1 Variáveis de interesse
 
 | Variável | Descrição |
 |---|---|
-| `V1028` | Peso (usar em médias ponderadas) |
-| `V2007` | Sexo |
+| `V1028` | Peso -- usar sempre em médias ponderadas |
+| `V2007` | Sexo (1 = Homem, 2 = Mulher) |
 | `V2010` | Cor ou raça |
 | `VD3005` | Anos de estudo |
 | `VD4017` | Rendimento mensal efetivo (R$) |
@@ -238,9 +270,9 @@ pnadc_raw <- PNADcIBGE::get_pnadc(
 
 ```{r pnadc-prep, eval=FALSE}
 pnadc <- pnadc_raw %>%
-  dplyr::select(V1028, V2007, V2010, VD3005, VD4017) %>%
-  dplyr::mutate(
-    grupo = dplyr::case_when(
+  select(V1028, V2007, V2010, VD3005, VD4017) %>%
+  mutate(
+    grupo = case_when(
       V2010 %in% c("Preta", "Parda") ~ "Negros",
       V2010 == "Branca"              ~ "Brancos",
       V2010 == "Amarela"             ~ "Amarelos",
@@ -248,21 +280,23 @@ pnadc <- pnadc_raw %>%
       TRUE                           ~ NA_character_
     )
   ) %>%
-  dplyr::filter(!is.na(grupo))
+  filter(!is.na(grupo))
 ```
 
 ## 2.3 Médias ponderadas
 
 ```{r pnadc-medias, eval=FALSE}
 renda_raca <- pnadc %>%
-  dplyr::filter(!is.na(VD4017)) %>%
-  dplyr::group_by(grupo) %>%
-  dplyr::summarise(
+  filter(!is.na(VD4017)) %>%
+  group_by(grupo) %>%
+  summarise(
     renda_media       = weighted.mean(VD4017, w = V1028, na.rm = TRUE),
     anos_estudo_medio = weighted.mean(VD3005, w = V1028, na.rm = TRUE),
-    n = dplyr::n(),
+    n = n(),
     .groups = "drop"
   )
+
+renda_raca
 ```
 
 <div class="exercicio">
@@ -285,8 +319,8 @@ cores_grupo <- c(
 )
 
 pop_grupo %>%
-  dplyr::filter(grupo %in% names(cores_grupo)) %>%
-  dplyr::mutate(
+  filter(grupo %in% names(cores_grupo)) %>%
+  mutate(
     regiao = factor(regiao, levels = c("Norte","Nordeste","Centro-Oeste","Sudeste","Sul")),
     grupo  = factor(grupo,  levels = names(cores_grupo))
   ) %>%
@@ -297,11 +331,11 @@ pop_grupo %>%
     position = position_fill(vjust = 0.5),
     color = "white", size = 3.5, fontface = "bold"
   ) +
-  scale_y_continuous(labels = scales::percent_format()) +
+  scale_y_continuous(labels = percent_format()) +
   scale_fill_manual(values = cores_grupo, name = NULL) +
   labs(
     title    = "Composição racial por grande região -- Censo 2022",
-    subtitle = "Negros = Pretos + Pardos (categorias censitárias IBGE)",
+    subtitle = "Negros = pretos + pardos (categorias censitárias IBGE)",
     x = NULL, y = "Proporção",
     caption  = "Fonte: IBGE, Censo Demográfico 2022 (Tabela 9605 / SIDRA)."
   ) +
@@ -318,17 +352,21 @@ pop_grupo %>%
 
 ## 3.2 Rendimento por raça (PNADC 2022)
 
-```{r grafico-renda, fig.height=5}
+```{r dados-sim}
 df_sim <- tibble::tribble(
-  ~cor_raca,   ~renda_media,
-  "Branca",        2917,
-  "Amarela",       3282,
-  "Preta",         1563,
-  "Parda",         1533,
-  "Indígena",      1248
+  ~cor_raca,   ~renda_media, ~anos_estudo_medio,
+  "Branca",        2917,          9.8,
+  "Amarela",       3282,         10.5,
+  "Preta",         1563,          8.2,
+  "Parda",         1533,          8.0,
+  "Indígena",      1248,          7.1
 ) %>%
-  dplyr::mutate(cor_raca = forcats::fct_reorder(cor_raca, renda_media))
+  mutate(cor_raca = forcats::fct_reorder(cor_raca, renda_media))
 
+df_sim
+```
+
+```{r grafico-renda, fig.height=5}
 cores_censo <- c(
   "Branca"   = "#5baad4",
   "Amarela"  = "#a8c8e8",
@@ -340,14 +378,14 @@ cores_censo <- c(
 ggplot(df_sim, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   geom_col(width = 0.65, show.legend = FALSE) +
   geom_text(
-    aes(label = scales::dollar(renda_media, prefix = "R$ ",
-                               big.mark = ".", decimal.mark = ",")),
+    aes(label = dollar(renda_media, prefix = "R$ ",
+                       big.mark = ".", decimal.mark = ",")),
     hjust = -0.1, size = 4, color = "#0f2a4a", fontface = "bold"
   ) +
   coord_flip(clip = "off") +
   scale_y_continuous(
     limits = c(0, 3900),
-    labels = scales::dollar_format(prefix = "R$ ", big.mark = ".", decimal.mark = ",")
+    labels = dollar_format(prefix = "R$ ", big.mark = ".", decimal.mark = ",")
   ) +
   scale_fill_manual(values = cores_censo) +
   labs(
@@ -365,36 +403,47 @@ ggplot(df_sim, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   )
 ```
 
+## 3.3 Razão de desigualdade
+
+A razão de rendimentos mede quantos reais brancos recebem para cada real recebido por negros. É um indicador simples e direto de desigualdade racial de renda.
+
+```{r razao}
+razao_tab <- df_sim %>%
+  mutate(grupo = case_when(
+    cor_raca %in% c("Preta", "Parda") ~ "Negros",
+    TRUE                              ~ as.character(cor_raca)
+  )) %>%
+  group_by(grupo) %>%
+  summarise(renda_grupo = mean(renda_media), .groups = "drop") %>%
+  filter(grupo %in% c("Brancos", "Negros"))
+
+razao_tab
+
+razao_val <- razao_tab$renda_grupo[razao_tab$grupo == "Brancos"] /
+             razao_tab$renda_grupo[razao_tab$grupo == "Negros"]
+
+cat(sprintf(
+  "\nPara cada R$ 1,00 recebido por negros, brancos recebem, em média, R$ %.2f\n",
+  razao_val
+))
+```
+
 <div class="exercicio">
 **Exercício 3**
-Calcule a razão de desigualdade de renda entre Brancos e Negros com o código abaixo. Repita para anos de estudo. O que o padrão diz sobre a relação entre educação e renda por raça?
-
-```r
-df_sim %>%
-  dplyr::mutate(grupo = dplyr::case_when(
-    cor_raca %in% c("Preta", "Parda") ~ "Negros",
-    TRUE ~ as.character(cor_raca)
-  )) %>%
-  dplyr::group_by(grupo) %>%
-  dplyr::summarise(renda = mean(renda_media)) %>%
-  dplyr::filter(grupo %in% c("Brancos", "Negros")) %>%
-  dplyr::summarise(razao = renda[grupo == "Brancos"] / renda[grupo == "Negros"])
-```
+Repita o cálculo da razão de desigualdade para anos de estudo, usando `anos_estudo_medio`. Construa também um gráfico de dispersão com `renda_media` no eixo X e `anos_estudo_medio` no Y, identificando cada ponto pelo nome da categoria. O que o padrão diz sobre a relação entre educação e renda por raça?
 </div>
 
 ---
 
 # Parte 4 -- Integrando Censo e TSE via Base dos Dados
 
-Agora voltamos à pergunta da aula: **municípios com maior proporção de população negra elegem mais candidatos negros?**
-
-Para isso, vamos cruzar o Censo 2022 (composição racial por município) com os dados de candidatos do TSE 2022 (eleitos por raça e município), usando a [Base dos Dados](https://basedosdados.org/) como plataforma de integração.
+Agora respondemos à pergunta da aula: municípios com mais negros elegem mais vereadores negros? Para isso, cruzamos o Censo 2022 e o TSE 2022 usando a [Base dos Dados](https://basedosdados.org/).
 
 ## 4.1 Configuração
 
 <div class="atencao">
 **Pré-requisito**
-Você precisa de: (1) conta Google; (2) projeto no [Google Cloud Platform](https://console.cloud.google.com/) -- o nível gratuito dá 1 TB/mês de consultas sem custo; (3) `install.packages("basedosdados")`.
+Você precisa de: (1) conta Google; (2) projeto no [Google Cloud Platform](https://console.cloud.google.com/) -- o nível gratuito dá 1 TB/mês de consultas; (3) `install.packages("basedosdados")`.
 </div>
 
 ```{r bq-setup, eval=FALSE}
@@ -415,34 +464,28 @@ con <- DBI::dbConnect(
 ## 4.2 Composição racial por município (Censo 2022)
 
 ```{r censo-municipios, eval=FALSE}
-pop_municipios <- sidrar::get_sidra(
-  x        = 9605,
-  variable = 93,
-  geo      = "City"
-)
+pop_municipios <- get_sidra(x = 9605, variable = 93, geo = "City")
 
 prop_negros_mun <- pop_municipios %>%
-  dplyr::select(
+  select(
     id_municipio_sidra = `Município (Código)`,
     municipio          = Município,
     cor_raca           = `Cor ou raça`,
     populacao          = Valor
   ) %>%
-  dplyr::filter(cor_raca != "Total", !is.na(populacao)) %>%
-  dplyr::mutate(
-    grupo = dplyr::case_when(
-      cor_raca %in% c("Preta", "Parda") ~ "Negros",
-      TRUE                              ~ cor_raca
-    )
-  ) %>%
-  dplyr::group_by(id_municipio_sidra, municipio, grupo) %>%
-  dplyr::summarise(populacao = sum(populacao), .groups = "drop") %>%
-  dplyr::group_by(id_municipio_sidra) %>%
-  dplyr::mutate(prop = populacao / sum(populacao)) %>%
-  dplyr::ungroup() %>%
-  dplyr::filter(grupo == "Negros") %>%
-  dplyr::select(id_municipio_sidra, municipio, prop_negros = prop) %>%
-  dplyr::mutate(id_municipio = stringr::str_sub(as.character(id_municipio_sidra), 1, 6))
+  filter(cor_raca != "Total", !is.na(populacao)) %>%
+  mutate(grupo = case_when(
+    cor_raca %in% c("Preta", "Parda") ~ "Negros",
+    TRUE                              ~ cor_raca
+  )) %>%
+  group_by(id_municipio_sidra, municipio, grupo) %>%
+  summarise(populacao = sum(populacao), .groups = "drop") %>%
+  group_by(id_municipio_sidra) %>%
+  mutate(prop = populacao / sum(populacao)) %>%
+  ungroup() %>%
+  filter(grupo == "Negros") %>%
+  select(id_municipio_sidra, municipio, prop_negros = prop) %>%
+  mutate(id_municipio = stringr::str_sub(as.character(id_municipio_sidra), 1, 6))
 ```
 
 ## 4.3 Candidatos negros por município (TSE 2022)
@@ -455,58 +498,51 @@ query_tse <- "
     COUNT(*) AS n_candidatos,
     COUNTIF(resultado = 'Eleito') AS n_eleitos
   FROM `basedosdados.br_tse_eleicoes.candidatos`
-  WHERE
-    ano = 2022
-    AND cargo = 'Vereador'
-    AND raca IS NOT NULL
+  WHERE ano = 2022 AND cargo = 'Vereador' AND raca IS NOT NULL
   GROUP BY id_municipio, raca
 "
 
 df_tse <- DBI::dbGetQuery(con, query_tse)
 
 prop_negros_tse <- df_tse %>%
-  dplyr::mutate(
-    grupo_tse = dplyr::case_when(
-      cor_raca_tse %in% c("PRETA", "PARDA") ~ "Negros",
-      TRUE                                   ~ cor_raca_tse
-    )
-  ) %>%
-  dplyr::group_by(id_municipio, grupo_tse) %>%
-  dplyr::summarise(
-    candidatos = sum(n_candidatos),
-    eleitos    = sum(n_eleitos),
-    .groups    = "drop"
-  ) %>%
-  dplyr::group_by(id_municipio) %>%
-  dplyr::mutate(
+  mutate(grupo_tse = case_when(
+    cor_raca_tse %in% c("PRETA", "PARDA") ~ "Negros",
+    TRUE                                   ~ cor_raca_tse
+  )) %>%
+  group_by(id_municipio, grupo_tse) %>%
+  summarise(candidatos = sum(n_candidatos), eleitos = sum(n_eleitos), .groups = "drop") %>%
+  group_by(id_municipio) %>%
+  mutate(
     prop_cand_negros    = candidatos / sum(candidatos),
     prop_eleitos_negros = eleitos    / sum(eleitos)
   ) %>%
-  dplyr::ungroup() %>%
-  dplyr::filter(grupo_tse == "Negros") %>%
-  dplyr::select(id_municipio, prop_cand_negros, prop_eleitos_negros)
+  ungroup() %>%
+  filter(grupo_tse == "Negros") %>%
+  select(id_municipio, prop_cand_negros, prop_eleitos_negros)
 ```
 
 ## 4.4 Cruzamento e gráfico
 
+O gráfico de dispersão mostra a relação entre composição racial da população e representação política. A linha pontilhada é a representação proporcional perfeita: pontos abaixo indicam sub-representação.
+
 ```{r cruzamento, eval=FALSE}
 df_cruzado <- prop_negros_mun %>%
-  dplyr::inner_join(prop_negros_tse, by = "id_municipio") %>%
-  dplyr::filter(!is.na(prop_cand_negros), !is.na(prop_negros))
+  inner_join(prop_negros_tse, by = "id_municipio") %>%
+  filter(!is.na(prop_cand_negros), !is.na(prop_negros))
 
 ggplot(df_cruzado, aes(x = prop_negros, y = prop_eleitos_negros)) +
   geom_point(alpha = 0.4, color = "#0f2a4a", size = 1.5) +
   geom_smooth(method = "lm", color = "#1a6fa8", se = TRUE) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed",
               color = "#e6a817", linewidth = 0.8) +
-  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
   labs(
-    title    = "Populacao negra e eleitos negros por municipio -- Brasil, 2022",
-    subtitle = "Linha pontilhada = representacao proporcional",
-    x        = "Proporcao de negros na populacao (Censo 2022)",
-    y        = "Proporcao de vereadores negros eleitos (TSE 2022)",
-    caption  = "Fontes: IBGE, Censo Demografico 2022 (SIDRA); TSE, Candidatos 2022 (Base dos Dados)."
+    title    = "População negra e vereadores negros eleitos por município -- Brasil, 2022",
+    subtitle = "Linha pontilhada = representação proporcional",
+    x        = "Proporção de negros na população (Censo 2022)",
+    y        = "Proporção de vereadores negros eleitos (TSE 2022)",
+    caption  = "Fontes: IBGE, Censo Demográfico 2022 (SIDRA); TSE, Candidatos 2022 (Base dos Dados)."
   ) +
   theme_minimal() +
   theme(
