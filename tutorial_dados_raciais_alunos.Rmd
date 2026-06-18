@@ -193,12 +193,20 @@ A [Base dos Dados](https://basedosdados.org/) é uma plataforma que disponibiliz
 
 # Configuração inicial
 
-```{r configuracao}
+```{r configuracao, error=TRUE}
+# Locale garante leitura correta de acentos e datas em português
 Sys.setlocale(category = "LC_ALL", locale = "pt_BR.UTF-8")
 
-# Defina sua pasta de trabalho -- ajuste se necessário
-# Exemplos: try(setwd("~/Downloads"), silent = TRUE) ou setwd("~/Documents/aula_raciais")
-try(setwd("~/Downloads"), silent = TRUE)
+# Configuracao global dos blocos de código:
+# echo = TRUE mostra o código; warning/message = FALSE omite avisos técnicos
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+# Diretório de trabalho -- ajuste para a pasta da aula
+setwd("~/Downloads")
 
 dir.create("dados",    showWarnings = FALSE)
 dir.create("graficos", showWarnings = FALSE)
@@ -434,6 +442,8 @@ cores_censo <- c(
 
 ## 5.2 Composição racial por região (Censo 2022)
 
+O gráfico mostra a distribuição das categorias censitárias em cada grande região. A proporção de negros varia bastante entre regiões, o que já sugere que cruzar esse dado com representação política precisará levar o recorte geográfico em conta.
+
 ```{r grafico-distribuicao, fig.height=5.5}
 ordem_regioes <- c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")
 
@@ -473,6 +483,8 @@ pop_grupo %>%
 ```
 
 ## 5.3 Rendimento médio por cor ou raça
+
+O gráfico usa as estimativas de `df_renda_sim`, que reproduzem os valores da PNADC 2022. O objetivo é ver a distribuição do rendimento médio entre as cinco categorias censitárias e calcular a razão branco/negro.
 
 ```{r grafico-renda, fig.height=5}
 ggplot(df_renda_sim, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
@@ -677,6 +689,8 @@ ggplot(df_cruzado_sim, aes(x = prop_negros, y = prop_eleitos_negros)) +
 cor_val <- cor(df_cruzado_sim$prop_negros, df_cruzado_sim$prop_eleitos_negros)
 print(paste("Correlação (prop. negros na população vs. eleitos):", round(cor_val, 3)))
 ```
+
+A correlação indica a direção e a intensidade da associação entre as duas variáveis -- mas é um passo descritivo. Para fazer afirmações sobre causalidade ou controlar por outras variáveis (porte do município, região, partido), seriam necessários modelos mais robustos. O que fazemos aqui é aprender a montar o dado: saber de onde vem cada variável e como cruzá-las já é o objetivo.
 
 <div class="callout-exercicio">
 **Exercício 3**
