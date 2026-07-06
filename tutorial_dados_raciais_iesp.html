@@ -2527,10 +2527,12 @@ erros padrão de modelos de regressão ficam incorretos nesse modo.</p>
 <h1>5 · Parte 3 – TSE: dados eleitorais</h1>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># install.packages(&quot;electionsBR&quot;)</span></span>
 <span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="fu">library</span>(electionsBR)</span></code></pre></div>
-<p>O TSE disponibiliza dados de candidaturas em formato aberto. O <a href="https://cran.r-project.org/package=electionsBR">pacote
-<code>electionsBR</code></a> faz o download diretamente do repositório
-do tribunal, sem necessidade de baixar e descompactar arquivos
-manualmente.</p>
+<p>Os dados eleitorais estão disponíveis no <a href="https://dadosabertos.tse.jus.br/">Portal de Dados Abertos do
+TSE</a> em arquivos <code>.csv</code> por eleição e por tipo de dado
+(candidatos, resultados, receitas, gastos). O <a href="https://cran.r-project.org/package=electionsBR">pacote
+<code>electionsBR</code></a> faz o download desses mesmos arquivos
+diretamente do repositório do tribunal, sem necessidade de baixar e
+descompactar manualmente.</p>
 <p>O dado racial nas bases eleitorais tem uma peculiaridade importante:
 ele é autodeclarado pelo candidato no momento do registro, sem
 verificação. A partir de 2020, o TSE começou a desenvolver procedimentos
@@ -2581,6 +2583,14 @@ IBGE</strong></td>
 </tr>
 </tbody>
 </table>
+<p>O TSE disponibiliza um segundo arquivo,
+<code>consulta_cand_complementar</code>, que precisa ser lido
+separadamente e cruzado pelo <code>SQ_CANDIDATO</code>. Ele contém
+variáveis que não estão no arquivo principal, entre elas
+<code>ST_QUILOMBOLA</code> (se o candidato se declarou quilombola) e
+<code>DS_ETNIA_INDIGENA</code> (etnia específica para candidatos
+indígenas). Para análises que incluam essas populações, o join entre os
+dois arquivos é necessário.</p>
 <div class="callout-aviso">
 <p><strong>Códigos de município incompatíveis</strong> O TSE usa um
 sistema próprio de códigos de município, diferente dos códigos IBGE

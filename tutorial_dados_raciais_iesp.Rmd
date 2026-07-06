@@ -546,7 +546,7 @@ df_renda_sim <- tibble::tribble(
 library(electionsBR)
 ```
 
-O TSE disponibiliza dados de candidaturas em formato aberto. O [pacote `electionsBR`](https://cran.r-project.org/package=electionsBR) faz o download diretamente do repositório do tribunal, sem necessidade de baixar e descompactar arquivos manualmente.
+Os dados eleitorais estão disponíveis no [Portal de Dados Abertos do TSE](https://dadosabertos.tse.jus.br/) em arquivos `.csv` por eleição e por tipo de dado (candidatos, resultados, receitas, gastos). O [pacote `electionsBR`](https://cran.r-project.org/package=electionsBR) faz o download desses mesmos arquivos diretamente do repositório do tribunal, sem necessidade de baixar e descompactar manualmente.
 
 O dado racial nas bases eleitorais tem uma peculiaridade importante: ele é autodeclarado pelo candidato no momento do registro, sem verificação. A partir de 2020, o TSE começou a desenvolver procedimentos de heteroclassificação para contrastar com a autodeclaração, o que revelou discrepâncias relevantes -- especialmente em partidos que aumentaram as candidaturas negras por exigências de financiamento proporcional. Para as eleições de 2022, usamos o campo `DS_COR_RACA`, que registra a autodeclaração.
 
@@ -560,6 +560,8 @@ O dado racial nas bases eleitorais tem uma peculiaridade importante: ele é auto
 | `SG_UF` | Estado |
 | `CD_MUNICIPIO` | Código TSE do município -- **diferente do código IBGE** |
 | `NM_MUNICIPIO` | Nome do município |
+
+O TSE disponibiliza um segundo arquivo, `consulta_cand_complementar`, que precisa ser lido separadamente e cruzado pelo `SQ_CANDIDATO`. Ele contém variáveis que não estão no arquivo principal, entre elas `ST_QUILOMBOLA` (se o candidato se declarou quilombola) e `DS_ETNIA_INDIGENA` (etnia específica para candidatos indígenas). Para análises que incluam essas populações, o join entre os dois arquivos é necessário.
 
 <div class="callout-aviso">
 **Códigos de município incompatíveis**
