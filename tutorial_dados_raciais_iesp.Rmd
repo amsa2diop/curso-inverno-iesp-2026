@@ -212,8 +212,8 @@ Antes de entrar no código, vale ter uma visão geral de quando e onde a variáv
 **Censo Escolar: acesso restrito aos microdados individuais**
 Os microdados do Censo Escolar têm variável de cor ou raça por aluno (`TP_COR_RACA`) desde 2005. O INEP restringiu o acesso a dados individuais por conta da LGPD: o dado granular está disponível apenas via canais controlados (pesquisadores credenciados). Para o público geral, o acesso é a dados agregados por escola.
 
-**RAIS: dado racial de baixa cobertura**
-A RAIS tem variável de cor ou raça desde 1999, com acesso público a partir da edição de 2006. O preenchimento é feito pelo empregador -- portanto, heteroidentificação, não autodeclaração. O problema central é a cobertura: mais de 90% dos registros não têm raça informada. O IPEA disponibiliza uma versão com imputação racial para suprir essa lacuna (ver [repositorio.ipea.gov.br](https://repositorio.ipea.gov.br/entities/publication/f712b1d5-e0bf-4399-acce-0d5c22797464)).
+**RAIS: dado racial de cobertura desigual**
+A RAIS tem variável de cor ou raça desde 1999, com acesso público a partir da edição de 2006. O preenchimento é feito pelo empregador -- portanto, heteroidentificação, não autodeclaração. A cobertura varia muito por setor: no setor privado, cerca de 13% dos vínculos não têm raça informada; no setor público estatutário, esse percentual chegou a 100% em 2019. Para este último grupo, Silveira (2022) propõe uma estratégia de imputação combinando registros históricos e imputação múltipla (MICE), disponível como nota técnica do IPEA ([repositorio.ipea.gov.br](https://repositorio.ipea.gov.br/entities/publication/f712b1d5-e0bf-4399-acce-0d5c22797464)).
 </div>
 
 ## 2.2 Documentação e dicionários
@@ -285,6 +285,25 @@ Para ilustrar como trabalhar com essas bases, vamos usar uma pergunta concreta a
 Responder a ela exige o **Censo 2022** (composição racial por município) e os **dados do TSE 2024** (candidatos por raça e município). A **PNADC** entra como recurso complementar: como o Censo só acontece a cada dez anos, é ela que permite acompanhar as desigualdades raciais nos anos entre um censo e outro.
 
 A pergunta funciona como instrumento didático -- ela nos força a passar pelas três bases e entender como cada uma contribui. Primeiro respondemos com as fontes diretas (seções 3, 4 e 5), ao nível da grande região. Depois mostramos como a Base dos Dados permite descer ao nível do município com muito menos código (seção 7). Respondê-la de forma rigorosa exigiria controles e testes que estão além do escopo da aula, mas o caminho metodológico que percorremos para chegar perto já é o objetivo.
+
+```{r instalacao, eval=FALSE}
+# Rode este bloco UMA VEZ antes da aula para instalar todos os pacotes.
+# Depois, não é necessário rodar novamente.
+if (!require("pacman", quietly = TRUE)) install.packages("pacman")
+
+pacman::p_load(
+  tidyverse,    # dplyr, ggplot2, forcats e afins
+  scales,       # formatação de eixos e valores
+  sidrar,       # tabelas agregadas do IBGE via SIDRA
+  censobr,      # microdados do Censo 2022 via IPEA
+  arrow,        # necessário para coletar dados do censobr
+  PNADcIBGE,   # microdados da PNADC
+  electionsBR,  # dados eleitorais do TSE
+  basedosdados, # Base dos Dados (BigQuery)
+  DBI,          # interface de banco de dados
+  bigrquery     # conector Google BigQuery
+)
+```
 
 ```{r configuracao, error=TRUE}
 # Locale garante leitura correta de acentos e datas em português
