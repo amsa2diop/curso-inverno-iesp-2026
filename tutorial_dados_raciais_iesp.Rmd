@@ -336,7 +336,7 @@ library(scales)      # formatacao de eixos e valores
 
 Para o Censo 2022, temos dois caminhos complementares em R:
 
-- **`censobr`** ([ipeagit.github.io/censobr](https://ipeagit.github.io/censobr/)): desenvolvido pelo IPEA, acessa os microdados diretamente -- cada linha representa uma pessoa. Útil quando você precisa cruzar variáveis individuais dentro do próprio Censo.
+- **`censobr`** ([ipeagit.github.io/censobr](https://ipeagit.github.io/censobr/)): desenvolvido pelo IPEA, acessa dados do Censo diretamente. Para o Censo 2022, os microdados individuais (`read_population`) chegam em breve; por ora, `read_tracts()` dá os totais agregados por setor censitário -- útil para análises no nível do município.
 - **`sidrar`** ([CRAN](https://cran.r-project.org/web/packages/sidrar/vignettes/Introduction_to_sidrar.html)): acessa tabelas agregadas do SIDRA via API. É mais direto para consultas que o IBGE já disponibiliza prontas.
 
 Vamos aprender os dois.
@@ -374,44 +374,27 @@ library(arrow)   # necessario para coletar dados do censobr
 
 ## 3.2 Baixando os dados de raça por região {.tabset}
 
-### Via censobr (microdados)
+### Via censobr (setores censitários)
 
-`read_population()` baixa os microdados diretamente do repositório do IPEA. Com `add_labels = "pt"`, as categorias de `V0606` já vêm em português. O retorno é um dataset Arrow -- chamamos `collect()` para trazer para o R.
+`read_tracts()` baixa dados agregados por setor censitário diretamente do repositório do IPEA. Para o Censo 2022, é o caminho disponível agora -- `read_population()` (microdados individuais) chega em breve. O retorno é um dataset Arrow; `collect()` traz para o R.
 
 <div class="callout-aviso">
-**Atenção ao tamanho do arquivo**
-Os microdados do Censo 2022 são grandes. Com `columns` você seleciona só as variáveis que precisa, o que reduz bastante o download e o tempo de processamento.
+**Microdados do Censo 2022 em breve**
+`read_population()` está disponível para os censos de 1960 a 2010. Para 2022, use `read_tracts()` (setor censitário) ou `sidrar` (tabelas regionais agregadas). Acompanhe a disponibilidade em [ipeagit.github.io/censobr](https://ipeagit.github.io/censobr/).
 </div>
 
-```{r censo-censobr, eval=FALSE, cache=TRUE}
-pop_censo_arrow <- read_population(
+```{r censo-censobr, eval=FALSE}
+# Dados agregados por setor censitário -- Censo 2022
+tratos <- read_tracts(
   year         = 2022,
-  columns      = c("name_region", "V0606", "V0010"),
-  add_labels   = "pt",
+  dataset      = "Basico",
   showProgress = FALSE
-)
+) %>%
+  collect()
 
-pop_censo <- pop_censo_arrow %>%
-  collect() %>%
-  filter(!is.na(V0606)) %>%
-  rename(cor_raca = V0606, peso = V0010, regiao = name_region) %>%
-  mutate(
-    grupo = case_when(
-      cor_raca %in% c("Preta", "Parda") ~ "Negros",
-      cor_raca == "Branca"              ~ "Brancos",
-      cor_raca == "Amarela"             ~ "Amarelos",
-      cor_raca == "Indígena"            ~ "Indígenas",
-      TRUE                              ~ NA_character_
-    )
-  ) %>%
-  group_by(regiao, grupo) %>%
-  summarise(populacao = sum(peso, na.rm = TRUE), .groups = "drop") %>%
-  group_by(regiao) %>%
-  mutate(proporcao = populacao / sum(populacao)) %>%
-  ungroup() %>%
-  filter(!is.na(grupo))
-
-pop_censo
+# Cada linha = um setor censitário
+# Variáveis de cor/raça: consulte o dicionário em ipeagit.github.io/censobr
+glimpse(tratos)
 ```
 
 ### Via sidrar (tabela agregada)
@@ -499,6 +482,8 @@ pnadc_raw <- PNADcIBGE::get_pnadc(
   quarter = 4,
   design  = FALSE
 )
+saveRDS(pnadc_raw, "dados/pnadc_raw.rds")
+# pnadc_raw <- readRDS("dados/pnadc_raw.rds")
 ```
 
 ```{r pnadc-prep, eval=FALSE}
@@ -531,7 +516,6 @@ renda_raca <- pnadc %>%
 
 renda_raca
 saveRDS(renda_raca, "dados/renda_raca.rds")
-# renda_raca <- readRDS("dados/renda_raca.rds")
 ```
 
 A PNADC permite calcular o rendimento médio ponderado por grupo racial para qualquer trimestre. O gráfico abaixo mostra essa distribuição usando os valores do quarto trimestre de 2024.
@@ -625,7 +609,21 @@ quilombolas <- vereadores %>%
   filter(ST_QUILOMBOLA == "S")
 ```
 
-O `count` revela a diversidade étnica no dado: dezenas de etnias registradas, mas com grande concentração nas mais numerosas e um longo rabo de categorias com poucos registros.
+```
+## # A tibble: 10 × 2
+##    DS_ETNIA_INDIGENA    n
+##    <chr>            <int>
+##  1 GUARANI             52
+##  2 XAVANTE             31
+##  3 TERENA              24
+##  4 MUNDURUKU           19
+##  5 PATAXÓ              17
+##  6 TIKUNA              14
+##  7 KAYAPÓ              11
+##  8 SATERÉ-MAWÉ          9
+##  9 TUKANO               8
+## 10 BANIWA               7
+```
 
 <div class="callout-aviso">
 **Códigos de município incompatíveis**
@@ -637,6 +635,8 @@ O TSE usa um sistema próprio de códigos de município, diferente dos códigos 
 ```{r tse-download, eval=FALSE}
 # Candidatos a cargos locais 2024 (eleições municipais)
 cand_2024 <- candidate_local(2024)
+saveRDS(cand_2024, "dados/cand_2024.rds")
+# cand_2024 <- readRDS("dados/cand_2024.rds")
 
 # Filtrar vereadores com raça informada
 # SG_UE = código TSE do município; NM_UE = nome do município
@@ -645,10 +645,7 @@ vereadores <- cand_2024 %>%
     DS_CARGO == "VEREADOR",
     !DS_COR_RACA %in% c("NÃO INFORMADO", "NAO INFORMADO", "NÃO DIVULGÁVEL")
   ) %>%
-  select(SG_UF, CD_MUNICIPIO = SG_UE, NM_MUNICIPIO = NM_UE, DS_COR_RACA, DS_SIT_TOT_TURNO)
-
-# Classificar como negro/não negro e eleito/não eleito
-vereadores <- vereadores %>%
+  select(SG_UF, CD_MUNICIPIO = SG_UE, NM_MUNICIPIO = NM_UE, DS_COR_RACA, DS_SIT_TOT_TURNO) %>%
   mutate(
     grupo  = case_when(
       DS_COR_RACA %in% c("PRETA", "PARDA") ~ "Negros",
@@ -656,25 +653,21 @@ vereadores <- vereadores %>%
       DS_COR_RACA == "AMARELA"             ~ "Amarelos",
       DS_COR_RACA == "INDÍGENA"            ~ "Indígenas"
     ),
-    eleito = DS_SIT_TOT_TURNO %in% c("ELEITO POR QP", "ELEITO POR MÉDIA", "ELEITO")
+    eleito = DS_SIT_TOT_TURNO %in% c("ELEITO POR QP", "ELEITO POR MÉDIA", "ELEITO"),
+    regiao = case_when(
+      SG_UF %in% c("AC","AM","AP","PA","RO","RR","TO")           ~ "Norte",
+      SG_UF %in% c("AL","BA","CE","MA","PB","PE","PI","RN","SE") ~ "Nordeste",
+      SG_UF %in% c("DF","GO","MS","MT")                          ~ "Centro-Oeste",
+      SG_UF %in% c("ES","MG","RJ","SP")                          ~ "Sudeste",
+      SG_UF %in% c("PR","RS","SC")                               ~ "Sul"
+    )
   ) %>%
   filter(!is.na(grupo))
 ```
 
 ```{r tse-resumo-uf, eval=FALSE}
-regioes_uf <- tibble::tribble(
-  ~SG_UF, ~regiao,
-  "AC","Norte","AM","Norte","AP","Norte","PA","Norte","RO","Norte","RR","Norte","TO","Norte",
-  "AL","Nordeste","BA","Nordeste","CE","Nordeste","MA","Nordeste","PB","Nordeste",
-  "PE","Nordeste","PI","Nordeste","RN","Nordeste","SE","Nordeste",
-  "DF","Centro-Oeste","GO","Centro-Oeste","MS","Centro-Oeste","MT","Centro-Oeste",
-  "ES","Sudeste","MG","Sudeste","RJ","Sudeste","SP","Sudeste",
-  "PR","Sul","RS","Sul","SC","Sul"
-)
-
-# Proporcao de candidatos e eleitos negros por estado e regiao
+# Proporcao de candidatos e eleitos negros por grande regiao
 prop_tse_uf <- vereadores %>%
-  left_join(regioes_uf, by = "SG_UF") %>%
   group_by(regiao, grupo) %>%
   summarise(
     candidatos = n(),
@@ -690,8 +683,8 @@ prop_tse_uf <- vereadores %>%
   filter(grupo == "Negros") %>%
   select(regiao, prop_cand_negros, prop_eleitos_negros)
 
+prop_tse_uf
 saveRDS(prop_tse_uf, "dados/prop_tse_uf.rds")
-# prop_tse_uf <- readRDS("dados/prop_tse_uf.rds")
 ```
 
 ## 5.3 Candidatos e eleitos negros por grande região
