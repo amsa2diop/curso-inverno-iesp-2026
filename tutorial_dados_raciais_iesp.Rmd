@@ -282,7 +282,7 @@ Para ilustrar como trabalhar com essas bases, vamos usar uma pergunta concreta a
 
 > **Municípios com maior proporção de população negra elegem mais candidatos negros?**
 
-Responder a ela exige o **Censo 2022** (composição racial por município) e os **dados do TSE 2022** (candidatos por raça e município). A **PNADC** entra como recurso complementar: como o Censo só acontece a cada dez anos, é ela que permite acompanhar as desigualdades raciais nos anos entre um censo e outro.
+Responder a ela exige o **Censo 2022** (composição racial por município) e os **dados do TSE 2024** (candidatos por raça e município). A **PNADC** entra como recurso complementar: como o Censo só acontece a cada dez anos, é ela que permite acompanhar as desigualdades raciais nos anos entre um censo e outro.
 
 A pergunta funciona como instrumento didático -- ela nos força a passar pelas três bases e entender como cada uma contribui. Primeiro respondemos com as fontes diretas (seções 3, 4 e 5), ao nível da grande região. Depois mostramos como a Base dos Dados permite descer ao nível do município com muito menos código (seção 7). Respondê-la de forma rigorosa exigiria controles e testes que estão além do escopo da aula, mas o caminho metodológico que percorremos para chegar perto já é o objetivo.
 
@@ -484,7 +484,7 @@ pnadc_raw <- PNADcIBGE::get_pnadc(
 
 ```{r pnadc-prep, eval=FALSE}
 pnadc <- pnadc_raw %>%
-  select(V1028, V2007, V2010, VD3005, VD4008, VD4017) %>%
+  select(V1028, V2007, V2010, VD4008, VD4017) %>%
   mutate(
     grupo = case_when(
       V2010 %in% c("Preta", "Parda") ~ "Negros",
@@ -504,10 +504,9 @@ renda_raca <- pnadc %>%
   filter(!is.na(VD4017)) %>%
   group_by(grupo) %>%
   summarise(
-    renda_media       = weighted.mean(VD4017, w = V1028, na.rm = TRUE),
-    anos_estudo_medio = weighted.mean(VD3005, w = V1028, na.rm = TRUE),
-    n = n(),
-    .groups = "drop"
+    renda_media = weighted.mean(VD4017, w = V1028, na.rm = TRUE),
+    n           = n(),
+    .groups     = "drop"
   ) %>%
   arrange(desc(renda_media))
 
@@ -617,16 +616,17 @@ O TSE usa um sistema próprio de códigos de município, diferente dos códigos 
 ## 5.2 Baixando e preparando os dados
 
 ```{r tse-download, eval=FALSE}
-# Candidatos a cargos locais 2022 (inclui vereadores e prefeitos)
-cand_2022 <- candidate_local(2022)
+# Candidatos a cargos locais 2024 (eleições municipais)
+cand_2024 <- candidate_local(2024)
 
 # Filtrar vereadores com raça informada
-vereadores <- cand_2022 %>%
+# SG_UE = código TSE do município; NM_UE = nome do município
+vereadores <- cand_2024 %>%
   filter(
     DS_CARGO == "VEREADOR",
-    !DS_COR_RACA %in% c("NÃO INFORMADO", "NAO INFORMADO")
+    !DS_COR_RACA %in% c("NÃO INFORMADO", "NAO INFORMADO", "NÃO DIVULGÁVEL")
   ) %>%
-  select(SG_UF, CD_MUNICIPIO, NM_MUNICIPIO, DS_COR_RACA, DS_SIT_TOT_TURNO)
+  select(SG_UF, CD_MUNICIPIO = SG_UE, NM_MUNICIPIO = NM_UE, DS_COR_RACA, DS_SIT_TOT_TURNO)
 
 # Classificar como negro/não negro e eleito/não eleito
 vereadores <- vereadores %>%
@@ -701,10 +701,10 @@ df_tse_sim %>%
   scale_y_continuous(labels = percent_format(), limits = c(0, 0.85)) +
   scale_fill_manual(values = c("Candidatos" = "#5baad4", "Eleitos" = "#0f2a4a"), name = NULL) +
   labs(
-    title    = "Candidatos e eleitos negros a vereador por grande região -- 2022",
-    subtitle = "Negros = pretos + pardos (autodeclaração TSE) | dados de referência para ilustração",
+    title    = "Candidatos e eleitos negros a vereador por grande região -- 2024",
+    subtitle = "Negros = pretos + pardos (autodeclaração TSE)",
     x = NULL, y = "Proporção",
-    caption  = "Fonte: TSE, Repositório de Dados Eleitorais 2022."
+    caption  = "Fonte: TSE, Repositório de Dados Eleitorais 2024."
   ) +
   theme_minimal(base_family = "sans") +
   theme(
@@ -811,7 +811,7 @@ df_resposta <- pop_negros_regiao %>%
   ) %>%
   mutate(dimensao = recode(dimensao,
     prop_pop_negra       = "População negra (Censo 2022)",
-    prop_eleitos_negros  = "Vereadores negros eleitos (TSE 2022)"
+    prop_eleitos_negros  = "Vereadores negros eleitos (TSE 2024)"
   ))
 
 ggplot(df_resposta, aes(x = regiao, y = proporcao, fill = dimensao)) +
@@ -825,15 +825,15 @@ ggplot(df_resposta, aes(x = regiao, y = proporcao, fill = dimensao)) +
   scale_fill_manual(
     values = c(
       "População negra (Censo 2022)"         = "#5baad4",
-      "Vereadores negros eleitos (TSE 2022)" = "#0f2a4a"
+      "Vereadores negros eleitos (TSE 2024)" = "#0f2a4a"
     ),
     name = NULL
   ) +
   labs(
-    title    = "População negra e representação política por grande região -- 2022",
-    subtitle = "Negros = pretos + pardos | TSE: vereadores; dados de referência para ilustração",
+    title    = "População negra e representação política por grande região",
+    subtitle = "Negros = pretos + pardos | população: Censo 2022; vereadores: TSE 2024",
     x = NULL, y = "Proporção",
-    caption  = "Fontes: IBGE, Censo Demográfico 2022 (SIDRA); TSE, Repositório de Dados Eleitorais 2022."
+    caption  = "Fontes: IBGE, Censo Demográfico 2022 (SIDRA); TSE, Repositório de Dados Eleitorais 2024."
   ) +
   theme_minimal(base_family = "sans") +
   theme(
@@ -864,7 +864,7 @@ library(DBI)
 library(bigrquery)
 ```
 
-Na seção anterior, vimos o padrão no nível da grande região. Agora descemos ao nível do município -- cruzando o Censo 2022 (proporção de negros por município) com o TSE 2022 (candidatos e eleitos por raça). Na Base dos Dados, ambas as fontes estão disponíveis com chaves de município compatíveis no sistema IBGE, o que elimina o problema de correspondência de códigos que encontramos ao trabalhar com as fontes diretas.
+Na seção anterior, vimos o padrão no nível da grande região. Agora descemos ao nível do município -- cruzando o Censo 2022 (proporção de negros por município) com o TSE 2024 (candidatos e eleitos por raça). Na Base dos Dados, ambas as fontes estão disponíveis com chaves de município compatíveis no sistema IBGE, o que elimina o problema de correspondência de códigos que encontramos ao trabalhar com as fontes diretas.
 
 ## 7.1 Principais campos das tabelas TSE (Base dos Dados)
 
@@ -933,14 +933,14 @@ query_cruzamento <- "
       AND cor_raca IS NOT NULL
     GROUP BY id_municipio
   ),
-  -- Candidatos e eleitos negros a vereador (TSE 2022)
+  -- Candidatos e eleitos negros a vereador (TSE 2024)
   tse_mun AS (
     SELECT
       id_municipio,
       COUNTIF(raca IN ('PRETA', 'PARDA') AND resultado LIKE 'ELEITO%') * 1.0
         / NULLIF(COUNTIF(resultado LIKE 'ELEITO%'), 0) AS prop_eleitos_negros
     FROM `basedosdados.br_tse_eleicoes.candidatos`
-    WHERE ano = 2022
+    WHERE ano = 2024
       AND cargo = 'Vereador'
       AND raca IS NOT NULL
     GROUP BY id_municipio
@@ -983,7 +983,7 @@ ggplot(df_cruzado_plot, aes(x = prop_negros, y = prop_eleitos_negros)) +
     subtitle = "Linha pontilhada = representação proporcional perfeita",
     x        = "Proporção de negros na população (Censo 2022)",
     y        = "Proporção de vereadores negros eleitos (TSE 2022)",
-    caption  = "Fonte: IBGE, Censo Demográfico 2022; TSE, Repositório de Dados Eleitorais 2022."
+    caption  = "Fonte: IBGE, Censo Demográfico 2022; TSE, Repositório de Dados Eleitorais 2024."
   ) +
   theme_minimal(base_family = "sans") +
   theme(
