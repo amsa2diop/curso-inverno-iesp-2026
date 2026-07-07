@@ -474,10 +474,10 @@ Sempre que calcular médias de variáveis socioeconômicas da PNADC, use `V1028`
 ## 4.2 Baixando e preparando os dados
 
 ```{r pnadc-download, eval=FALSE}
-# Baixa PNADC 2022, 1o trimestre
+# Baixa PNADC 2024, 4o trimestre
 pnadc_raw <- PNADcIBGE::get_pnadc(
-  year    = 2022,
-  quarter = 1,
+  year    = 2024,
+  quarter = 4,
   design  = FALSE
 )
 ```
@@ -515,7 +515,7 @@ saveRDS(renda_raca, "dados/renda_raca.rds")
 # renda_raca <- readRDS("dados/renda_raca.rds")
 ```
 
-A PNADC permite calcular o rendimento médio ponderado por grupo racial para qualquer trimestre. O gráfico abaixo mostra essa distribuição usando os valores da primeira edição de 2022.
+A PNADC permite calcular o rendimento médio ponderado por grupo racial para qualquer trimestre. O gráfico abaixo mostra essa distribuição usando os valores do quarto trimestre de 2024.
 
 ```{r load-renda}
 renda_raca <- readRDS("dados/renda_raca.rds") %>%
@@ -532,7 +532,7 @@ ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   ) +
   coord_flip(clip = "off") +
   scale_y_continuous(
-    limits = c(0, 3900),
+    limits = c(0, 6500),
     labels = dollar_format(prefix = "R$ ", big.mark = ".", decimal.mark = ",")
   ) +
   scale_fill_manual(values = c(
@@ -547,10 +547,10 @@ ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
     "Indígenas" = "#7fb3d3"
   )) +
   labs(
-    title    = "Rendimento médio mensal por cor ou raça -- Brasil, 2022",
+    title    = "Rendimento médio mensal por cor ou raça -- Brasil, 2024",
     subtitle = "Trabalho principal; pessoas de 14 anos ou mais com rendimento informado",
     x = NULL, y = "Rendimento médio (R$)",
-    caption  = "Fonte: IBGE, PNAD Contínua 2022, 1º trimestre."
+    caption  = "Fonte: IBGE, PNAD Contínua 2024, 4º trimestre."
   ) +
   theme_minimal(base_family = "sans") +
   theme(
