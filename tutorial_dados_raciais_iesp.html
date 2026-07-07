@@ -2500,7 +2500,7 @@ erros padrão de modelos de regressão ficam incorretos nesse modo.</p>
 <span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a></span>
 <span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>renda_raca</span>
 <span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a><span class="fu">saveRDS</span>(renda_raca, <span class="st">&quot;dados/renda_raca.rds&quot;</span>)</span>
-<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a><span class="co"># renda_raca &lt;- readRDS(&quot;dados/renda_raca.rds&quot;)  # socorro: recarregar sem re-baixar</span></span></code></pre></div>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a><span class="co"># renda_raca &lt;- readRDS(&quot;dados/renda_raca.rds&quot;)</span></span></code></pre></div>
 <p>A PNADC permite calcular o rendimento médio ponderado por grupo
 racial para qualquer trimestre. O gráfico abaixo mostra essa
 distribuição usando os valores da primeira edição de 2022.</p>
@@ -2622,16 +2622,17 @@ indígenas). Para análises que incluam essas populações, o join entre os
 dois arquivos é necessário.</p>
 <p>Após o join, o padrão de filtragem é:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>indigenas <span class="ot">&lt;-</span> vereadores <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">filter</span>(DS_COR_RACA <span class="sc">==</span> <span class="st">&quot;INDÍGENA&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DS_ETNIA_INDIGENA =</span> <span class="fu">case_when</span>(</span>
-<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>    DS_ETNIA_INDIGENA <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;#NULO#&quot;</span>, <span class="st">&quot;NÃO DETERMINADAS&quot;</span>,</span>
-<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>                              <span class="st">&quot;NÃO INFORMADO&quot;</span>, <span class="st">&quot;NÃO SABEM&quot;</span>,</span>
-<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>                              <span class="st">&quot;SEM DECLARAÇÃO&quot;</span>) <span class="sc">~</span> <span class="cn">NA_character_</span>,</span>
-<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> DS_ETNIA_INDIGENA</span>
-<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>  ))</span>
-<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a></span>
-<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>quilombolas <span class="ot">&lt;-</span> vereadores <span class="sc">%&gt;%</span></span>
-<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>  <span class="fu">filter</span>(ST_QUILOMBOLA <span class="sc">==</span> <span class="st">&quot;S&quot;</span>)</span></code></pre></div>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">filter</span>(DS_COR_RACA <span class="sc">==</span> <span class="st">&quot;INDÍGENA&quot;</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>indigenas <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>  <span class="fu">count</span>(DS_ETNIA_INDIGENA, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>quilombolas <span class="ot">&lt;-</span> vereadores <span class="sc">%&gt;%</span></span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>  <span class="fu">filter</span>(ST_QUILOMBOLA <span class="sc">==</span> <span class="st">&quot;S&quot;</span>)</span></code></pre></div>
+<p>O <code>count</code> revela a diversidade étnica no dado: dezenas de
+etnias registradas, mas com grande concentração nas mais numerosas e um
+longo rabo de categorias com poucos registros.</p>
 <div class="callout-aviso">
 <p><strong>Códigos de município incompatíveis</strong> O TSE usa um
 sistema próprio de códigos de município, diferente dos códigos IBGE
@@ -2694,7 +2695,7 @@ dos Dados resolve esse problema na seção 7.</p>
 <span id="cb22-27"><a href="#cb22-27" tabindex="-1"></a>  <span class="fu">select</span>(regiao, prop_cand_negros, prop_eleitos_negros)</span>
 <span id="cb22-28"><a href="#cb22-28" tabindex="-1"></a></span>
 <span id="cb22-29"><a href="#cb22-29" tabindex="-1"></a><span class="fu">saveRDS</span>(prop_tse_uf, <span class="st">&quot;dados/prop_tse_uf.rds&quot;</span>)</span>
-<span id="cb22-30"><a href="#cb22-30" tabindex="-1"></a><span class="co"># prop_tse_uf &lt;- readRDS(&quot;dados/prop_tse_uf.rds&quot;)  # socorro: recarregar sem re-baixar</span></span></code></pre></div>
+<span id="cb22-30"><a href="#cb22-30" tabindex="-1"></a><span class="co"># prop_tse_uf &lt;- readRDS(&quot;dados/prop_tse_uf.rds&quot;)</span></span></code></pre></div>
 </div>
 <div id="candidatos-e-eleitos-negros-por-grande-região" class="section level2">
 <h2>5.3 Candidatos e eleitos negros por grande região</h2>
@@ -3044,7 +3045,7 @@ O código abaixo usa a estrutura esperada; ajuste se necessário.</p>
 <span id="cb30-34"><a href="#cb30-34" tabindex="-1"></a>df_cruzado <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, query_cruzamento)</span>
 <span id="cb30-35"><a href="#cb30-35" tabindex="-1"></a></span>
 <span id="cb30-36"><a href="#cb30-36" tabindex="-1"></a><span class="fu">saveRDS</span>(df_cruzado, <span class="st">&quot;dados/df_cruzado.rds&quot;</span>)</span>
-<span id="cb30-37"><a href="#cb30-37" tabindex="-1"></a><span class="co"># df_cruzado &lt;- readRDS(&quot;dados/df_cruzado.rds&quot;)  # socorro: recarregar sem re-baixar</span></span></code></pre></div>
+<span id="cb30-37"><a href="#cb30-37" tabindex="-1"></a><span class="co"># df_cruzado &lt;- readRDS(&quot;dados/df_cruzado.rds&quot;)</span></span></code></pre></div>
 </div>
 <div id="cruzamento-e-visualização" class="section level2">
 <h2>7.5 Cruzamento e visualização</h2>

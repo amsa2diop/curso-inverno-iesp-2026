@@ -513,7 +513,7 @@ renda_raca <- pnadc %>%
 
 renda_raca
 saveRDS(renda_raca, "dados/renda_raca.rds")
-# renda_raca <- readRDS("dados/renda_raca.rds")  # socorro: recarregar sem re-baixar
+# renda_raca <- readRDS("dados/renda_raca.rds")
 ```
 
 A PNADC permite calcular o rendimento médio ponderado por grupo racial para qualquer trimestre. O gráfico abaixo mostra essa distribuição usando os valores da primeira edição de 2022.
@@ -597,17 +597,17 @@ Após o join, o padrão de filtragem é:
 
 ```r
 indigenas <- vereadores %>%
-  filter(DS_COR_RACA == "INDÍGENA") %>%
-  mutate(DS_ETNIA_INDIGENA = case_when(
-    DS_ETNIA_INDIGENA %in% c("#NULO#", "NÃO DETERMINADAS",
-                              "NÃO INFORMADO", "NÃO SABEM",
-                              "SEM DECLARAÇÃO") ~ NA_character_,
-    TRUE ~ DS_ETNIA_INDIGENA
-  ))
+  filter(DS_COR_RACA == "INDÍGENA")
+
+indigenas %>%
+  count(DS_ETNIA_INDIGENA, sort = TRUE) %>%
+  head(10)
 
 quilombolas <- vereadores %>%
   filter(ST_QUILOMBOLA == "S")
 ```
+
+O `count` revela a diversidade étnica no dado: dezenas de etnias registradas, mas com grande concentração nas mais numerosas e um longo rabo de categorias com poucos registros.
 
 <div class="callout-aviso">
 **Códigos de município incompatíveis**
@@ -672,7 +672,7 @@ prop_tse_uf <- vereadores %>%
   select(regiao, prop_cand_negros, prop_eleitos_negros)
 
 saveRDS(prop_tse_uf, "dados/prop_tse_uf.rds")
-# prop_tse_uf <- readRDS("dados/prop_tse_uf.rds")  # socorro: recarregar sem re-baixar
+# prop_tse_uf <- readRDS("dados/prop_tse_uf.rds")
 ```
 
 ## 5.3 Candidatos e eleitos negros por grande região
@@ -957,7 +957,7 @@ query_cruzamento <- "
 df_cruzado <- DBI::dbGetQuery(con, query_cruzamento)
 
 saveRDS(df_cruzado, "dados/df_cruzado.rds")
-# df_cruzado <- readRDS("dados/df_cruzado.rds")  # socorro: recarregar sem re-baixar
+# df_cruzado <- readRDS("dados/df_cruzado.rds")
 ```
 
 ## 7.5 Cruzamento e visualização
