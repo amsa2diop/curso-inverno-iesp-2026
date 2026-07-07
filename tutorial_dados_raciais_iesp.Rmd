@@ -385,7 +385,7 @@ library(arrow)   # necessario para coletar dados do censobr
 
 ```{r censo-censobr, eval=FALSE}
 # Dados agregados por setor censitário -- Censo 2022
-tratos <- read_tracts(
+censo_setores <- read_tracts(
   year         = 2022,
   dataset      = "Basico",
   showProgress = FALSE
@@ -394,7 +394,7 @@ tratos <- read_tracts(
 
 # Cada linha = um setor censitário
 # Variáveis de cor/raça: consulte o dicionário em ipeagit.github.io/censobr
-glimpse(tratos)
+glimpse(censo_setores)
 ```
 
 ### Via sidrar (tabela agregada)
@@ -601,28 +601,8 @@ Após o join, o padrão de filtragem é:
 indigenas <- vereadores %>%
   filter(DS_COR_RACA == "INDÍGENA")
 
-indigenas %>%
-  count(DS_ETNIA_INDIGENA, sort = TRUE) %>%
-  head(10)
-
 quilombolas <- vereadores %>%
   filter(ST_QUILOMBOLA == "S")
-```
-
-```
-## # A tibble: 10 × 2
-##    DS_ETNIA_INDIGENA    n
-##    <chr>            <int>
-##  1 GUARANI             52
-##  2 XAVANTE             31
-##  3 TERENA              24
-##  4 MUNDURUKU           19
-##  5 PATAXÓ              17
-##  6 TIKUNA              14
-##  7 KAYAPÓ              11
-##  8 SATERÉ-MAWÉ          9
-##  9 TUKANO               8
-## 10 BANIWA               7
 ```
 
 <div class="callout-aviso">
@@ -667,7 +647,7 @@ vereadores <- cand_2024 %>%
 
 ```{r tse-resumo-uf, eval=FALSE}
 # Proporcao de candidatos e eleitos negros por grande regiao
-prop_tse_uf <- vereadores %>%
+tse_regioes <- vereadores %>%
   group_by(regiao, grupo) %>%
   summarise(
     candidatos = n(),
@@ -683,8 +663,8 @@ prop_tse_uf <- vereadores %>%
   filter(grupo == "Negros") %>%
   select(regiao, prop_cand_negros, prop_eleitos_negros)
 
-prop_tse_uf
-saveRDS(prop_tse_uf, "dados/prop_tse_uf.rds")
+tse_regioes
+saveRDS(tse_regioes, "dados/tse_regioes.rds")
 ```
 
 ## 5.3 Candidatos e eleitos negros por grande região
@@ -692,11 +672,11 @@ saveRDS(prop_tse_uf, "dados/prop_tse_uf.rds")
 O gráfico abaixo compara a proporção de candidatos negros com a proporção de eleitos negros por grande região. A diferença entre as duas colunas mostra se negros chegam ao cargo na mesma proporção em que disputam -- ou se há uma perda no caminho das candidaturas para os mandatos.
 
 ```{r load-tse}
-df_tse_sim <- readRDS("dados/prop_tse_uf.rds")
+tse_regioes <- readRDS("dados/tse_regioes.rds")
 ```
 
 ```{r grafico-tse, fig.height=5}
-df_tse_sim %>%
+tse_regioes %>%
   tidyr::pivot_longer(
     cols = c(prop_cand_negros, prop_eleitos_negros),
     names_to  = "tipo",
@@ -802,7 +782,7 @@ pop_grupo %>%
 
 ## 6.3 Respondendo à pergunta: Censo + TSE por grande região
 
-Temos agora os ingredientes para dar uma primeira resposta à pergunta da aula. Usamos `pop_grupo` (Censo, seção 3) para a composição racial da população e `df_tse_sim` (TSE, seção 5) para a representação política. A pergunta é: regiões com mais negros elegem proporcionalmente mais vereadores negros?
+Temos agora os ingredientes para dar uma primeira resposta à pergunta da aula. Usamos `pop_grupo` (Censo, seção 3) para a composição racial da população e `tse_regioes` (TSE, seção 5) para a representação política. A pergunta é: regiões com mais negros elegem proporcionalmente mais vereadores negros?
 
 ```{r resposta-regional, fig.height=5.5}
 ordem_regioes <- c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")
@@ -815,7 +795,7 @@ pop_negros_regiao <- pop_grupo %>%
 
 # Juntar com dados TSE
 df_resposta <- pop_negros_regiao %>%
-  left_join(df_tse_sim, by = "regiao") %>%
+  left_join(tse_regioes, by = "regiao") %>%
   tidyr::pivot_longer(
     cols      = c(prop_pop_negra, prop_eleitos_negros),
     names_to  = "dimensao",
@@ -914,11 +894,12 @@ Você precisa de: (1) conta Google; (2) projeto no [Google Cloud Platform](https
 ```{r bq-config, eval=FALSE}
 bigrquery::bq_auth()
 
-basedosdados::set_billing_id("seu-projeto-no-gcp")   # <-- substitua
+meu_projeto_gcp <- "seu-projeto-no-gcp"   # <-- substitua pelo ID do seu projeto GCP
+basedosdados::set_billing_id(meu_projeto_gcp)
 
 con <- DBI::dbConnect(
   bigrquery::bigquery(),
-  billing = "seu-projeto-no-gcp",
+  billing = meu_projeto_gcp,
   project = "basedosdados"
 )
 ```
@@ -966,22 +947,22 @@ query_cruzamento <- "
   WHERE t.prop_eleitos_negros IS NOT NULL
 "
 
-df_cruzado <- DBI::dbGetQuery(con, query_cruzamento)
+censo_tse_municipios <- DBI::dbGetQuery(con, query_cruzamento)
 
-saveRDS(df_cruzado, "dados/df_cruzado.rds")
-# df_cruzado <- readRDS("dados/df_cruzado.rds")
+saveRDS(censo_tse_municipios, "dados/censo_tse_municipios.rds")
+# censo_tse_municipios <- readRDS("dados/censo_tse_municipios.rds")
 ```
 
 ## 7.5 Cruzamento e visualização
 
 ```{r load-cruzado}
-df_cruzado_plot <- readRDS("dados/df_cruzado.rds")
+censo_tse_municipios <- readRDS("dados/censo_tse_municipios.rds")
 ```
 
 A linha pontilhada diagonal representa a representação proporcional perfeita: municípios nessa linha elegem vereadores negros exatamente na proporção da população negra local. Municípios abaixo da linha -- a maioria -- têm representação menor do que a composição da população sugeriria.
 
 ```{r grafico-cruzamento}
-ggplot(df_cruzado_plot, aes(x = prop_negros, y = prop_eleitos_negros)) +
+ggplot(censo_tse_municipios, aes(x = prop_negros, y = prop_eleitos_negros)) +
   geom_point(alpha = 0.35, color = "#0f2a4a", size = 1.5) +
   geom_smooth(method = "lm", color = "#1a6fa8", se = TRUE) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed",
@@ -1010,7 +991,7 @@ ggplot(df_cruzado_plot, aes(x = prop_negros, y = prop_eleitos_negros)) +
 O eixo X mostra a proporção de negros na população de cada município (Censo 2022). O eixo Y mostra a proporção de vereadores negros eleitos (TSE 2022). Se a representação fosse proporcional, todos os pontos estariam sobre a linha pontilhada.
 
 ```{r correlacao}
-cor_val <- cor(df_cruzado_plot$prop_negros, df_cruzado_plot$prop_eleitos_negros)
+cor_val <- cor(censo_tse_municipios$prop_negros, censo_tse_municipios$prop_eleitos_negros)
 print(paste("Correlação (prop. negros na população vs. eleitos):", round(cor_val, 3)))
 ```
 
@@ -1018,7 +999,7 @@ A correlação indica a direção e intensidade da associação entre as duas va
 
 <div class="callout-pratica">
 **Para ir além**
-Com os dados reais (após rodar as seções 7.3-7.4), filtre `df_cruzado` para municípios com mais de 50.000 habitantes e refaça o gráfico. O padrão muda em municípios maiores?
+Com os dados reais (após rodar as seções 7.3-7.4), filtre `censo_tse_municipios` para municípios com mais de 50.000 habitantes e refaça o gráfico. O padrão muda em municípios maiores?
 </div>
 
 ---
