@@ -156,7 +156,6 @@ Na autodeclaração, a própria pessoa se classifica. Na heteroidentificação, 
 | Dimensão | Autodeclaração | Heteroidentificação |
 |---|---|---|
 | Quem classifica | O próprio indivíduo | Terceiro(s) |
-| Critério | Identidade subjetiva | Aparência fenotípica |
 | Uso principal | Censos, PNADs | Cotas, políticas afirmativas |
 
 ## 1.2 A categoria analítica "negros"
@@ -207,14 +206,14 @@ Antes de entrar no código, vale ter uma visão geral de quando e onde a variáv
 | [TSE -- candidatos](#dados-eleitorais-tse) | Registro de candidaturas e resultados eleitorais | 2014 | Candidato |
 | [Censo Escolar (INEP)](#outros-recursos) | Levantamento anual de matrículas e infraestrutura escolar | 2005 | Escola (ver nota) |
 | [SUS -- SINASC e SIM](#outros-recursos) | Registro de nascimentos e óbitos | 1996 | Evento vital |
-| [RAIS](#outros-recursos) | Registro anual de vínculos formais de trabalho (MTE) | Sem dado oficial | -- |
+| [RAIS](#outros-recursos) | Registro anual de vínculos formais de trabalho (MTE) | 2006 (acesso público) | Vínculo |
 
 <div class="callout-aviso">
 **Censo Escolar: acesso restrito aos microdados individuais**
 Os microdados do Censo Escolar têm variável de cor ou raça por aluno (`TP_COR_RACA`) desde 2005. O INEP restringiu o acesso a dados individuais por conta da LGPD: o dado granular está disponível apenas via canais controlados (pesquisadores credenciados). Para o público geral, o acesso é a dados agregados por escola.
 
 **RAIS: dado racial de baixa cobertura**
-A RAIS tem variável de cor ou raça desde 1999, com acesso público a partir da edição de 2006. O preenchimento é feito pelo empregador -- portanto, heteroidentificação, não autodeclaração. O problema central é a cobertura: mais de 90% dos registros não têm raça informada. O IBGE e o IPEA recomendam cautela ao usar a RAIS para análises raciais por essa razão.
+A RAIS tem variável de cor ou raça desde 1999, com acesso público a partir da edição de 2006. O preenchimento é feito pelo empregador -- portanto, heteroidentificação, não autodeclaração. O problema central é a cobertura: mais de 90% dos registros não têm raça informada. O IPEA disponibiliza uma versão com imputação racial para suprir essa lacuna (ver [repositorio.ipea.gov.br](https://repositorio.ipea.gov.br/entities/publication/f712b1d5-e0bf-4399-acce-0d5c22797464)).
 </div>
 
 ## 2.2 Documentação e dicionários
@@ -512,39 +511,17 @@ renda_raca <- pnadc %>%
   ) %>%
   arrange(desc(renda_media))
 
-# Salvar para uso offline na aula:
+renda_raca
 saveRDS(renda_raca, "dados/renda_raca.rds")
-```
-
-## 4.4 Rendimento por cor ou raça
-
-```{r load-renda}
-# Carrega o arquivo salvo na seção 4.3 (se disponível)
-# Caso contrário, usa estimativas de referência da PNADC 2022
-if (file.exists("dados/renda_raca.rds")) {
-  renda_raca <- readRDS("dados/renda_raca.rds") %>%
-    mutate(cor_raca = grupo,
-           cor_raca = forcats::fct_reorder(cor_raca, renda_media))
-} else {
-  renda_raca <- tibble::tribble(
-    ~cor_raca,   ~renda_media, ~anos_estudo_medio,
-    "Branca",        2917,          9.8,
-    "Amarela",       3282,         10.5,
-    "Preta",         1563,          8.2,
-    "Parda",         1533,          8.0,
-    "Indígena",      1248,          7.1
-  ) %>%
-    mutate(
-      grupo    = case_when(
-        cor_raca %in% c("Preta", "Parda") ~ "Negros",
-        TRUE                              ~ cor_raca
-      ),
-      cor_raca = forcats::fct_reorder(cor_raca, renda_media)
-    )
-}
+# renda_raca <- readRDS("dados/renda_raca.rds")  # socorro: recarregar sem re-baixar
 ```
 
 A PNADC permite calcular o rendimento médio ponderado por grupo racial para qualquer trimestre. O gráfico abaixo mostra essa distribuição usando os valores da primeira edição de 2022.
+
+```{r load-renda}
+renda_raca <- readRDS("dados/renda_raca.rds") %>%
+  mutate(cor_raca = forcats::fct_reorder(grupo, renda_media))
+```
 
 ```{r grafico-renda-pnadc, fig.height=5}
 ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
@@ -601,7 +578,7 @@ library(electionsBR)
 
 Os dados eleitorais estão disponíveis no [Portal de Dados Abertos do TSE](https://dadosabertos.tse.jus.br/) em arquivos `.csv` por eleição e por tipo de dado (candidatos, resultados, receitas, gastos). O [pacote `electionsBR`](https://cran.r-project.org/package=electionsBR) faz o download desses mesmos arquivos diretamente do repositório do tribunal, sem necessidade de baixar e descompactar manualmente.
 
-O dado racial nas bases eleitorais é nominalmente autodeclarado pelo candidato no momento do registro. Na prática, porém, quem preenche esse campo com frequência é o funcionário do partido durante o processo de filiação, não o candidato diretamente. Isso significa que `DS_COR_RACA` registra uma declaração formal -- mas não necessariamente uma identidade racial escolhida pelo próprio candidato. Trabalhos que exploram essa distinção, como Almeida (2025), mostram que as discrepâncias são relevantes, especialmente nos partidos que aumentaram candidaturas negras por exigências de financiamento proporcional.
+O dado racial nas bases eleitorais é nominalmente autodeclarado pelo candidato no momento do registro. Na prática, porém, quem preenche esse campo com frequência é o funcionário do partido durante o processo de filiação, não o candidato diretamente. Isso significa que `DS_COR_RACA` registra uma declaração formal -- mas não necessariamente uma identidade racial escolhida pelo próprio candidato. As discrepâncias são relevantes, especialmente nos partidos que aumentaram candidaturas negras por exigências de financiamento proporcional.
 
 ## 5.1 Principais variáveis
 
@@ -615,6 +592,22 @@ O dado racial nas bases eleitorais é nominalmente autodeclarado pelo candidato 
 | `NM_MUNICIPIO` | Nome do município |
 
 O TSE disponibiliza um segundo arquivo, `consulta_cand_complementar`, que precisa ser lido separadamente e cruzado pelo `SQ_CANDIDATO`. Ele contém variáveis que não estão no arquivo principal, entre elas `ST_QUILOMBOLA` (se o candidato se declarou quilombola) e `DS_ETNIA_INDIGENA` (etnia específica para candidatos indígenas). Para análises que incluam essas populações, o join entre os dois arquivos é necessário.
+
+Após o join, o padrão de filtragem é:
+
+```r
+indigenas <- vereadores %>%
+  filter(DS_COR_RACA == "INDÍGENA") %>%
+  mutate(DS_ETNIA_INDIGENA = case_when(
+    DS_ETNIA_INDIGENA %in% c("#NULO#", "NÃO DETERMINADAS",
+                              "NÃO INFORMADO", "NÃO SABEM",
+                              "SEM DECLARAÇÃO") ~ NA_character_,
+    TRUE ~ DS_ETNIA_INDIGENA
+  ))
+
+quilombolas <- vereadores %>%
+  filter(ST_QUILOMBOLA == "S")
+```
 
 <div class="callout-aviso">
 **Códigos de município incompatíveis**
@@ -678,8 +671,8 @@ prop_tse_uf <- vereadores %>%
   filter(grupo == "Negros") %>%
   select(regiao, prop_cand_negros, prop_eleitos_negros)
 
-# Salvar para uso offline na aula:
 saveRDS(prop_tse_uf, "dados/prop_tse_uf.rds")
+# prop_tse_uf <- readRDS("dados/prop_tse_uf.rds")  # socorro: recarregar sem re-baixar
 ```
 
 ## 5.3 Candidatos e eleitos negros por grande região
@@ -687,23 +680,7 @@ saveRDS(prop_tse_uf, "dados/prop_tse_uf.rds")
 O gráfico abaixo compara a proporção de candidatos negros com a proporção de eleitos negros por grande região. A diferença entre as duas colunas mostra se negros chegam ao cargo na mesma proporção em que disputam -- ou se há uma perda no caminho das candidaturas para os mandatos.
 
 ```{r load-tse}
-# Carrega o arquivo salvo na seção 5.2 (se disponível)
-if (file.exists("dados/prop_tse_uf.rds")) {
-  df_tse_sim <- readRDS("dados/prop_tse_uf.rds") %>%
-    mutate(regiao = factor(regiao,
-      levels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")))
-} else {
-  df_tse_sim <- tibble::tribble(
-    ~regiao,        ~prop_cand_negros, ~prop_eleitos_negros,
-    "Norte",               0.66,               0.55,
-    "Nordeste",            0.72,               0.62,
-    "Centro-Oeste",        0.53,               0.44,
-    "Sudeste",             0.45,               0.36,
-    "Sul",                 0.22,               0.18
-  ) %>%
-    mutate(regiao = factor(regiao,
-      levels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")))
-}
+df_tse_sim <- readRDS("dados/prop_tse_uf.rds")
 ```
 
 ```{r grafico-tse, fig.height=5}
@@ -979,30 +956,14 @@ query_cruzamento <- "
 
 df_cruzado <- DBI::dbGetQuery(con, query_cruzamento)
 
-# Salvar para uso offline na aula:
 saveRDS(df_cruzado, "dados/df_cruzado.rds")
+# df_cruzado <- readRDS("dados/df_cruzado.rds")  # socorro: recarregar sem re-baixar
 ```
 
 ## 7.5 Cruzamento e visualização
 
 ```{r load-cruzado}
-# Carrega o arquivo salvo na seção 7.3 (se disponível)
-if (file.exists("dados/df_cruzado.rds")) {
-  df_cruzado_plot <- readRDS("dados/df_cruzado.rds")
-} else {
-  # Fallback: padrão simulado para visualização no HTML
-  set.seed(42)
-  n <- 500
-  df_cruzado_plot <- tibble::tibble(
-    prop_negros = runif(n, 0.05, 0.92),
-    ruido       = rnorm(n, 0, 0.09)
-  ) %>%
-    mutate(
-      prop_eleitos_negros = pmin(0.95, pmax(0.01,
-        0.38 * prop_negros + 0.04 + ruido))
-    ) %>%
-    select(-ruido)
-}
+df_cruzado_plot <- readRDS("dados/df_cruzado.rds")
 ```
 
 A linha pontilhada diagonal representa a representação proporcional perfeita: municípios nessa linha elegem vereadores negros exatamente na proporção da população negra local. Municípios abaixo da linha -- a maioria -- têm representação menor do que a composição da população sugeriria.
