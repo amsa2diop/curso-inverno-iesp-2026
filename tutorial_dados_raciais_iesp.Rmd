@@ -158,9 +158,20 @@ Na autodeclaração, a própria pessoa se classifica. Na heteroidentificação, 
 | Quem classifica | O próprio indivíduo | Terceiro(s) |
 | Uso principal | Censos, PNADs | Cotas, políticas afirmativas |
 
-## 1.2 A categoria analítica "negros": por que somar preto e pardo?
+## 1.2 Categorias raciais no Brasil: história e a questão analítica dos "negros"
 
-A operação mais comum na análise de desigualdade racial no Brasil é somar pretos e pardos para formar a categoria "negros". O procedimento não é óbvio -- afinal, o IBGE usa cinco categorias distintas -- e foi objeto de debate metodológico e político por décadas.
+A operação mais comum na análise de desigualdade racial no Brasil é somar pretos e pardos para formar a categoria "negros". Para entendê-la é preciso saber como essas categorias foram construídas historicamente -- e por que a agregação passou a fazer sentido tanto metodológico quanto político.
+
+### Histórico nos censos
+
+A classificação racial nas pesquisas públicas tem história. O Censo de 1872 -- o primeiro -- dividia a população por "raça" (pretos, pardos, brancos e caboclos) e por "condição" (livre, liberto ou escravo). Essa classificação não descrevia pigmentação: como argumenta Camargo (2009), ela "buscava definir lugares sociais, nos quais etnia e condição estavam indissociavelmente ligadas". A ausência de uma categoria de cor para a população branca era, naquela sociedade escravocrata, um signo de cidadania.
+
+O Censo de 1890 refletiu o positivismo da nascente República e as teses de branqueamento da época: inseriu "mestiços" como categoria, suprimiu a variável "frequência escolar" e introduziu perguntas sobre imigração. Em 1920, o quesito cor foi suprimido completamente; retornou em 1940, com a criação do IBGE e a consolidação de uma comunidade técnica especializada. As cinco categorias atuais -- branca, preta, amarela, parda e indígena -- foram consolidadas no Censo de 1991 e mantidas em 2022.
+
+<div class="callout-aviso">
+**Descontinuidades históricas**
+As categorias mudaram entre 1872, 1890, 1940 e 1991. Comparações diretas entre censos exigem atenção: "pardo" em 1872 não capturava o mesmo fenômeno social que "parda" em 2022. O [pacote `censobr`](https://ipeagit.github.io/censobr/) permite acessar os formulários e dicionários de variáveis de cada edição.
+</div>
 
 ### Origem sociológica da agregação
 
@@ -170,16 +181,20 @@ Esse achado foi confirmado por pesquisas subsequentes: Henriques (2001), Soares 
 
 ### O debate político
 
-A sociologia produziu a evidência; o movimento negro criou o vocabulário. Como analisa Campos (2013), ao longo dos anos 1980 e 1990 as organizações negras passaram a defender que pretos e pardos fossem denominados "negros" -- não apenas por conveniência analítica, mas como projeto político de construção de identidade. A redenominação invertia a carga negativa historicamente associada à palavra e criava uma base demográfica expressiva (aproximadamente metade da população) para demandar políticas públicas.
+A sociologia produziu a evidência; o movimento negro criou o vocabulário. Ao longo dos anos 1980 e 1990, as organizações negras passaram a defender que pretos e pardos fossem denominados "negros" -- não apenas por conveniência analítica, mas como projeto político de construção de identidade. A redenominação invertia a carga negativa historicamente associada à palavra e criava uma base demográfica expressiva (aproximadamente metade da população) para demandar políticas públicas.
 
-Quando as universidades brasileiras começaram a implementar cotas nos anos 2000, esse debate ganhou contornos práticos: quem eram os "beneficiários"? O estado do Rio de Janeiro usou inicialmente "pardos e negros" (mesclando nomenclaturas); a UnB exigiu que o candidato "se declare negro"; a lei federal de 2012 adotou o modelo do IBGE (pretos e pardos). A Tabela 2 de Campos (2013) documenta a variedade de modelos classificatórios adotados pelas universidades públicas brasileiras.
+Para Campos (2013), o pardo "deixou de ser um simples obstáculo epistemológico para as ciências sociais para se tornar dilema político para o Estado brasileiro". Em pesquisa aberta do IBGE (1998), 134 categorias espontâneas foram usadas por brasileiros para descrever sua cor -- mas 90% se concentraram em apenas 14 termos, e quase metade escolheu apenas dois: "branca" e "parda". A fluidez do sistema, frequentemente citada para questionar a viabilidade de políticas raciais, coexiste com uma estrutura de desigualdade surpreendentemente estável.
+
+Quando as universidades implementaram cotas nos anos 2000, o debate ganhou contornos práticos: quem eram os beneficiários? O estado do Rio de Janeiro usou inicialmente "pardos e negros"; a UnB exigiu que o candidato "se declare negro"; a lei federal de 2012 adotou o modelo do IBGE (pretos e pardos). A Tabela 2 de Campos (2013) documenta a variedade de modelos classificatórios adotados pelas universidades públicas.
 
 ### Evidência empírica
 
-A justificativa empírica para a agregação pode ser vista diretamente nos dados da PNADC 2024. A tabela abaixo reúne dois indicadores centrais -- rendimento médio mensal do trabalho principal e percentual com ensino superior completo -- para cada uma das cinco categorias do IBGE.
+Os gráficos abaixo mostram rendimento médio mensal e percentual com ensino superior para cada uma das cinco categorias do IBGE -- sem colapsar preto e pardo.
 
-```{r tabela-desigualdade-racial, echo=FALSE, cache=TRUE, message=FALSE}
-suppressPackageStartupMessages({ library(PNADcIBGE); library(survey) })
+```{r graficos-desigualdade-racial, echo=FALSE, cache=TRUE, message=FALSE, fig.width=5, fig.height=4.5, fig.show='hold', out.width='48%'}
+suppressPackageStartupMessages({
+  library(PNADcIBGE); library(survey); library(ggplot2); library(scales)
+})
 
 pnadc_raw <- readRDS("dados/pnadc_raw.rds")
 pnadc_ds  <- PNADcIBGE::pnadc_design(data_pnadc = pnadc_raw)
@@ -203,38 +218,52 @@ escol_raca$cor_raca <- reorder(escol_raca$cor_raca, escol_raca$prop_superior)
 
 rm(pnadc_ds, pnadc_raw)
 
-.df <- merge(
-  renda_raca[, c("cor_raca", "renda_media")],
-  escol_raca[, c("cor_raca", "prop_superior")],
-  by = "cor_raca"
-)
-.df <- .df[order(-.df$renda_media), ]
+.cores <- c("Branca"="#5baad4", "Amarela"="#e6a817", "Preta"="#0f2a4a",
+            "Parda"="#2a6496", "Indígena"="#7fb3d3")
 
-knitr::kable(
-  data.frame(
-    `Cor ou raca` = as.character(.df$cor_raca),
-    `Renda media` = paste0("R$ ", formatC(round(.df$renda_media), format = "d", big.mark = ".")),
-    `Superior`    = paste0(formatC(.df$prop_superior * 100, format = "f",
-                                   digits = 1, decimal.mark = ","), "%"),
-    check.names   = FALSE
-  ),
-  col.names  = c("Cor ou raça", "Renda média", "Ensino superior (%)"),
-  align      = c("l", "r", "r"),
-  format     = "html",
-  caption    = "Rendimento e escolaridade por cor ou raça — PNADC 2024, 4.º trimestre"
-)
+.tema <- theme_minimal(base_family = "sans") +
+  theme(plot.title    = element_text(color = "#0f2a4a", face = "bold", size = 12),
+        plot.subtitle = element_text(color = "#4a6580", size = 9),
+        plot.caption  = element_text(color = "#888888", size = 8, hjust = 0),
+        axis.text.y   = element_text(color = "#0f2a4a", face = "bold"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor   = element_blank(),
+        plot.background    = element_rect(fill = "#f8f9fb", color = NA),
+        panel.background   = element_rect(fill = "#f8f9fb", color = NA))
+
+ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = paste0("R$ ", formatC(round(renda_media), format = "d", big.mark = "."))),
+            hjust = -0.1, size = 3.5, color = "#0f2a4a") +
+  coord_flip(clip = "off") +
+  scale_y_continuous(limits = c(0, 7200),
+    labels = function(x) paste0("R$ ", formatC(x, format = "d", big.mark = "."))) +
+  scale_fill_manual(values = .cores) +
+  labs(title    = "Rendimento médio (R$)",
+       subtitle = "Trabalho principal · PNADC 2024, 4T",
+       x = NULL, y = NULL,
+       caption  = "Fonte: IBGE, PNADC 2024.") +
+  .tema
+
+ggplot(escol_raca, aes(x = cor_raca, y = prop_superior, fill = cor_raca)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = percent(prop_superior, accuracy = 0.1, decimal.mark = ",")),
+            hjust = -0.1, size = 3.5, color = "#0f2a4a") +
+  coord_flip(clip = "off") +
+  scale_y_continuous(limits = c(0, 0.45), labels = percent_format(accuracy = 1)) +
+  scale_fill_manual(values = .cores) +
+  labs(title    = "Ensino superior completo (%)",
+       subtitle = "Pessoas de 14 anos ou mais · PNADC 2024, 4T",
+       x = NULL, y = NULL,
+       caption  = "Fonte: IBGE, PNADC 2024.") +
+  .tema
 ```
 
-Em ambos os indicadores, pretos e pardos apresentam valores muito próximos entre si e sistematicamente inferiores aos de brancos. A diferença dentro do grupo negro (preto × pardo) é menor do que a diferença entre negros e brancos, o que sustenta empiricamente a agregação. As seções **4.3** e **4.4** mostram como calcular essas estimativas a partir dos microdados com o desenho amostral correto.
+Em ambos os indicadores, pretos e pardos apresentam valores próximos entre si e sistematicamente inferiores aos de brancos. A diferença dentro do grupo negro (preto × pardo) é menor do que entre negros e brancos -- o que sustenta empiricamente a agregação. As seções **4.3** e **4.4** mostram como calcular essas estimativas com o desenho amostral correto.
 
 <div class="callout-aviso">
 **Atenção ao comunicar resultados**
 Ao somar pretos e pardos, deixe claro na primeira vez que aparece no texto: "negros (pretos e pardos, conforme categorias do IBGE)". Nas ocorrências seguintes, use só "negros".
-</div>
-
-<div class="callout-conceito">
-**A categoria "pardo" como dilema político**
-Luiz Augusto Campos (2013) argumenta que o pardo "deixou de ser um simples obstáculo epistemológico para as ciências sociais para se tornar dilema político para o Estado brasileiro". Em pesquisa aberta do IBGE (1998), 134 categorias espontâneas foram usadas por brasileiros para descrever sua cor -- mas 90% se concentraram em apenas 14 termos, e quase metade escolheu apenas dois: "branca" e "parda". A fluidez do sistema, frequentemente citada para questionar a viabilidade de políticas raciais, coexiste com uma estrutura relativamente estável de desigualdade entre grupos.
 </div>
 
 ## 1.3 Marcos legais relevantes
@@ -247,23 +276,6 @@ Luiz Augusto Campos (2013) argumenta que o pardo "deixou de ser um simples obst�
 - **2014** -- obrigatoriedade de autodeclaração de cor ou raça no registro de candidaturas (TSE)
 - **Lei n. 12.990/2014** -- cotas raciais no serviço público federal (20% das vagas em concursos)
 - **Resolução TSE n. 23.610/2019 e atualizações** -- financiamento proporcional para candidaturas negras (2020)
-
-## 1.4 Histórico das classificações raciais nos censos brasileiros
-
-O [primeiro recenseamento brasileiro](https://www12.senado.leg.br/noticias/especiais/arquivo-s/1o-censo-do-brasil-feito-ha-150-anos-contou-1-5-milhao-de-escravizados) aconteceu em 1872, cento e cinquenta anos depois das primeiras entrevistas feitas em nível nacional. Sem as tecnologias disponíveis hoje, as paróquias distribuíram formulários às casas de seu entorno -- preenchidos pelos chefes de família, devolvidos para tabulação. O quantitativo populacional da época era de quase dez milhões.
-
-A preocupação central dos políticos do Império era a possibilidade de os números servirem ao cálculo de eleitores e ao redimensionamento das bancadas provinciais na Câmara. Recrutamento militar, cartografia (a Guerra do Paraguai terminara em 1870) e arrecadação fiscal completavam os usos previstos. A ideia de usar o censo para planejar escolas, hospitais ou habitação popular era ainda inexistente. Ao mesmo tempo, crescia o prestígio da estatística como instrumento de governo: na concepção da época, estados que negligenciavam os números faziam parte do grupo das nações atrasadas.
-
-O censo de 1872 dividia a população segundo a "raça" -- em "pretos", "pardos", "brancos" e "caboclos" -- e segundo a "condição" -- livre, liberto ou escravo. Os dois primeiros grupos eram os únicos aplicáveis aos escravizados, embora também pudessem enquadrar pessoas nascidas livres ou libertas. A noção de "cor", herdada do período colonial, não designava matrizes de pigmentação ou graus de mestiçagem. Como argumenta Camargo (2009), ela "buscava definir lugares sociais, nos quais etnia e condição estavam indissociavelmente ligadas": a ausência de uma categoria de cor para a população branca era, antes de tudo, "um signo de cidadania na sociedade imperial, para a qual apenas a liberdade era precondição".
-
-O Censo de 1890 carregava o signo positivista dos primeiros anos da República. As categorias raciais passaram a ser "brancos", "pretos", "caboclos" e "mestiços" -- a mestiçagem alçada à condição de categoria, assumindo o sentido das teses de branqueamento então em circulação. O abandono da variável "frequência escolar" e a introdução de questões sobre origem e fixação de imigrantes revelam as prioridades do novo regime: atrair população europeia, não integrar as populações livres já existentes.
-
-O quesito de cor foi suprimido no Censo de 1920 e só retornou em 1940, com a criação do IBGE e a consolidação de uma comunidade técnica especializada. Esse movimento de supressão e retorno não foi neutro: reflete disputas sobre o que o Estado queria tornar visível -- ou invisível -- sobre a composição social do país.
-
-<div class="callout-aviso">
-**Continuidade nas descontinuidades**
-As categorias censitárias mudaram entre 1872, 1890, 1940 e 1991. Comparações históricas diretas exigem atenção: "pardo" em 1872 não capturava o mesmo fenômeno social que "parda" no Censo 2022. O [pacote `censobr`](https://ipeagit.github.io/censobr/) permite acessar os formulários e os dicionários de variáveis de cada edição, o que facilita o trabalho com séries históricas.
-</div>
 
 ---
 
@@ -554,21 +566,14 @@ O pacote `survey` é o padrão em R para lidar com esse tipo de desenho amostral
 ## 4.2 Baixando e aplicando o desenho amostral
 
 ```{r pnadc-download, eval=FALSE}
-# Baixa PNADC 2024, 4o trimestre (design=FALSE para manipular os dados antes)
-pnadc_raw <- PNADcIBGE::get_pnadc(
-  year    = 2024,
-  quarter = 4,
-  design  = FALSE
-)
-saveRDS(pnadc_raw, "dados/pnadc_raw.rds")
-# pnadc_raw <- readRDS("dados/pnadc_raw.rds")
+# design=TRUE configura automaticamente estratos, UPAs e pesos amostrais
+pnadc_ds <- PNADcIBGE::get_pnadc(year = 2024, quarter = 4, design = TRUE)
+# saveRDS(pnadc_ds, "dados/pnadc_ds.rds")   # opcional: salvar para reuso offline
+# pnadc_ds <- readRDS("dados/pnadc_ds.rds")
 ```
 
 ```{r pnadc-design, eval=FALSE}
-# pnadc_raw <- readRDS("dados/pnadc_raw.rds")  # rescue se necessário
-
-# Configura o objeto de desenho amostral com estratos, UPAs e pesos
-pnadc_ds <- PNADcIBGE::pnadc_design(data_pnadc = pnadc_raw)
+# Com design=TRUE, pnadc_ds já vem configurado (ver pnadc-download)
 
 # Adiciona indicador de ensino superior (usado na seção 4.4)
 pnadc_ds <- update(pnadc_ds,
@@ -723,7 +728,7 @@ O dado disponível no TSE a partir de 2014 é nominalmente autodeclarado, mas ai
 
 <div class="callout-aviso">
 **Autodeclaração no TSE ≠ autodeclaração no IBGE**
-No Censo e na PNADC, a pessoa se classifica em contexto neutro. No TSE, a declaração é um ato jurídico-eleitoral: o candidato (ou seu partido) sabe que a informação será usada para fins de financiamento proporcional desde 2020. Esse incentivo pode distorcer as declarações em direção ao "negro" de forma oportunista. Pesquisas recentes comparam a autodeclaração no TSE com a heteroidentificação por fotos para estimar a dimensão dessa distorção.
+No Censo e na PNADC, a pessoa se classifica sem que a resposta gere consequências institucionais diretas. No TSE, a declaração é um ato jurídico-eleitoral: o candidato (ou seu partido) sabe que a informação será usada para fins de financiamento proporcional desde 2020. Esse incentivo pode distorcer as declarações em direção ao "negro". Campos e Machado (2020) comparam a autodeclaração no TSE com a heteroidentificação por fotos e estimam que, nas eleições municipais de 2016, entre 35% e 41% dos candidatos que se autodeclararam negros não seriam classificados como tal por observadores externos -- sugerindo que parte relevante das mudanças de categoria reflete o novo enquadramento eleitoral, e não apenas mudanças de identidade.
 </div>
 
 ## 5.1 Principais variáveis
