@@ -428,7 +428,8 @@ knitr::opts_chunk$set(
 )
 
 # Diretório de trabalho -- ajuste para a pasta da aula
-setwd("~/Downloads")
+# setwd("~/Downloads")
+setwd("C:/Users/Amsatou Diop/Downloads")
 
 # Criar subpastas para organizar arquivos da aula
 # showWarnings = FALSE evita erro se a pasta já existir
@@ -598,9 +599,12 @@ pnadc_ds <- PNADcIBGE::get_pnadc(year = 2024, quarter = 4, design = TRUE)
 ```{r pnadc-design, eval=FALSE}
 # Com design=TRUE, pnadc_ds já vem configurado (ver pnadc-download)
 
-# Adiciona indicador de ensino superior (usado na seção 4.4)
+# update() é o equivalente do mutate() para objetos de survey:
+# adiciona ou recalcula variáveis sem perder os metadados do desenho
+# amostral (estratos, UPAs, pesos). Usar mutate() diretamente apagaria
+# essa estrutura e produziria erros padrão errados nas estimativas.
 pnadc_ds <- update(pnadc_ds,
-  tem_superior = as.numeric(VD3004 == "Superior completo")
+  tem_superior = as.numeric(VD3004 == "Superior completo")  # 1 se sim, 0 se não
 )
 ```
 
@@ -609,16 +613,31 @@ pnadc_ds <- update(pnadc_ds,
 Calculamos o rendimento médio do trabalho principal para cada uma das **cinco categorias censitárias** (sem colapsar preto e pardo), o que permite visualizar diretamente a proximidade entre os dois grupos -- justificativa empírica para a agregação como "negros".
 
 ```{r pnadc-renda, eval=FALSE}
+# svyby() é o equivalente de group_by() + summarise() para objetos de survey.
+# Calcula a estatística indicada em FUN para cada grupo de 'by',
+# levando em conta estratos, UPAs e pesos — o que garante erros padrão corretos.
+#
+# subset() aqui filtra o objeto de survey (como filter() no tidyverse),
+# mas preserva todos os metadados do desenho amostral.
+# Filtramos: sem NA em raça, sem NA em renda, e excluímos "Ignorado"
+# (categoria que aparece nos dados mas não é uma resposta válida).
+#
+# FUN = svymean: função aplicada a cada grupo.
+# svymean() é o mean() com consciência amostral — produz média ponderada
+# e desvio padrão correto dado o desenho complexo.
+#
+# O resultado tem uma coluna por variável + uma coluna "se" (standard error).
 renda_raca <- survey::svyby(
-  formula = ~VD4017,
-  by      = ~V2010,
-  design  = subset(pnadc_ds, !is.na(V2010) & !is.na(VD4017) &
-                     as.character(V2010) != "Ignorado"),
+  formula = ~VD4017,                   # variável a resumir: rendimento
+  by      = ~V2010,                    # variável de grupo: cor ou raça
+  design  = subset(pnadc_ds,
+              !is.na(V2010) & !is.na(VD4017) &
+              as.character(V2010) != "Ignorado"),
   FUN     = survey::svymean,
   na.rm   = TRUE
 )
 renda_raca <- as.data.frame(renda_raca)
-names(renda_raca)[1:3] <- c("cor_raca", "renda_media", "se")
+names(renda_raca)[1:3] <- c("cor_raca", "renda_media", "se")  # renomeia colunas geradas pelo svyby
 ```
 
 ```{r grafico-renda-pnadc, fig.height=5}
@@ -632,15 +651,19 @@ cores_raca <- c(
 
 ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   geom_col(width = 0.65, show.legend = FALSE) +
+  # geom_errorbar: desenha as barras de intervalo de confiança de 95%.
+  # IC 95% = estimativa ± 1,96 × erro padrão (se vem do svyby).
   geom_errorbar(
     aes(ymin = renda_media - 1.96 * se, ymax = renda_media + 1.96 * se),
     width = 0.2, color = "#555555", linewidth = 0.5
   ) +
+  # hjust = -0.15 empurra o rótulo para a direita da barra (após coord_flip, "direita" = acima)
   geom_text(
     aes(label = dollar(renda_media, prefix = "R$ ",
                        big.mark = ".", decimal.mark = ",")),
     hjust = -0.15, size = 3.8, color = "#0f2a4a", fontface = "bold"
   ) +
+  # coord_flip: gira o gráfico 90°, transformando barras verticais em horizontais
   coord_flip(clip = "off") +
   scale_y_continuous(
     limits = c(0, 7000),
@@ -674,11 +697,15 @@ Pretos e pardos apresentam rendimentos sistematicamente próximos entre si e dis
 O mesmo padrão se replica na escolaridade. O gráfico abaixo mostra o percentual de pessoas com **ensino superior completo** em cada grupo racial -- indicador sensível às políticas de cotas raciais implementadas a partir de 2003 nas universidades estaduais e de 2012 nas federais.
 
 ```{r pnadc-escolaridade, eval=FALSE}
+# Mesma lógica de 4.3, mas agora a variável resumida é tem_superior (0/1).
+# svymean() de uma variável 0/1 retorna a proporção de 1s no grupo —
+# ou seja, a proporção de pessoas com ensino superior em cada raça.
 escol_raca <- survey::svyby(
-  formula = ~tem_superior,
-  by      = ~V2010,
-  design  = subset(pnadc_ds, !is.na(V2010) & !is.na(VD3004) &
-                     as.character(V2010) != "Ignorado"),
+  formula = ~tem_superior,             # variável a resumir: indicador de superior
+  by      = ~V2010,                    # variável de grupo: cor ou raça
+  design  = subset(pnadc_ds,
+              !is.na(V2010) & !is.na(VD3004) &
+              as.character(V2010) != "Ignorado"),
   FUN     = survey::svymean,
   na.rm   = TRUE
 )
@@ -840,17 +867,22 @@ O gráfico abaixo compara a proporção de candidatos negros com a proporção d
 
 ```{r grafico-tse, fig.height=5}
 tse_regioes %>%
+  # pivot_longer: transforma duas colunas em duas linhas por região.
+  # Antes: uma linha por região com colunas prop_cand e prop_eleitos.
+  # Depois: duas linhas por região, coluna "tipo" indica qual é qual.
+  # Necessário porque ggplot espera uma coluna para o eixo Y e outra para a cor/fill.
   tidyr::pivot_longer(
-    cols = c(prop_cand_negros, prop_eleitos_negros),
+    cols      = c(prop_cand_negros, prop_eleitos_negros),
     names_to  = "tipo",
     values_to = "proporcao"
   ) %>%
   mutate(tipo = ifelse(tipo == "prop_cand_negros", "Candidatos", "Eleitos")) %>%
   ggplot(aes(x = regiao, y = proporcao, fill = tipo)) +
+  # position = "dodge": coloca as barras dos dois grupos lado a lado (não empilhadas)
   geom_col(position = "dodge", width = 0.65) +
   geom_text(
     aes(label = percent(proporcao, accuracy = 1)),
-    position = position_dodge(width = 0.65),
+    position = position_dodge(width = 0.65),  # alinha os rótulos com suas respectivas barras
     vjust = -0.5, size = 3.5, color = "#0f2a4a", fontface = "bold"
   ) +
   scale_y_continuous(labels = percent_format(), limits = c(0, 0.85)) +
@@ -914,10 +946,12 @@ pop_grupo %>%
     grupo  = factor(grupo,  levels = names(cores_grupo))
   ) %>%
   ggplot(aes(x = regiao, y = proporcao, fill = grupo)) +
+  # position = "fill": empilha as barras e normaliza para 100%,
+  # ignorando o valor absoluto de y — cada barra representa a composição percentual
   geom_col(position = "fill", width = 0.72) +
   geom_text(
     aes(label = percent(proporcao, accuracy = 0.1)),
-    position = position_fill(vjust = 0.5),
+    position = position_fill(vjust = 0.5),  # centraliza o rótulo dentro de cada segmento
     color = "white", size = 3.5, fontface = "bold"
   ) +
   scale_y_continuous(labels = percent_format()) +
@@ -956,14 +990,19 @@ pop_negros_regiao <- pop_grupo %>%
   select(regiao, prop_pop_negra = proporcao) %>%
   mutate(regiao = factor(regiao, levels = ordem_regioes))
 
-# Juntar com dados TSE
+# left_join: combina os dois data frames pelo campo "regiao".
+# "left" = mantém todas as linhas do lado esquerdo (pop_negros_regiao)
+# mesmo que não haja correspondência no lado direito (tse_regioes).
 df_resposta <- pop_negros_regiao %>%
   left_join(tse_regioes, by = "regiao") %>%
+  # pivot_longer: reestrutura de wide para long — necessário para o ggplot
+  # comparar as duas métricas (população e eleitos) lado a lado
   tidyr::pivot_longer(
     cols      = c(prop_pop_negra, prop_eleitos_negros),
     names_to  = "dimensao",
     values_to = "proporcao"
   ) %>%
+  # recode: renomeia valores de uma coluna (como case_when para substituições simples)
   mutate(dimensao = recode(dimensao,
     prop_pop_negra       = "População negra (Censo 2022)",
     prop_eleitos_negros  = "Vereadores negros eleitos (TSE 2024)"
@@ -1074,35 +1113,52 @@ Nas seções anteriores trabalhamos com cada base separadamente. A vantagem da B
 ```{r cruzamento-bq, eval=FALSE}
 
 query_cruzamento <- "
-  -- Composicao racial por municipio (Censo 2022)
+  -- WITH ... AS (...): CTE (Common Table Expression).
+  -- Cria uma tabela temporária nomeada que pode ser referenciada depois na mesma query.
+  -- Aqui temos duas CTEs: censo_mun e tse_mun. O SELECT final as cruza.
+
+  -- CTE 1: proporção de negros por município (Censo 2022)
   WITH censo_mun AS (
     SELECT
       id_municipio,
-      SUM(populacao)                                                             AS pop_total,
+      SUM(populacao) AS pop_total,
+      -- CASE WHEN: equivale ao if_else() do R — soma apenas pretos e pardos
+      -- * 1.0 força divisão em ponto flutuante (sem isso, divisão inteira trunca p/ 0)
+      -- NULLIF(expr, 0): retorna NULL se o denominador for 0, evitando erro de divisão
       SUM(CASE WHEN cor_raca IN ('Preta', 'Parda') THEN populacao ELSE 0 END) * 1.0
-        / NULLIF(SUM(populacao), 0)                                              AS prop_negros
+        / NULLIF(SUM(populacao), 0) AS prop_negros
     FROM `basedosdados.br_ibge_censo_2022.populacao_grupo_idade_sexo_raca`
     WHERE cor_raca IS NOT NULL
-    GROUP BY id_municipio
+    GROUP BY id_municipio      -- equivale ao group_by(id_municipio) do dplyr
   ),
-  -- Proporcao de eleitos negros a vereador por municipio (TSE 2024)
+
+  -- CTE 2: proporção de eleitos negros a vereador por município (TSE 2024)
   tse_mun AS (
     SELECT
       c.id_municipio,
+      -- COUNTIF(): função BigQuery que conta apenas linhas que satisfazem a condição
+      -- equivale a sum(if(condicao, 1, 0)) — não existe em SQL padrão, é específico do BigQuery
+      -- UPPER() normaliza maiúsculas para evitar falhas de match por capitalização
       COUNTIF(UPPER(c.raca) IN ('PRETA', 'PARDA')) * 1.0
         / NULLIF(COUNT(*), 0) AS prop_eleitos_negros
+    -- JOIN entre as tabelas de resultados e de candidatos para ter raça + resultado juntos
+    -- r = resultados_candidato (quem foi eleito); c = candidatos (dados do candidato, incl. raça)
     FROM `basedosdados.br_tse_eleicoes.resultados_candidato` r
     JOIN `basedosdados.br_tse_eleicoes.candidatos` c
-      ON  r.sequencial_candidato = c.sequencial
-      AND r.ano = c.ano
-      AND r.sigla_uf = c.sigla_uf
+      ON  r.sequencial_candidato = c.sequencial   -- chave de ligação entre as duas tabelas
+      AND r.ano        = c.ano
+      AND r.sigla_uf   = c.sigla_uf
       AND r.id_municipio = c.id_municipio
-    WHERE r.ano = 2024
-      AND r.cargo = 'vereador'
+    WHERE r.ano    = 2024
+      AND r.cargo  = 'vereador'
       AND r.resultado IN ('eleito por qp', 'eleito por media')
       AND c.raca IS NOT NULL
     GROUP BY c.id_municipio
   )
+
+  -- SELECT final: cruza as duas CTEs pelo código IBGE do município
+  -- INNER JOIN: mantém apenas municípios que aparecem em AMBAS as tabelas
+  -- USING (id_municipio): atalho para ON a.id_municipio = b.id_municipio
   SELECT
     c.id_municipio,
     c.pop_total,
@@ -1132,7 +1188,12 @@ A linha pontilhada diagonal representa a representação proporcional perfeita: 
 ```{r grafico-cruzamento-todos}
 ggplot(censo_tse_municipios, aes(x = prop_negros, y = prop_eleitos_negros)) +
   geom_point(alpha = 0.25, color = "#0f2a4a", size = 1.2) +
+  # geom_smooth(method = "lm"): linha de regressão linear (OLS) com banda de confiança (se=TRUE).
+  # Mostra a tendência empírica: à medida que a proporção negra aumenta, a representação sobe?
   geom_smooth(method = "lm", color = "#1a6fa8", se = TRUE) +
+  # geom_abline(slope=1, intercept=0): desenha a linha y = x (diagonal).
+  # Representa a representação proporcional perfeita: vereadores negros = % negros na população.
+  # Pontos abaixo dessa linha = sub-representação; acima = sobre-representação.
   geom_abline(slope = 1, intercept = 0, linetype = "dashed",
               color = "#e6a817", linewidth = 0.9) +
   scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
