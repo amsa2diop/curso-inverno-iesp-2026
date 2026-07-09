@@ -408,7 +408,9 @@ Para instalar:
 1. Baixe e instale o **R** em [cran.r-project.org](https://cran.r-project.org/)
 2. Baixe e instale o **RStudio Desktop** em [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/)
 
-Com o RStudio aberto, rode o bloco abaixo **uma única vez** antes da aula. Ele instala o pacote `pacman`, que por sua vez baixa e carrega todos os outros pacotes usados neste tutorial:
+Durante a aula, vamos acompanhar o código num **script R** (arquivo `.R`): no RStudio, vá em *File → New File → R Script*, cole os trechos de código e execute linha a linha com `Ctrl+Enter` (Windows) ou `Cmd+Enter` (Mac).
+
+Antes disso, rode o bloco abaixo **uma única vez** para instalar os pacotes. O `pacman` é um gerenciador que instala e carrega tudo de uma só vez:
 
 ```{r instalacao, eval=FALSE}
 # Rode UMA VEZ antes da aula para instalar todos os pacotes.
@@ -434,15 +436,7 @@ pacman::p_load(
 # Locale garante leitura correta de acentos e datas em português
 Sys.setlocale(category = "LC_ALL", locale = "pt_BR.UTF-8")
 
-# Configuracao global dos blocos de código:
-# echo = TRUE mostra o código; warning/message = FALSE omite avisos técnicos
-knitr::opts_chunk$set(
-  echo    = TRUE,
-  warning = FALSE,
-  message = FALSE
-)
-
-# Diretório de trabalho -- ajuste para a pasta da aula
+# Diretório de trabalho -- ajuste para a pasta onde você salvou os arquivos da aula
 # setwd("~/Downloads")
 setwd("C:/Users/Amsatou Diop/Downloads")
 
@@ -450,10 +444,15 @@ setwd("C:/Users/Amsatou Diop/Downloads")
 # showWarnings = FALSE evita erro se a pasta já existir
 dir.create("dados",    showWarnings = FALSE)
 dir.create("graficos", showWarnings = FALSE)
+```
 
-# Pacotes de uso geral (usados ao longo de toda a aula)
-library(tidyverse)   # dplyr, ggplot2, forcats e afins
-library(scales)      # formatacao de eixos e valores
+```{r pacotes-render, include=FALSE}
+# Carrega pacotes para renderização do tutorial (não aparece no script do aluno)
+suppressPackageStartupMessages({
+  library(tidyverse); library(scales); library(patchwork)
+  library(sidrar); library(censobr); library(arrow)
+  library(PNADcIBGE); library(survey); library(electionsBR)
+})
 ```
 
 ---
