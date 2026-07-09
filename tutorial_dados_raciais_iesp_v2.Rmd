@@ -11,7 +11,7 @@ output:
       smooth_scroll: true
     toc_depth: 3
     theme: flatly
-    highlight: tango
+    highlight: espresso
     self_contained: true
 ---
 
@@ -407,9 +407,23 @@ Responder a ela exige o **Censo 2022** (composição racial por município) e os
 
 A pergunta funciona como instrumento didático -- ela nos força a passar pelas três bases e entender como cada uma contribui. Primeiro respondemos com as fontes diretas (seções 3, 4 e 5), ao nível da grande região. Depois mostramos como a Base dos Dados permite descer ao nível do município com muito menos código (seção 7). Respondê-la de forma rigorosa exigiria controles e testes que estão além do escopo da aula, mas o caminho metodológico que percorremos para chegar perto já é o objetivo.
 
+---
+
+# Primeiros passos: R e RStudio
+
+**R** é uma linguagem de programação gratuita e de código aberto para análise estatística e visualização de dados. **RStudio** é o ambiente de trabalho mais usado para escrever e executar código R — ele organiza scripts, gráficos e resultados em uma única janela.
+
+Para instalar:
+
+1. Baixe e instale o **R** em [cran.r-project.org](https://cran.r-project.org/)
+2. Baixe e instale o **RStudio Desktop** em [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/)
+
+Durante a aula, vamos acompanhar o código num **script R** (arquivo `.R`): no RStudio, vá em *File → New File → R Script*, cole os trechos de código e execute linha a linha com `Ctrl+Enter` (Windows) ou `Cmd+Enter` (Mac).
+
+Antes disso, rode o bloco abaixo **uma única vez** para instalar os pacotes. O `pacman` é um gerenciador que instala e carrega tudo de uma só vez:
+
 ```{r instalacao, eval=FALSE}
-# Rode este bloco UMA VEZ antes da aula para instalar todos os pacotes.
-# Depois, não é necessário rodar novamente.
+# Rode UMA VEZ antes da aula para instalar todos os pacotes.
 if (!require("pacman", quietly = TRUE)) install.packages("pacman")
 
 pacman::p_load(
@@ -420,6 +434,7 @@ pacman::p_load(
   arrow,        # necessário para coletar dados do censobr
   PNADcIBGE,   # microdados da PNADC
   survey,       # estimativas com desenho amostral complexo
+  patchwork,    # combinar gráficos
   electionsBR,  # dados eleitorais do TSE
   basedosdados, # Base dos Dados (BigQuery)
   DBI,          # interface de banco de dados
@@ -431,15 +446,7 @@ pacman::p_load(
 # Locale garante leitura correta de acentos e datas em português
 Sys.setlocale(category = "LC_ALL", locale = "pt_BR.UTF-8")
 
-# Configuracao global dos blocos de código:
-# echo = TRUE mostra o código; warning/message = FALSE omite avisos técnicos
-knitr::opts_chunk$set(
-  echo    = TRUE,
-  warning = FALSE,
-  message = FALSE
-)
-
-# Diretório de trabalho -- ajuste para a pasta da aula
+# Diretório de trabalho -- ajuste para a pasta onde você salvou os arquivos da aula
 # setwd("~/Downloads")
 setwd("C:/Users/Amsatou Diop/Downloads")
 
@@ -447,10 +454,15 @@ setwd("C:/Users/Amsatou Diop/Downloads")
 # showWarnings = FALSE evita erro se a pasta já existir
 dir.create("dados",    showWarnings = FALSE)
 dir.create("graficos", showWarnings = FALSE)
+```
 
-# Pacotes de uso geral (usados ao longo de toda a aula)
-library(tidyverse)   # dplyr, ggplot2, forcats e afins
-library(scales)      # formatacao de eixos e valores
+```{r pacotes-render, include=FALSE}
+# Carrega pacotes para renderização do tutorial (não aparece no script do aluno)
+suppressPackageStartupMessages({
+  library(tidyverse); library(scales); library(patchwork)
+  library(sidrar); library(censobr); library(arrow)
+  library(PNADcIBGE); library(survey); library(electionsBR)
+})
 ```
 
 ---
@@ -566,6 +578,16 @@ pop_grupo
 <div class="callout-pratica">
 Use o **censobr** quando precisar cruzar variáveis individuais (ex: raça + sexo + renda dentro do Censo) ou trabalhar no nível do município. Use o **sidrar** quando a tabela que você precisa já existe no SIDRA -- é mais rápido e simples para análises regionais e nacionais.
 </div>
+
+## 3.4 Populações quilombolas e indígenas no Censo 2022
+
+O Censo 2022 foi o primeiro a coletar dados abrangentes sobre **populações indígenas** e **quilombolas** como recortes específicos -- não apenas como categorias de cor ou raça, mas como grupos com territórios identificados.
+
+**No SIDRA:** o portal [sidra.ibge.gov.br](https://sidra.ibge.gov.br/) tem seções dedicadas a "Indígenas" e "Quilombolas" com tabelas de população por sexo, faixa etária e localização. Basta buscar por esses termos na barra de pesquisa do SIDRA.
+
+**No `censobr`:** a função `read_tracts()` retorna os setores censitários com uma variável de tipo de setor que distingue áreas urbanas, rurais, terras indígenas e territórios quilombolas -- o que permite filtrar e agregar para esses grupos diretamente.
+
+O IBGE publicou relatórios dedicados a cada grupo, acessíveis pela página de resultados do Censo 2022: [censo2022.ibge.gov.br](https://censo2022.ibge.gov.br/).
 
 ---
 

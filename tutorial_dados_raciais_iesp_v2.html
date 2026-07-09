@@ -1342,42 +1342,42 @@ border: none; display: inline-block;
 -khtml-user-select: none; -moz-user-select: none;
 -ms-user-select: none; user-select: none;
 padding: 0 4px; width: 4em;
-color: #aaaaaa;
+background-color: #2a211c;
+color: #bdae9d;
 }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #bdae9d; padding-left: 4px; }
 div.sourceCode
-{ background-color: #f8f8f8; }
+{ color: #bdae9d; background-color: #2a211c; }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ef2929; } 
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.at { color: #204a87; } 
-code span.bn { color: #0000cf; } 
-code span.cf { color: #204a87; font-weight: bold; } 
-code span.ch { color: #4e9a06; } 
-code span.cn { color: #8f5902; } 
-code span.co { color: #8f5902; font-style: italic; } 
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.dt { color: #204a87; } 
-code span.dv { color: #0000cf; } 
-code span.er { color: #a40000; font-weight: bold; } 
+code span.al { color: #ffff00; } 
+code span.an { color: #0066ff; font-weight: bold; font-style: italic; } 
+code span.at { } 
+code span.bn { color: #44aa43; } 
+code span.bu { } 
+code span.cf { color: #43a8ed; font-weight: bold; } 
+code span.ch { color: #049b0a; } 
+code span.cn { } 
+code span.co { color: #0066ff; font-weight: bold; font-style: italic; } 
+code span.do { color: #0066ff; font-style: italic; } 
+code span.dt { text-decoration: underline; } 
+code span.dv { color: #44aa43; } 
+code span.er { color: #ffff00; font-weight: bold; } 
 code span.ex { } 
-code span.fl { color: #0000cf; } 
-code span.fu { color: #204a87; font-weight: bold; } 
+code span.fl { color: #44aa43; } 
+code span.fu { color: #ff9358; font-weight: bold; } 
 code span.im { } 
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.kw { color: #204a87; font-weight: bold; } 
-code span.op { color: #ce5c00; font-weight: bold; } 
-code span.ot { color: #8f5902; } 
-code span.pp { color: #8f5902; font-style: italic; } 
-code span.sc { color: #ce5c00; font-weight: bold; } 
-code span.ss { color: #4e9a06; } 
-code span.st { color: #4e9a06; } 
-code span.va { color: #000000; } 
-code span.vs { color: #4e9a06; } 
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.in { color: #0066ff; font-weight: bold; font-style: italic; } 
+code span.kw { color: #43a8ed; font-weight: bold; } 
+code span.op { } 
+code span.pp { font-weight: bold; } 
+code span.sc { color: #049b0a; } 
+code span.ss { color: #049b0a; } 
+code span.st { color: #049b0a; } 
+code span.va { } 
+code span.vs { color: #049b0a; } 
+code span.wa { color: #ffff00; font-weight: bold; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -2302,18 +2302,40 @@ do município com muito menos código (seção 7). Respondê-la de forma
 rigorosa exigiria controles e testes que estão além do escopo da aula,
 mas o caminho metodológico que percorremos para chegar perto já é o
 objetivo.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Rode este bloco UMA VEZ antes da aula para instalar todos os pacotes.</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># Depois, não é necessário rodar novamente.</span></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;pacman&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  tidyverse,    <span class="co"># dplyr, ggplot2, forcats e afins</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  scales,       <span class="co"># formatação de eixos e valores</span></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  sidrar,       <span class="co"># tabelas agregadas do IBGE via SIDRA</span></span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  censobr,      <span class="co"># microdados do Censo 2022 via IPEA</span></span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  arrow,        <span class="co"># necessário para coletar dados do censobr</span></span>
-<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  PNADcIBGE,   <span class="co"># microdados da PNADC</span></span>
-<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  survey,       <span class="co"># estimativas com desenho amostral complexo</span></span>
+<hr />
+</div>
+<div id="primeiros-passos-r-e-rstudio" class="section level1">
+<h1>Primeiros passos: R e RStudio</h1>
+<p><strong>R</strong> é uma linguagem de programação gratuita e de
+código aberto para análise estatística e visualização de dados.
+<strong>RStudio</strong> é o ambiente de trabalho mais usado para
+escrever e executar código R — ele organiza scripts, gráficos e
+resultados em uma única janela.</p>
+<p>Para instalar:</p>
+<ol style="list-style-type: decimal">
+<li>Baixe e instale o <strong>R</strong> em <a href="https://cran.r-project.org/">cran.r-project.org</a></li>
+<li>Baixe e instale o <strong>RStudio Desktop</strong> em <a href="https://posit.co/download/rstudio-desktop/">posit.co/download/rstudio-desktop</a></li>
+</ol>
+<p>Durante a aula, vamos acompanhar o código num <strong>script
+R</strong> (arquivo <code>.R</code>): no RStudio, vá em <em>File → New
+File → R Script</em>, cole os trechos de código e execute linha a linha
+com <code>Ctrl+Enter</code> (Windows) ou <code>Cmd+Enter</code>
+(Mac).</p>
+<p>Antes disso, rode o bloco abaixo <strong>uma única vez</strong> para
+instalar os pacotes. O <code>pacman</code> é um gerenciador que instala
+e carrega tudo de uma só vez:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Rode UMA VEZ antes da aula para instalar todos os pacotes.</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;pacman&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  tidyverse,    <span class="co"># dplyr, ggplot2, forcats e afins</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  scales,       <span class="co"># formatação de eixos e valores</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  sidrar,       <span class="co"># tabelas agregadas do IBGE via SIDRA</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  censobr,      <span class="co"># microdados do Censo 2022 via IPEA</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  arrow,        <span class="co"># necessário para coletar dados do censobr</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  PNADcIBGE,   <span class="co"># microdados da PNADC</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  survey,       <span class="co"># estimativas com desenho amostral complexo</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  patchwork,    <span class="co"># combinar gráficos</span></span>
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>  electionsBR,  <span class="co"># dados eleitorais do TSE</span></span>
 <span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  basedosdados, <span class="co"># Base dos Dados (BigQuery)</span></span>
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  DBI,          <span class="co"># interface de banco de dados</span></span>
@@ -2322,26 +2344,14 @@ objetivo.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Locale garante leitura correta de acentos e datas em português</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">Sys.setlocale</span>(<span class="at">category =</span> <span class="st">&quot;LC_ALL&quot;</span>, <span class="at">locale =</span> <span class="st">&quot;pt_BR.UTF-8&quot;</span>)</span></code></pre></div>
 <pre><code>#&gt; [1] &quot;LC_COLLATE=pt_BR.UTF-8;LC_CTYPE=pt_BR.UTF-8;LC_MONETARY=pt_BR.UTF-8;LC_NUMERIC=C;LC_TIME=pt_BR.UTF-8&quot;</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Configuracao global dos blocos de código:</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># echo = TRUE mostra o código; warning/message = FALSE omite avisos técnicos</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">echo    =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">warning =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">message =</span> <span class="cn">FALSE</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>)</span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co"># Diretório de trabalho -- ajuste para a pasta da aula</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co"># setwd(&quot;~/Downloads&quot;)</span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;C:/Users/Amsatou Diop/Downloads&quot;</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co"># Criar subpastas para organizar arquivos da aula</span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co"># showWarnings = FALSE evita erro se a pasta já existir</span></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">&quot;dados&quot;</span>,    <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">&quot;graficos&quot;</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co"># Pacotes de uso geral (usados ao longo de toda a aula)</span></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="fu">library</span>(tidyverse)   <span class="co"># dplyr, ggplot2, forcats e afins</span></span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="fu">library</span>(scales)      <span class="co"># formatacao de eixos e valores</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Diretório de trabalho -- ajuste para a pasta onde você salvou os arquivos da aula</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># setwd(&quot;~/Downloads&quot;)</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;C:/Users/Amsatou Diop/Downloads&quot;</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co"># Criar subpastas para organizar arquivos da aula</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co"># showWarnings = FALSE evita erro se a pasta já existir</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">&quot;dados&quot;</span>,    <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">&quot;graficos&quot;</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <hr />
 </div>
 <div id="parte-1-censo-2022" class="section level1">
@@ -2549,6 +2559,24 @@ nível do município. Use o <strong>sidrar</strong> quando a tabela que
 você precisa já existe no SIDRA – é mais rápido e simples para análises
 regionais e nacionais.</p>
 </div>
+</div>
+<div id="populações-quilombolas-e-indígenas-no-censo-2022" class="section level2">
+<h2>3.4 Populações quilombolas e indígenas no Censo 2022</h2>
+<p>O Censo 2022 foi o primeiro a coletar dados abrangentes sobre
+<strong>populações indígenas</strong> e <strong>quilombolas</strong>
+como recortes específicos – não apenas como categorias de cor ou raça,
+mas como grupos com territórios identificados.</p>
+<p><strong>No SIDRA:</strong> o portal <a href="https://sidra.ibge.gov.br/">sidra.ibge.gov.br</a> tem seções
+dedicadas a “Indígenas” e “Quilombolas” com tabelas de população por
+sexo, faixa etária e localização. Basta buscar por esses termos na barra
+de pesquisa do SIDRA.</p>
+<p><strong>No <code>censobr</code>:</strong> a função
+<code>read_tracts()</code> retorna os setores censitários com uma
+variável de tipo de setor que distingue áreas urbanas, rurais, terras
+indígenas e territórios quilombolas – o que permite filtrar e agregar
+para esses grupos diretamente.</p>
+<p>O IBGE publicou relatórios dedicados a cada grupo, acessíveis pela
+página de resultados do Censo 2022: <a href="https://censo2022.ibge.gov.br/">censo2022.ibge.gov.br</a>.</p>
 <hr />
 </div>
 </div>
