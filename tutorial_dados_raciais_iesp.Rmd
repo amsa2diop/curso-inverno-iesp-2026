@@ -575,6 +575,16 @@ pop_grupo
 Use o **censobr** quando precisar cruzar variáveis individuais (ex: raça + sexo + renda dentro do Censo) ou trabalhar no nível do município. Use o **sidrar** quando a tabela que você precisa já existe no SIDRA -- é mais rápido e simples para análises regionais e nacionais.
 </div>
 
+## 3.4 Populações quilombolas e indígenas no Censo 2022
+
+O Censo 2022 foi o primeiro a coletar dados abrangentes sobre **populações indígenas** e **quilombolas** como recortes específicos -- não apenas como categorias de cor ou raça, mas como grupos com territórios identificados.
+
+**No SIDRA:** o portal [sidra.ibge.gov.br](https://sidra.ibge.gov.br/) tem seções dedicadas a "Indígenas" e "Quilombolas" com tabelas de população por sexo, faixa etária e localização. Basta buscar por esses termos na barra de pesquisa do SIDRA.
+
+**No `censobr`:** a função `read_tracts()` retorna os setores censitários com uma variável de tipo de setor que distingue áreas urbanas, rurais, terras indígenas e territórios quilombolas -- o que permite filtrar e agregar para esses grupos diretamente.
+
+O IBGE publicou relatórios dedicados a cada grupo, acessíveis pela página de resultados do Censo 2022: [censo2022.ibge.gov.br](https://censo2022.ibge.gov.br/).
+
 ---
 
 # 4 · Parte 2 -- PNADC nos anos intercensitários
