@@ -194,6 +194,8 @@ O ponto de partida está nos trabalhos de Carlos Hasenbalg e Nelson do Valle Sil
 
 Esse achado foi confirmado por pesquisas subsequentes -- entre elas Henriques (2001) -- que reproduziram a análise com diferentes períodos e encontraram o mesmo padrão. A consistência dos resultados consolidou a agregação como prática metodológica padrão na literatura de estratificação racial no Brasil.
 
+Hasenbalg e Silva (1988) estimaram que brancos tinham o **dobro de chance** de mobilidade social ascendente em relação a não brancos ao longo de uma geração -- mesmo quando se controla pela origem socioeconômica. Esse resultado deslocou o debate: a desigualdade racial não é apenas um resquício do escravismo a ser diluído pelo crescimento econômico, mas um mecanismo ativo de reprodução de hierarquias.
+
 ### Evidência empírica
 
 Os gráficos abaixo mostram rendimento médio mensal e percentual com ensino superior para cada uma das cinco categorias do IBGE -- sem colapsar preto e pardo. A proximidade entre pretos e pardos em ambos os indicadores é o que justifica empiricamente a agregação.

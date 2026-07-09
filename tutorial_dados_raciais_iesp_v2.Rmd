@@ -6,7 +6,6 @@ date: "`r format(Sys.Date(), '%d de %B de %Y')`"
 output:
   html_document:
     toc: true
-    output_file: "tutorial_dados_raciais_iesp_v2.html"
     toc_float:
       collapsed: true
       smooth_scroll: true
@@ -17,71 +16,80 @@ output:
 ---
 
 <style>
+/* ============================================================
+   PALETA DARA
+   Laranja Elétrico  #f71e0a
+   Óleo de Palma     #3b0017
+   Amarelo Solar     #ece100
+   Gíz               #f0ebe3
+   Azul Pacífico     #85e1e8
+   Preto Meia-Noite  #0a0513
+   ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 html { font-size: 17px; scroll-behavior: smooth; }
 body {
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  color: #2d2d2d;
+  color: #0a0513;
   line-height: 1.8;
-  background-color: #f8f9fb;
+  background-color: #f0ebe3;
 }
 h1, h2, h3, h4 {
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  color: #0f2a4a; font-weight: 600; letter-spacing: -0.015em;
+  color: #3b0017; font-weight: 600; letter-spacing: -0.015em;
 }
-/* === DARA v2 palette: #f71e0a como acento, azul-marinho como base === */
-h1.title  { font-size: 1.9rem; border-bottom: 3px solid #f71e0a; padding-bottom: 0.4em; }
-h1 { font-size: 1.6rem; border-left: 4px solid #f71e0a; padding-left: 0.6em; margin-top: 1.8em; }
-h2 { font-size: 1.25rem; border-left: 3px solid #0f2a4a; padding-left: 0.5em; margin-top: 1.5em; }
-h3 { font-size: 1.05rem; color: #1d3557; margin-top: 1.3em; }
-a { color: #1a6fa8; text-decoration: none; }
+h1.title  { font-size: 1.9rem; border-bottom: 4px solid #f71e0a; padding-bottom: 0.4em; color: #3b0017; }
+h1 { font-size: 1.6rem; border-left: 5px solid #f71e0a; padding-left: 0.6em; margin-top: 1.8em; color: #3b0017; }
+h2 { font-size: 1.25rem; border-left: 3px solid #3b0017; padding-left: 0.5em; margin-top: 1.5em; }
+h3 { font-size: 1.05rem; color: #5a1530; margin-top: 1.3em; }
+a { color: #3b0017; text-decoration: none; font-weight: 500; }
 a:hover { color: #f71e0a; text-decoration: underline; }
 
-#TOC { background-color: #f5f8fc; border: none; border-radius: 0; padding: 8px 0; }
-#TOC a { color: #0f2a4a !important; font-size: 0.85rem !important; }
+#TOC { background-color: #3b0017; border: none; border-radius: 0; padding: 8px 0; }
+#TOC a { color: #f0ebe3 !important; font-size: 0.85rem !important; }
 #TOC a:hover { color: #f71e0a !important; }
-#TOC li.active > a { color: #f71e0a !important; font-weight: 600 !important; }
+#TOC li.active > a { color: #ece100 !important; font-weight: 600 !important; }
 
 #toc-toggle {
   position: fixed; top: 56px; left: 5px; z-index: 2000;
   background: #f71e0a; color: #fff; border: none;
   border-radius: 0 4px 4px 0; padding: 6px 9px;
   font-size: 13px; line-height: 1; cursor: pointer;
-  opacity: 0.55; transition: opacity .2s;
+  opacity: 0.65; transition: opacity .2s;
 }
 #toc-toggle:hover { opacity: 1; }
 .tocify-wrapper.toc-hidden { display: none !important; }
 
 pre {
-  background-color: #f0f4f8; border: 1px solid #dce6f0;
+  background-color: #1a000d; border: 1px solid #3b0017;
   border-radius: 7px; padding: 14px 18px;
   font-size: 14px; line-height: 1.65; position: relative;
+  color: #f0ebe3;
 }
 code {
-  background-color: #e8f0f8; border-radius: 4px;
-  padding: 2px 6px; font-size: 0.88em; color: #0f2a4a;
+  background-color: rgba(59,0,23,0.08); border-radius: 4px;
+  padding: 2px 6px; font-size: 0.88em; color: #3b0017;
 }
-pre code { background: transparent; padding: 0; color: inherit; font-size: 14px; }
+pre code { background: transparent; padding: 0; color: #f0ebe3; font-size: 14px; }
 
 .copy-btn {
   position: absolute; top: 7px; right: 9px;
   background: #f71e0a; color: #fff; border: none;
   border-radius: 4px; padding: 3px 11px;
   font-size: 0.75rem; font-family: 'Inter', sans-serif;
-  cursor: pointer; opacity: 0.75; transition: opacity .15s; z-index: 10;
+  cursor: pointer; opacity: 0.85; transition: opacity .15s; z-index: 10;
 }
 .copy-btn:hover { opacity: 1; }
 
 table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: 15.5px; }
-thead th { background-color: #0f2a4a; color: #ffffff; padding: 10px 15px; text-align: left; }
-tbody tr:nth-child(even) { background-color: #f0f4f8; }
-tbody td { padding: 9px 15px; border-bottom: 1px solid #dce6f0; }
+thead th { background-color: #3b0017; color: #f0ebe3; padding: 10px 15px; text-align: left; }
+tbody tr:nth-child(even) { background-color: rgba(133,225,232,0.12); }
+tbody td { padding: 9px 15px; border-bottom: 1px solid rgba(59,0,23,0.12); }
 
-.callout-conceito { background: #e8f4fd; border-left: 4px solid #1a6fa8; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
-.callout-aviso    { background: #fff0ee; border-left: 4px solid #f71e0a; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
+.callout-conceito { background: rgba(133,225,232,0.15); border-left: 4px solid #85e1e8; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
+.callout-aviso    { background: rgba(247,30,10,0.06);  border-left: 4px solid #f71e0a; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
 .callout-pratica  { background: #e8f5e9; border-left: 4px solid #2e7d32; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
-.callout-exercicio{ background: #f3e8fd; border-left: 4px solid #6a1b9a; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
+.callout-exercicio{ background: rgba(236,225,0,0.12);  border-left: 4px solid #ece100; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
 
 .main-container { max-width: 960px; }
 </style>
@@ -196,6 +204,8 @@ O ponto de partida está nos trabalhos de Carlos Hasenbalg e Nelson do Valle Sil
 
 Esse achado foi confirmado por pesquisas subsequentes -- entre elas Henriques (2001) -- que reproduziram a análise com diferentes períodos e encontraram o mesmo padrão. A consistência dos resultados consolidou a agregação como prática metodológica padrão na literatura de estratificação racial no Brasil.
 
+Hasenbalg e Silva (1988) estimaram que brancos tinham o **dobro de chance** de mobilidade social ascendente em relação a não brancos ao longo de uma geração -- mesmo quando se controla pela origem socioeconômica. Esse resultado deslocou o debate: a desigualdade racial não é apenas um resquício do escravismo a ser diluído pelo crescimento econômico, mas um mecanismo ativo de reprodução de hierarquias.
+
 ### Evidência empírica
 
 Os gráficos abaixo mostram rendimento médio mensal e percentual com ensino superior para cada uma das cinco categorias do IBGE -- sem colapsar preto e pardo. A proximidade entre pretos e pardos em ambos os indicadores é o que justifica empiricamente a agregação.
@@ -227,23 +237,23 @@ escol_raca$cor_raca <- reorder(escol_raca$cor_raca, escol_raca$prop_superior)
 
 rm(pnadc_ds, pnadc_raw)
 
-.cores <- c("Branca"="#5baad4", "Amarela"="#e6a817", "Preta"="#0f2a4a",
-            "Parda"="#2a6496", "Indígena"="#7fb3d3")
+.cores <- c("Branca"="#85e1e8", "Amarela"="#ece100", "Preta"="#3b0017",
+            "Parda"="#f71e0a", "Indígena"="#d4630a")
 
 .tema <- theme_minimal(base_family = "sans") +
-  theme(plot.title    = element_text(color = "#0f2a4a", face = "bold", size = 12),
-        plot.subtitle = element_text(color = "#4a6580", size = 9),
+  theme(plot.title    = element_text(color = "#3b0017", face = "bold", size = 12),
+        plot.subtitle = element_text(color = "#7a3050", size = 9),
         plot.caption  = element_text(color = "#888888", size = 8, hjust = 0),
-        axis.text.y   = element_text(color = "#0f2a4a", face = "bold"),
+        axis.text.y   = element_text(color = "#3b0017", face = "bold"),
         panel.grid.major.y = element_blank(),
         panel.grid.minor   = element_blank(),
-        plot.background    = element_rect(fill = "#f8f9fb", color = NA),
-        panel.background   = element_rect(fill = "#f8f9fb", color = NA))
+        plot.background    = element_rect(fill = "#f0ebe3", color = NA),
+        panel.background   = element_rect(fill = "#f0ebe3", color = NA))
 
 p1 <- ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   geom_col(width = 0.65, show.legend = FALSE) +
   geom_text(aes(label = paste0("R$ ", formatC(round(renda_media), format = "d", big.mark = "."))),
-            hjust = -0.1, size = 3.5, color = "#0f2a4a") +
+            hjust = -0.1, size = 3.5, color = "#3b0017") +
   coord_flip(clip = "off") +
   scale_y_continuous(limits = c(0, 7200),
     labels = function(x) paste0("R$ ", formatC(x, format = "d", big.mark = "."))) +
@@ -257,7 +267,7 @@ p1 <- ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
 p2 <- ggplot(escol_raca, aes(x = cor_raca, y = prop_superior, fill = cor_raca)) +
   geom_col(width = 0.65, show.legend = FALSE) +
   geom_text(aes(label = percent(prop_superior, accuracy = 0.1, decimal.mark = ",")),
-            hjust = -0.1, size = 3.5, color = "#0f2a4a") +
+            hjust = -0.1, size = 3.5, color = "#3b0017") +
   coord_flip(clip = "off") +
   scale_y_continuous(limits = c(0, 0.45), labels = percent_format(accuracy = 1)) +
   scale_fill_manual(values = .cores) +
@@ -644,11 +654,11 @@ names(renda_raca)[1:3] <- c("cor_raca", "renda_media", "se")  # renomeia colunas
 
 ```{r grafico-renda-pnadc, fig.height=5}
 cores_raca <- c(
-  "Branca"   = "#5baad4",
-  "Amarela"  = "#e6a817",
-  "Preta"    = "#0f2a4a",
-  "Parda"    = "#2a6496",
-  "Indígena" = "#7fb3d3"
+  "Branca"   = "#85e1e8",
+  "Amarela"  = "#ece100",
+  "Preta"    = "#3b0017",
+  "Parda"    = "#f71e0a",
+  "Indígena" = "#d4630a"
 )
 
 ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
@@ -663,7 +673,7 @@ ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   geom_text(
     aes(label = dollar(renda_media, prefix = "R$ ",
                        big.mark = ".", decimal.mark = ",")),
-    hjust = -0.15, size = 3.8, color = "#0f2a4a", fontface = "bold"
+    hjust = -0.15, size = 3.8, color = "#3b0017", fontface = "bold"
   ) +
   # coord_flip: gira o gráfico 90°, transformando barras verticais em horizontais
   coord_flip(clip = "off") +
@@ -680,15 +690,15 @@ ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   ) +
   theme_minimal(base_family = "sans") +
   theme(
-    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
-    plot.subtitle      = element_text(color = "#4a6580", size = 10),
+    plot.title         = element_text(color = "#3b0017", face = "bold", size = 13),
+    plot.subtitle      = element_text(color = "#7a3050", size = 10),
     plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
-    axis.text.y        = element_text(color = "#0f2a4a", face = "bold", size = 12),
+    axis.text.y        = element_text(color = "#3b0017", face = "bold", size = 12),
     axis.text.x        = element_text(color = "#555555"),
     panel.grid.major.y = element_blank(),
     panel.grid.minor   = element_blank(),
-    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
-    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+    plot.background    = element_rect(fill = "#f0ebe3", color = NA),
+    panel.background   = element_rect(fill = "#f0ebe3", color = NA)
   )
 ```
 
@@ -724,7 +734,7 @@ ggplot(escol_raca, aes(x = cor_raca, y = prop_superior, fill = cor_raca)) +
   ) +
   geom_text(
     aes(label = percent(prop_superior, accuracy = 0.1, decimal.mark = ",")),
-    hjust = -0.15, size = 3.8, color = "#0f2a4a", fontface = "bold"
+    hjust = -0.15, size = 3.8, color = "#3b0017", fontface = "bold"
   ) +
   coord_flip(clip = "off") +
   scale_y_continuous(
@@ -740,15 +750,15 @@ ggplot(escol_raca, aes(x = cor_raca, y = prop_superior, fill = cor_raca)) +
   ) +
   theme_minimal(base_family = "sans") +
   theme(
-    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
-    plot.subtitle      = element_text(color = "#4a6580", size = 10),
+    plot.title         = element_text(color = "#3b0017", face = "bold", size = 13),
+    plot.subtitle      = element_text(color = "#7a3050", size = 10),
     plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
-    axis.text.y        = element_text(color = "#0f2a4a", face = "bold", size = 12),
+    axis.text.y        = element_text(color = "#3b0017", face = "bold", size = 12),
     axis.text.x        = element_text(color = "#555555"),
     panel.grid.major.y = element_blank(),
     panel.grid.minor   = element_blank(),
-    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
-    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+    plot.background    = element_rect(fill = "#f0ebe3", color = NA),
+    panel.background   = element_rect(fill = "#f0ebe3", color = NA)
   )
 ```
 
@@ -885,10 +895,10 @@ tse_regioes %>%
   geom_text(
     aes(label = percent(proporcao, accuracy = 1)),
     position = position_dodge(width = 0.65),  # alinha os rótulos com suas respectivas barras
-    vjust = -0.5, size = 3.5, color = "#0f2a4a", fontface = "bold"
+    vjust = -0.5, size = 3.5, color = "#3b0017", fontface = "bold"
   ) +
   scale_y_continuous(labels = percent_format(), limits = c(0, 0.85)) +
-  scale_fill_manual(values = c("Candidatos" = "#5baad4", "Eleitos" = "#0f2a4a"), name = NULL) +
+  scale_fill_manual(values = c("Candidatos" = "#85e1e8", "Eleitos" = "#3b0017"), name = NULL) +
   labs(
     title    = "Candidatos e eleitos negros a vereador por grande região -- 2024",
     subtitle = "Negros = pretos + pardos (autodeclaração TSE)",
@@ -897,15 +907,15 @@ tse_regioes %>%
   ) +
   theme_minimal(base_family = "sans") +
   theme(
-    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
-    plot.subtitle      = element_text(color = "#4a6580", size = 10.5),
+    plot.title         = element_text(color = "#3b0017", face = "bold", size = 13),
+    plot.subtitle      = element_text(color = "#7a3050", size = 10.5),
     plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
-    axis.text.x        = element_text(color = "#0f2a4a", face = "bold", size = 11),
+    axis.text.x        = element_text(color = "#3b0017", face = "bold", size = 11),
     legend.position    = "top",
     panel.grid.major.x = element_blank(),
     panel.grid.minor   = element_blank(),
-    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
-    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+    plot.background    = element_rect(fill = "#f0ebe3", color = NA),
+    panel.background   = element_rect(fill = "#f0ebe3", color = NA)
   )
 ```
 
@@ -919,18 +929,18 @@ Em todas as regiões, a proporção de eleitos negros fica abaixo da proporção
 
 ```{r paleta}
 cores_grupo <- c(
-  "Negros"    = "#0f2a4a",
-  "Brancos"   = "#5baad4",
-  "Indígenas" = "#7fb3d3",
-  "Amarelos"  = "#a8c8e8"
+  "Negros"    = "#3b0017",
+  "Brancos"   = "#85e1e8",
+  "Indígenas" = "#d4630a",
+  "Amarelos"  = "#ece100"
 )
 
 cores_censo <- c(
-  "Branca"    = "#5baad4",
-  "Amarela"   = "#a8c8e8",
-  "Preta"     = "#0f2a4a",
-  "Parda"     = "#1d3557",
-  "Indígena"  = "#7fb3d3"
+  "Branca"    = "#85e1e8",
+  "Amarela"   = "#ece100",
+  "Preta"     = "#3b0017",
+  "Parda"     = "#f71e0a",
+  "Indígena"  = "#d4630a"
 )
 ```
 
@@ -966,16 +976,16 @@ pop_grupo %>%
   ) +
   theme_minimal(base_family = "sans") +
   theme(
-    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 14),
-    plot.subtitle      = element_text(color = "#4a6580", size = 11.5),
+    plot.title         = element_text(color = "#3b0017", face = "bold", size = 14),
+    plot.subtitle      = element_text(color = "#7a3050", size = 11.5),
     plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
-    axis.text.x        = element_text(color = "#0f2a4a", face = "bold", size = 12),
+    axis.text.x        = element_text(color = "#3b0017", face = "bold", size = 12),
     axis.text.y        = element_text(color = "#555555"),
     legend.position    = "right",
     panel.grid.major.x = element_blank(),
     panel.grid.minor   = element_blank(),
-    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
-    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+    plot.background    = element_rect(fill = "#f0ebe3", color = NA),
+    panel.background   = element_rect(fill = "#f0ebe3", color = NA)
   )
 ```
 
@@ -1015,13 +1025,13 @@ ggplot(df_resposta, aes(x = regiao, y = proporcao, fill = dimensao)) +
   geom_text(
     aes(label = percent(proporcao, accuracy = 1)),
     position = position_dodge(width = 0.65),
-    vjust = -0.5, size = 3.5, color = "#0f2a4a", fontface = "bold"
+    vjust = -0.5, size = 3.5, color = "#3b0017", fontface = "bold"
   ) +
   scale_y_continuous(labels = percent_format(), limits = c(0, 0.90)) +
   scale_fill_manual(
     values = c(
-      "População negra (Censo 2022)"         = "#5baad4",
-      "Vereadores negros eleitos (TSE 2024)" = "#0f2a4a"
+      "População negra (Censo 2022)"         = "#85e1e8",
+      "Vereadores negros eleitos (TSE 2024)" = "#3b0017"
     ),
     name = NULL
   ) +
@@ -1033,15 +1043,15 @@ ggplot(df_resposta, aes(x = regiao, y = proporcao, fill = dimensao)) +
   ) +
   theme_minimal(base_family = "sans") +
   theme(
-    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
-    plot.subtitle      = element_text(color = "#4a6580", size = 10.5),
+    plot.title         = element_text(color = "#3b0017", face = "bold", size = 13),
+    plot.subtitle      = element_text(color = "#7a3050", size = 10.5),
     plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
-    axis.text.x        = element_text(color = "#0f2a4a", face = "bold", size = 11),
+    axis.text.x        = element_text(color = "#3b0017", face = "bold", size = 11),
     legend.position    = "top",
     panel.grid.major.x = element_blank(),
     panel.grid.minor   = element_blank(),
-    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
-    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+    plot.background    = element_rect(fill = "#f0ebe3", color = NA),
+    panel.background   = element_rect(fill = "#f0ebe3", color = NA)
   )
 ```
 
@@ -1189,15 +1199,15 @@ A linha pontilhada diagonal representa a representação proporcional perfeita: 
 
 ```{r grafico-cruzamento-todos}
 ggplot(censo_tse_municipios, aes(x = prop_negros, y = prop_eleitos_negros)) +
-  geom_point(alpha = 0.25, color = "#0f2a4a", size = 1.2) +
+  geom_point(alpha = 0.25, color = "#3b0017", size = 1.2) +
   # geom_smooth(method = "lm"): linha de regressão linear (OLS) com banda de confiança (se=TRUE).
   # Mostra a tendência empírica: à medida que a proporção negra aumenta, a representação sobe?
-  geom_smooth(method = "lm", color = "#1a6fa8", se = TRUE) +
+  geom_smooth(method = "lm", color = "#f71e0a", se = TRUE) +
   # geom_abline(slope=1, intercept=0): desenha a linha y = x (diagonal).
   # Representa a representação proporcional perfeita: vereadores negros = % negros na população.
   # Pontos abaixo dessa linha = sub-representação; acima = sobre-representação.
   geom_abline(slope = 1, intercept = 0, linetype = "dashed",
-              color = "#e6a817", linewidth = 0.9) +
+              color = "#ece100", linewidth = 0.9) +
   scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
   scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
   labs(
@@ -1209,11 +1219,11 @@ ggplot(censo_tse_municipios, aes(x = prop_negros, y = prop_eleitos_negros)) +
   ) +
   theme_minimal(base_family = "sans") +
   theme(
-    plot.title       = element_text(color = "#0f2a4a", face = "bold", size = 13),
-    plot.subtitle    = element_text(color = "#4a6580", size = 10.5),
+    plot.title       = element_text(color = "#3b0017", face = "bold", size = 13),
+    plot.subtitle    = element_text(color = "#7a3050", size = 10.5),
     plot.caption     = element_text(color = "#888888", size = 9, hjust = 0),
-    plot.background  = element_rect(fill = "#f8f9fb", color = NA),
-    panel.background = element_rect(fill = "#f8f9fb", color = NA)
+    plot.background  = element_rect(fill = "#f0ebe3", color = NA),
+    panel.background = element_rect(fill = "#f0ebe3", color = NA)
   )
 ```
 
@@ -1230,10 +1240,10 @@ print(paste("Correlação — todos os municípios:", round(cor_todos, 3)))
 censo_tse_municipios %>%
   filter(pop_total >= 100000) %>%
   ggplot(aes(x = prop_negros, y = prop_eleitos_negros)) +
-  geom_point(alpha = 0.45, color = "#0f2a4a", size = 1.8) +
-  geom_smooth(method = "lm", color = "#1a6fa8", se = TRUE) +
+  geom_point(alpha = 0.45, color = "#3b0017", size = 1.8) +
+  geom_smooth(method = "lm", color = "#f71e0a", se = TRUE) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed",
-              color = "#e6a817", linewidth = 0.9) +
+              color = "#ece100", linewidth = 0.9) +
   scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
   scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
   labs(
@@ -1245,11 +1255,11 @@ censo_tse_municipios %>%
   ) +
   theme_minimal(base_family = "sans") +
   theme(
-    plot.title       = element_text(color = "#0f2a4a", face = "bold", size = 13),
-    plot.subtitle    = element_text(color = "#4a6580", size = 10.5),
+    plot.title       = element_text(color = "#3b0017", face = "bold", size = 13),
+    plot.subtitle    = element_text(color = "#7a3050", size = 10.5),
     plot.caption     = element_text(color = "#888888", size = 9, hjust = 0),
-    plot.background  = element_rect(fill = "#f8f9fb", color = NA),
-    panel.background = element_rect(fill = "#f8f9fb", color = NA)
+    plot.background  = element_rect(fill = "#f0ebe3", color = NA),
+    panel.background = element_rect(fill = "#f0ebe3", color = NA)
   )
 ```
 
