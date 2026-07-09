@@ -11,7 +11,7 @@ output:
       smooth_scroll: true
     toc_depth: 3
     theme: flatly
-    highlight: espresso
+    highlight: tango
     self_contained: true
 ---
 
@@ -61,25 +61,25 @@ a:hover { color: #f71e0a; text-decoration: underline; }
 .tocify-wrapper.toc-hidden { display: none !important; }
 
 pre {
-  background-color: #1a000d; border: 1px solid #3b0017;
+  background-color: #e8dfd0; border: 1px solid rgba(59,0,23,0.2);
   border-radius: 7px; padding: 14px 18px;
   font-size: 14px; line-height: 1.65; position: relative;
-  color: #f0ebe3;
+  color: #0a0513;
 }
 code {
   background-color: rgba(59,0,23,0.08); border-radius: 4px;
   padding: 2px 6px; font-size: 0.88em; color: #3b0017;
 }
-pre code { background: transparent; padding: 0; color: #f0ebe3; font-size: 14px; }
+pre code { background: transparent; padding: 0; color: #0a0513; font-size: 14px; }
 
 .copy-btn {
   position: absolute; top: 7px; right: 9px;
-  background: #f71e0a; color: #fff; border: none;
+  background: #3b0017; color: #f0ebe3; border: none;
   border-radius: 4px; padding: 3px 11px;
   font-size: 0.75rem; font-family: 'Inter', sans-serif;
-  cursor: pointer; opacity: 0.85; transition: opacity .15s; z-index: 10;
+  cursor: pointer; opacity: 0.75; transition: opacity .15s; z-index: 10;
 }
-.copy-btn:hover { opacity: 1; }
+.copy-btn:hover { opacity: 1; background: #f71e0a; color: #fff; }
 
 table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: 15.5px; }
 thead th { background-color: #3b0017; color: #f0ebe3; padding: 10px 15px; text-align: left; }
