@@ -1721,41 +1721,6 @@ dados eleitorais do TSE, aprendendo como cada base funciona por conta
 própria antes de ver como combiná-las.</p>
 <hr />
 </div>
-<div id="primeiros-passos-r-e-rstudio" class="section level1">
-<h1>Primeiros passos: R e RStudio</h1>
-<p><strong>R</strong> é uma linguagem de programação gratuita e de
-código aberto para análise estatística e visualização de dados.
-<strong>RStudio</strong> é o ambiente de trabalho mais usado para
-escrever e executar código R — ele organiza scripts, gráficos e
-resultados em uma única janela.</p>
-<p>Para instalar:</p>
-<ol style="list-style-type: decimal">
-<li>Baixe e instale o <strong>R</strong> em <a href="https://cran.r-project.org/">cran.r-project.org</a></li>
-<li>Baixe e instale o <strong>RStudio Desktop</strong> em <a href="https://posit.co/download/rstudio-desktop/">posit.co/download/rstudio-desktop</a></li>
-</ol>
-<p>Com o RStudio aberto, rode o bloco abaixo <strong>uma única
-vez</strong> antes da aula. Ele instala o pacote <code>pacman</code>,
-que por sua vez baixa e carrega todos os outros pacotes usados neste
-tutorial:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Rode UMA VEZ antes da aula para instalar todos os pacotes.</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;pacman&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  tidyverse,    <span class="co"># dplyr, ggplot2, forcats e afins</span></span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  scales,       <span class="co"># formatação de eixos e valores</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  sidrar,       <span class="co"># tabelas agregadas do IBGE via SIDRA</span></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  censobr,      <span class="co"># microdados do Censo 2022 via IPEA</span></span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  arrow,        <span class="co"># necessário para coletar dados do censobr</span></span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  PNADcIBGE,   <span class="co"># microdados da PNADC</span></span>
-<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  survey,       <span class="co"># estimativas com desenho amostral complexo</span></span>
-<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  patchwork,    <span class="co"># combinar gráficos</span></span>
-<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>  electionsBR,  <span class="co"># dados eleitorais do TSE</span></span>
-<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  basedosdados, <span class="co"># Base dos Dados (BigQuery)</span></span>
-<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  DBI,          <span class="co"># interface de banco de dados</span></span>
-<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>  bigrquery     <span class="co"># conector Google BigQuery</span></span>
-<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>)</span></code></pre></div>
-<hr />
-</div>
 <div id="contexto-metodológico" class="section level1">
 <h1>1 · Contexto metodológico</h1>
 <div id="autodeclaração-e-heteroidentificação" class="section level2">
@@ -2335,6 +2300,41 @@ do município com muito menos código (seção 7). Respondê-la de forma
 rigorosa exigiria controles e testes que estão além do escopo da aula,
 mas o caminho metodológico que percorremos para chegar perto já é o
 objetivo.</p>
+<hr />
+</div>
+<div id="primeiros-passos-r-e-rstudio" class="section level1">
+<h1>Primeiros passos: R e RStudio</h1>
+<p><strong>R</strong> é uma linguagem de programação gratuita e de
+código aberto para análise estatística e visualização de dados.
+<strong>RStudio</strong> é o ambiente de trabalho mais usado para
+escrever e executar código R — ele organiza scripts, gráficos e
+resultados em uma única janela.</p>
+<p>Para instalar:</p>
+<ol style="list-style-type: decimal">
+<li>Baixe e instale o <strong>R</strong> em <a href="https://cran.r-project.org/">cran.r-project.org</a></li>
+<li>Baixe e instale o <strong>RStudio Desktop</strong> em <a href="https://posit.co/download/rstudio-desktop/">posit.co/download/rstudio-desktop</a></li>
+</ol>
+<p>Com o RStudio aberto, rode o bloco abaixo <strong>uma única
+vez</strong> antes da aula. Ele instala o pacote <code>pacman</code>,
+que por sua vez baixa e carrega todos os outros pacotes usados neste
+tutorial:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Rode UMA VEZ antes da aula para instalar todos os pacotes.</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;pacman&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  tidyverse,    <span class="co"># dplyr, ggplot2, forcats e afins</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  scales,       <span class="co"># formatação de eixos e valores</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  sidrar,       <span class="co"># tabelas agregadas do IBGE via SIDRA</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  censobr,      <span class="co"># microdados do Censo 2022 via IPEA</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  arrow,        <span class="co"># necessário para coletar dados do censobr</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  PNADcIBGE,   <span class="co"># microdados da PNADC</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  survey,       <span class="co"># estimativas com desenho amostral complexo</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  patchwork,    <span class="co"># combinar gráficos</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>  electionsBR,  <span class="co"># dados eleitorais do TSE</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  basedosdados, <span class="co"># Base dos Dados (BigQuery)</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  DBI,          <span class="co"># interface de banco de dados</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>  bigrquery     <span class="co"># conector Google BigQuery</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Locale garante leitura correta de acentos e datas em português</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">Sys.setlocale</span>(<span class="at">category =</span> <span class="st">&quot;LC_ALL&quot;</span>, <span class="at">locale =</span> <span class="st">&quot;pt_BR.UTF-8&quot;</span>)</span></code></pre></div>
 <pre><code>#&gt; [1] &quot;LC_COLLATE=pt_BR.UTF-8;LC_CTYPE=pt_BR.UTF-8;LC_MONETARY=pt_BR.UTF-8;LC_NUMERIC=C;LC_TIME=pt_BR.UTF-8&quot;</code></pre>

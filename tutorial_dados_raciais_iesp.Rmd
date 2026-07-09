@@ -140,39 +140,6 @@ A aula está dividida em duas partes. Primeiro, discutimos os desafios metodoló
 
 ---
 
-# Primeiros passos: R e RStudio
-
-**R** é uma linguagem de programação gratuita e de código aberto para análise estatística e visualização de dados. **RStudio** é o ambiente de trabalho mais usado para escrever e executar código R — ele organiza scripts, gráficos e resultados em uma única janela.
-
-Para instalar:
-
-1. Baixe e instale o **R** em [cran.r-project.org](https://cran.r-project.org/)
-2. Baixe e instale o **RStudio Desktop** em [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/)
-
-Com o RStudio aberto, rode o bloco abaixo **uma única vez** antes da aula. Ele instala o pacote `pacman`, que por sua vez baixa e carrega todos os outros pacotes usados neste tutorial:
-
-```{r instalacao, eval=FALSE}
-# Rode UMA VEZ antes da aula para instalar todos os pacotes.
-if (!require("pacman", quietly = TRUE)) install.packages("pacman")
-
-pacman::p_load(
-  tidyverse,    # dplyr, ggplot2, forcats e afins
-  scales,       # formatação de eixos e valores
-  sidrar,       # tabelas agregadas do IBGE via SIDRA
-  censobr,      # microdados do Censo 2022 via IPEA
-  arrow,        # necessário para coletar dados do censobr
-  PNADcIBGE,   # microdados da PNADC
-  survey,       # estimativas com desenho amostral complexo
-  patchwork,    # combinar gráficos
-  electionsBR,  # dados eleitorais do TSE
-  basedosdados, # Base dos Dados (BigQuery)
-  DBI,          # interface de banco de dados
-  bigrquery     # conector Google BigQuery
-)
-```
-
----
-
 # 1 · Contexto metodológico
 
 ## 1.1 Autodeclaração e heteroidentificação
@@ -429,6 +396,39 @@ Para ilustrar como trabalhar com essas bases, vamos usar uma pergunta concreta a
 Responder a ela exige o **Censo 2022** (composição racial por município) e os **dados do TSE 2024** (candidatos por raça e município). A **PNADC** entra como recurso complementar: como o Censo só acontece a cada dez anos, é ela que permite acompanhar as desigualdades raciais nos anos entre um censo e outro.
 
 A pergunta funciona como instrumento didático -- ela nos força a passar pelas três bases e entender como cada uma contribui. Primeiro respondemos com as fontes diretas (seções 3, 4 e 5), ao nível da grande região. Depois mostramos como a Base dos Dados permite descer ao nível do município com muito menos código (seção 7). Respondê-la de forma rigorosa exigiria controles e testes que estão além do escopo da aula, mas o caminho metodológico que percorremos para chegar perto já é o objetivo.
+
+---
+
+# Primeiros passos: R e RStudio
+
+**R** é uma linguagem de programação gratuita e de código aberto para análise estatística e visualização de dados. **RStudio** é o ambiente de trabalho mais usado para escrever e executar código R — ele organiza scripts, gráficos e resultados em uma única janela.
+
+Para instalar:
+
+1. Baixe e instale o **R** em [cran.r-project.org](https://cran.r-project.org/)
+2. Baixe e instale o **RStudio Desktop** em [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/)
+
+Com o RStudio aberto, rode o bloco abaixo **uma única vez** antes da aula. Ele instala o pacote `pacman`, que por sua vez baixa e carrega todos os outros pacotes usados neste tutorial:
+
+```{r instalacao, eval=FALSE}
+# Rode UMA VEZ antes da aula para instalar todos os pacotes.
+if (!require("pacman", quietly = TRUE)) install.packages("pacman")
+
+pacman::p_load(
+  tidyverse,    # dplyr, ggplot2, forcats e afins
+  scales,       # formatação de eixos e valores
+  sidrar,       # tabelas agregadas do IBGE via SIDRA
+  censobr,      # microdados do Censo 2022 via IPEA
+  arrow,        # necessário para coletar dados do censobr
+  PNADcIBGE,   # microdados da PNADC
+  survey,       # estimativas com desenho amostral complexo
+  patchwork,    # combinar gráficos
+  electionsBR,  # dados eleitorais do TSE
+  basedosdados, # Base dos Dados (BigQuery)
+  DBI,          # interface de banco de dados
+  bigrquery     # conector Google BigQuery
+)
+```
 
 ```{r configuracao, error=TRUE}
 # Locale garante leitura correta de acentos e datas em português
