@@ -166,34 +166,41 @@ A operação mais comum na análise de desigualdade racial no Brasil é somar pr
 
 A classificação racial nas pesquisas públicas tem história. O Censo de 1872 -- o primeiro -- dividia a população por "raça" (pretos, pardos, brancos e caboclos) e por "condição" (livre, liberto ou escravo). Essa classificação não descrevia pigmentação: como argumenta Camargo (2009), ela "buscava definir lugares sociais, nos quais etnia e condição estavam indissociavelmente ligadas". A ausência de uma categoria de cor para a população branca era, naquela sociedade escravocrata, um signo de cidadania.
 
-O Censo de 1890 refletiu o positivismo da nascente República e as teses de branqueamento da época: inseriu "mestiços" como categoria, suprimiu a variável "frequência escolar" e introduziu perguntas sobre imigração. Em 1920, o quesito cor foi suprimido completamente; retornou em 1940, com a criação do IBGE e a consolidação de uma comunidade técnica especializada. As cinco categorias atuais -- branca, preta, amarela, parda e indígena -- foram consolidadas no Censo de 1991 e mantidas em 2022.
+O Censo de 1890 refletiu o positivismo da nascente República e as teses de branqueamento da época: substituiu "pardos" e "caboclos" por "mestiços", elevando a miscigenação ao status de categoria oficial. Em 1920, o quesito cor foi suprimido completamente; retornou em 1940, com a criação do IBGE. As cinco categorias atuais -- branca, preta, amarela, parda e indígena -- foram consolidadas no Censo de 1991 e seguem sendo mantidas.
+
+A tabela abaixo, reproduzida de Campos (2013), sintetiza as mudanças:
+
+| Censo | Nome da variável | Categorias |
+|---|---|---|
+| 1872 | Raça | Branca, Preta, Parda, Cabocla |
+| 1890 | Raça | Branca, Preta, Mestiça, Cabocla |
+| 1920 | *(ausente)* | — |
+| 1940 | Cor | Branca, Preta, Amarela |
+| 1950 / 1960 | Cor | Branca, Preta, Parda, Amarela |
+| 1970 | *(ausente)* | — |
+| 1980 | Cor | Branca, Preta, Parda, Amarela |
+| 1991 / 2000 / 2010 | Cor ou raça | Branca, Preta, Parda, Amarela, Indígena |
+
+*Fonte: IBGE; reproduzido de Campos (2013, Tabela 1).*
 
 <div class="callout-aviso">
 **Descontinuidades históricas**
-As categorias mudaram entre 1872, 1890, 1940 e 1991. Comparações diretas entre censos exigem atenção: "pardo" em 1872 não capturava o mesmo fenômeno social que "parda" em 2022. O [pacote `censobr`](https://ipeagit.github.io/censobr/) permite acessar os formulários e dicionários de variáveis de cada edição.
+As categorias mudaram entre 1872, 1890, 1940 e 1991. Comparações diretas entre censos exigem atenção: "pardo" em 1872 não capturava o mesmo fenômeno social que "parda" em 2022. O [pacote `censobr`](https://ipeagit.github.io/censobr/) (IPEA) dá acesso direto aos questionários e dicionários de variáveis de cada edição do Censo, incluindo os formulários de 1960 em diante -- o que permite verificar, por exemplo, quais categorias estavam disponíveis em cada rodada e como as instruções de preenchimento foram formuladas.
 </div>
 
 ### Origem sociológica da agregação
 
 O ponto de partida está nos trabalhos de Carlos Hasenbalg e Nelson do Valle Silva, publicados no final dos anos 1970. Ao estudar mobilidade social com dados censitários, os dois pesquisadores precisaram lidar com um problema prático: os autodeclarados "pretos" correspondiam a apenas 7--8% da população, o que tornava as estimativas estatisticamente frágeis. Ao agregar pretos e pardos como "não brancos", descobriram que os dois grupos tinham **trajetórias socioeconômicas semelhantes** -- chances de mobilidade ascendente comparáveis, e ambas muito abaixo das de brancos, independente da classe de origem.
 
-Esse achado foi confirmado por pesquisas subsequentes: Henriques (2001), Soares (2000), Ribeiro (2006) e outros reproduziram a análise com diferentes períodos e encontraram o mesmo padrão. A semelhança entre pretos e pardos não é um acidente estatístico -- ela reflete a percepção social de ambos os grupos como alvos de discriminação racial em contextos onde a aparência conta mais do que a autoidentificação.
-
-### O debate político
-
-A sociologia produziu a evidência; o movimento negro criou o vocabulário. Ao longo dos anos 1980 e 1990, as organizações negras passaram a defender que pretos e pardos fossem denominados "negros" -- não apenas por conveniência analítica, mas como projeto político de construção de identidade. A redenominação invertia a carga negativa historicamente associada à palavra e criava uma base demográfica expressiva (aproximadamente metade da população) para demandar políticas públicas.
-
-Para Campos (2013), o pardo "deixou de ser um simples obstáculo epistemológico para as ciências sociais para se tornar dilema político para o Estado brasileiro". Em pesquisa aberta do IBGE (1998), 134 categorias espontâneas foram usadas por brasileiros para descrever sua cor -- mas 90% se concentraram em apenas 14 termos, e quase metade escolheu apenas dois: "branca" e "parda". A fluidez do sistema, frequentemente citada para questionar a viabilidade de políticas raciais, coexiste com uma estrutura de desigualdade surpreendentemente estável.
-
-Quando as universidades implementaram cotas nos anos 2000, o debate ganhou contornos práticos: quem eram os beneficiários? O estado do Rio de Janeiro usou inicialmente "pardos e negros"; a UnB exigiu que o candidato "se declare negro"; a lei federal de 2012 adotou o modelo do IBGE (pretos e pardos). A Tabela 2 de Campos (2013) documenta a variedade de modelos classificatórios adotados pelas universidades públicas.
+Esse achado foi confirmado por pesquisas subsequentes: Henriques (2001), Soares (2000), Ribeiro (2006) e outros reproduziram a análise com diferentes períodos e encontraram o mesmo padrão. A consistência dos resultados consolidou a agregação como prática metodológica padrão na literatura de estratificação racial no Brasil.
 
 ### Evidência empírica
 
-Os gráficos abaixo mostram rendimento médio mensal e percentual com ensino superior para cada uma das cinco categorias do IBGE -- sem colapsar preto e pardo.
+Os gráficos abaixo mostram rendimento médio mensal e percentual com ensino superior para cada uma das cinco categorias do IBGE -- sem colapsar preto e pardo. A proximidade entre pretos e pardos em ambos os indicadores é o que justifica empiricamente a agregação.
 
-```{r graficos-desigualdade-racial, echo=FALSE, cache=TRUE, message=FALSE, fig.width=5, fig.height=4.5, fig.show='hold', out.width='48%'}
+```{r graficos-desigualdade-racial, echo=FALSE, cache=TRUE, message=FALSE, fig.width=10, fig.height=4.5}
 suppressPackageStartupMessages({
-  library(PNADcIBGE); library(survey); library(ggplot2); library(scales)
+  library(PNADcIBGE); library(survey); library(ggplot2); library(scales); library(patchwork)
 })
 
 pnadc_raw <- readRDS("dados/pnadc_raw.rds")
@@ -231,7 +238,7 @@ rm(pnadc_ds, pnadc_raw)
         plot.background    = element_rect(fill = "#f8f9fb", color = NA),
         panel.background   = element_rect(fill = "#f8f9fb", color = NA))
 
-ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
+p1 <- ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
   geom_col(width = 0.65, show.legend = FALSE) +
   geom_text(aes(label = paste0("R$ ", formatC(round(renda_media), format = "d", big.mark = "."))),
             hjust = -0.1, size = 3.5, color = "#0f2a4a") +
@@ -245,7 +252,7 @@ ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
        caption  = "Fonte: IBGE, PNADC 2024.") +
   .tema
 
-ggplot(escol_raca, aes(x = cor_raca, y = prop_superior, fill = cor_raca)) +
+p2 <- ggplot(escol_raca, aes(x = cor_raca, y = prop_superior, fill = cor_raca)) +
   geom_col(width = 0.65, show.legend = FALSE) +
   geom_text(aes(label = percent(prop_superior, accuracy = 0.1, decimal.mark = ",")),
             hjust = -0.1, size = 3.5, color = "#0f2a4a") +
@@ -257,14 +264,30 @@ ggplot(escol_raca, aes(x = cor_raca, y = prop_superior, fill = cor_raca)) +
        x = NULL, y = NULL,
        caption  = "Fonte: IBGE, PNADC 2024.") +
   .tema
+
+p1 + p2
 ```
 
 Em ambos os indicadores, pretos e pardos apresentam valores próximos entre si e sistematicamente inferiores aos de brancos. A diferença dentro do grupo negro (preto × pardo) é menor do que entre negros e brancos -- o que sustenta empiricamente a agregação. As seções **4.3** e **4.4** mostram como calcular essas estimativas com o desenho amostral correto.
 
-<div class="callout-aviso">
-**Atenção ao comunicar resultados**
-Ao somar pretos e pardos, deixe claro na primeira vez que aparece no texto: "negros (pretos e pardos, conforme categorias do IBGE)". Nas ocorrências seguintes, use só "negros".
-</div>
+### O debate político
+
+A sociologia produziu a evidência; o movimento negro criou o vocabulário. Ao longo dos anos 1980 e 1990, as organizações negras passaram a defender que pretos e pardos fossem denominados "negros" -- não apenas por conveniência analítica, mas como projeto político de construção de identidade. A redenominação invertia a carga negativa historicamente associada à palavra e criava uma base demográfica expressiva (aproximadamente metade da população) para demandar políticas públicas.
+
+Para Campos (2013), o pardo "deixou de ser um simples obstáculo epistemológico para as ciências sociais para se tornar dilema político para o Estado brasileiro". Em pesquisa aberta do IBGE (1998), 134 categorias espontâneas foram usadas por brasileiros para descrever sua cor -- mas 90% se concentraram em apenas 14 termos, e quase metade escolheu apenas dois: "branca" e "parda". Essa variedade terminológica contrasta com a estabilidade das desigualdades observadas entre os grupos.
+
+Quando as universidades implementaram cotas nos anos 2000, o debate ganhou contornos práticos: quem eram os beneficiários? O estado do Rio de Janeiro usou inicialmente "pardos e negros"; a UnB exigiu que o candidato "se declare negro"; a lei federal de 2012 adotou o modelo do IBGE (pretos e pardos). A tabela abaixo, reproduzida de Campos (2013), documenta a variedade de critérios adotados pelas universidades públicas até 2011:
+
+| Terminologia adotada | N | % |
+|---|---:|---:|
+| Negros | 15 | 38,5% |
+| Negros (pretos + pardos) | 8 | 20,5% |
+| Pretos ou pardos | 8 | 20,5% |
+| Afrodescendentes | 7 | 17,9% |
+| Negros ou pardos | 1 | 2,6% |
+| **Total** | **39** | **100%** |
+
+*Fonte: Grupo de Estudos Multidisciplinares da Ação Afirmativa (GEMAA/IESP-UERJ); reproduzido de Campos (2013, Tabela 2).*
 
 ## 1.3 Marcos legais relevantes
 
@@ -728,7 +751,7 @@ O dado disponível no TSE a partir de 2014 é nominalmente autodeclarado, mas ai
 
 <div class="callout-aviso">
 **Autodeclaração no TSE ≠ autodeclaração no IBGE**
-No Censo e na PNADC, a pessoa se classifica sem que a resposta gere consequências institucionais diretas. No TSE, a declaração é um ato jurídico-eleitoral: o candidato (ou seu partido) sabe que a informação será usada para fins de financiamento proporcional desde 2020. Esse incentivo pode distorcer as declarações em direção ao "negro". Campos e Machado (2020) comparam a autodeclaração no TSE com a heteroidentificação por fotos e estimam que, nas eleições municipais de 2016, entre 35% e 41% dos candidatos que se autodeclararam negros não seriam classificados como tal por observadores externos -- sugerindo que parte relevante das mudanças de categoria reflete o novo enquadramento eleitoral, e não apenas mudanças de identidade.
+No Censo e na PNADC, a pessoa se classifica sem que a resposta gere consequências institucionais diretas. No TSE, a declaração é um ato jurídico-eleitoral: o candidato (ou seu partido) sabe que a informação será usada para fins de financiamento proporcional desde 2020. Esse incentivo pode distorcer as declarações em direção ao "negro". Campos e Machado (2020) comparam a autodeclaração no TSE com a classificação feita por observadores externos e identificam uma divergência relevante entre os dois métodos, sugerindo que parte das mudanças de categoria racial observadas após 2014 reflete o novo enquadramento eleitoral -- e não apenas transformações de identidade.
 </div>
 
 ## 5.1 Principais variáveis
