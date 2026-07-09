@@ -1,0 +1,1312 @@
+---
+title: "Como trabalhar com dados raciais no Brasil"
+subtitle: "Escola de Inverno IESP-UERJ · Curso de Metodologia Quantitativa"
+author: "Juliana Alves Marques e Amsatou Falilou Diop"
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+output:
+  html_document:
+    toc: true
+    output_file: "tutorial_dados_raciais_iesp_v2.html"
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    toc_depth: 3
+    theme: flatly
+    highlight: tango
+    self_contained: true
+---
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+html { font-size: 17px; scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  color: #2d2d2d;
+  line-height: 1.8;
+  background-color: #f8f9fb;
+}
+h1, h2, h3, h4 {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  color: #0f2a4a; font-weight: 600; letter-spacing: -0.015em;
+}
+/* === DARA v2 palette: #f71e0a como acento, azul-marinho como base === */
+h1.title  { font-size: 1.9rem; border-bottom: 3px solid #f71e0a; padding-bottom: 0.4em; }
+h1 { font-size: 1.6rem; border-left: 4px solid #f71e0a; padding-left: 0.6em; margin-top: 1.8em; }
+h2 { font-size: 1.25rem; border-left: 3px solid #0f2a4a; padding-left: 0.5em; margin-top: 1.5em; }
+h3 { font-size: 1.05rem; color: #1d3557; margin-top: 1.3em; }
+a { color: #1a6fa8; text-decoration: none; }
+a:hover { color: #f71e0a; text-decoration: underline; }
+
+#TOC { background-color: #f5f8fc; border: none; border-radius: 0; padding: 8px 0; }
+#TOC a { color: #0f2a4a !important; font-size: 0.85rem !important; }
+#TOC a:hover { color: #f71e0a !important; }
+#TOC li.active > a { color: #f71e0a !important; font-weight: 600 !important; }
+
+#toc-toggle {
+  position: fixed; top: 56px; left: 5px; z-index: 2000;
+  background: #f71e0a; color: #fff; border: none;
+  border-radius: 0 4px 4px 0; padding: 6px 9px;
+  font-size: 13px; line-height: 1; cursor: pointer;
+  opacity: 0.55; transition: opacity .2s;
+}
+#toc-toggle:hover { opacity: 1; }
+.tocify-wrapper.toc-hidden { display: none !important; }
+
+pre {
+  background-color: #f0f4f8; border: 1px solid #dce6f0;
+  border-radius: 7px; padding: 14px 18px;
+  font-size: 14px; line-height: 1.65; position: relative;
+}
+code {
+  background-color: #e8f0f8; border-radius: 4px;
+  padding: 2px 6px; font-size: 0.88em; color: #0f2a4a;
+}
+pre code { background: transparent; padding: 0; color: inherit; font-size: 14px; }
+
+.copy-btn {
+  position: absolute; top: 7px; right: 9px;
+  background: #f71e0a; color: #fff; border: none;
+  border-radius: 4px; padding: 3px 11px;
+  font-size: 0.75rem; font-family: 'Inter', sans-serif;
+  cursor: pointer; opacity: 0.75; transition: opacity .15s; z-index: 10;
+}
+.copy-btn:hover { opacity: 1; }
+
+table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: 15.5px; }
+thead th { background-color: #0f2a4a; color: #ffffff; padding: 10px 15px; text-align: left; }
+tbody tr:nth-child(even) { background-color: #f0f4f8; }
+tbody td { padding: 9px 15px; border-bottom: 1px solid #dce6f0; }
+
+.callout-conceito { background: #e8f4fd; border-left: 4px solid #1a6fa8; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
+.callout-aviso    { background: #fff0ee; border-left: 4px solid #f71e0a; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
+.callout-pratica  { background: #e8f5e9; border-left: 4px solid #2e7d32; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
+.callout-exercicio{ background: #f3e8fd; border-left: 4px solid #6a1b9a; border-radius: 0 7px 7px 0; padding: 13px 18px; margin: 20px 0; font-size: 0.96rem; }
+
+.main-container { max-width: 960px; }
+</style>
+
+<script>
+$(document).ready(function() {
+
+  // Botão de toggle do TOC
+  // tocify é inicializado depois do ready; aguardamos 200ms
+  setTimeout(function() {
+    var $toc = $('.tocify-wrapper');
+    if (!$toc.length) return;
+    var $btn = $('<button id="toc-toggle" title="Ocultar / mostrar sumário">&#9664;</button>');
+    $('body').append($btn);
+    $btn.on('click', function() {
+      $toc.toggleClass('toc-hidden');
+      $btn.html($toc.hasClass('toc-hidden') ? '&#9654;' : '&#9664;');
+    });
+  }, 200);
+
+  // Botão de copiar código
+  $('pre').each(function() {
+    var $pre = $(this);
+    if (!$pre.find('code').length) return;
+    var $btn = $('<button class="copy-btn">Copiar</button>');
+    $pre.append($btn);
+    $btn.on('click', function() {
+      var text = $pre.find('code').text();
+      navigator.clipboard.writeText(text).then(function() {
+        $btn.text('Copiado!').css('background', '#2e7d32');
+        setTimeout(function() { $btn.text('Copiar').css('background', ''); }, 2000);
+      });
+    });
+  });
+
+});
+</script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo      = TRUE,
+  warning   = FALSE,
+  message   = FALSE,
+  fig.width  = 9,
+  fig.height = 5.5,
+  fig.align  = "center",
+  comment    = "#>"
+)
+```
+
+---
+
+# Apresentação
+
+Este material acompanha o workshop [**Como trabalhar com dados raciais no Brasil**](https://inverno.iesp.uerj.br/cursos/dados-raciais/), oferecido na Escola de Inverno IESP-UERJ. O objetivo é mostrar como coletar, organizar e visualizar dados raciais a partir das principais bases públicas brasileiras usando R.
+
+A aula está dividida em duas partes. Primeiro, discutimos os desafios metodológicos de trabalhar com raça como variável -- como o dado é coletado, o que ele mede, e quais são as armadilhas mais comuns. Depois, entramos na parte prática: vamos usar o Censo 2022, a PNAD Contínua e os dados eleitorais do TSE, aprendendo como cada base funciona por conta própria antes de ver como combiná-las.
+
+---
+
+# 1 · Contexto metodológico
+
+## 1.1 Autodeclaração e heteroidentificação
+
+Nas pesquisas do IBGE, cor ou raça é coletada por **autodeclaração**: cada pessoa escolhe, entre cinco categorias (branca, preta, amarela, parda ou indígena), aquela com que se identifica. Esse modelo foi consolidado no Censo de 1991, depois de ter ficado fora dos censos de 1970 e 1980, período em que o regime militar resistia à visibilidade estatística das desigualdades raciais.
+
+A autodeclaração contrasta com a **heteroidentificação**, em que um terceiro classifica a pessoa com base na aparência. Os dois métodos capturam coisas diferentes: o primeiro mede identidade subjetiva; o segundo, percepção social. Essa distinção importa na hora de interpretar os dados.
+
+<div class="callout-conceito">
+**Autodeclaração vs. heteroidentificação**
+Na autodeclaração, a própria pessoa se classifica. Na heteroidentificação, um terceiro classifica com base no fenótipo. Os dois métodos produzem distribuições distintas e cada um tem uso adequado conforme o objetivo da pesquisa.
+</div>
+
+| Dimensão | Autodeclaração | Heteroidentificação |
+|---|---|---|
+| Quem classifica | O próprio indivíduo | Terceiro(s) |
+| Uso principal | Censos, PNADs | Cotas, políticas afirmativas |
+
+## 1.2 Categorias raciais no Brasil: história e a questão analítica dos "negros"
+
+A operação mais comum na análise de desigualdade racial no Brasil é somar pretos e pardos para formar a categoria "negros". Para entendê-la é preciso saber como essas categorias foram construídas historicamente -- e por que a agregação passou a fazer sentido tanto metodológico quanto político.
+
+### Histórico nos censos
+
+A classificação racial nas pesquisas públicas tem história. O Censo de 1872 -- o primeiro -- dividia a população por "raça" (pretos, pardos, brancos e caboclos) e por "condição" (livre, liberto ou escravo). Essa classificação não descrevia pigmentação: como argumenta Camargo (2009), ela "buscava definir lugares sociais, nos quais etnia e condição estavam indissociavelmente ligadas". A ausência de uma categoria de cor para a população branca era, naquela sociedade escravocrata, um signo de cidadania.
+
+O Censo de 1890 refletiu o positivismo da nascente República e as teses de branqueamento da época: substituiu "pardos" e "caboclos" por "mestiços", elevando a miscigenação ao status de categoria oficial. Em 1920, o quesito cor foi suprimido completamente; retornou em 1940, com a criação do IBGE. As cinco categorias atuais -- branca, preta, amarela, parda e indígena -- foram consolidadas no Censo de 1991 e seguem sendo mantidas.
+
+A tabela abaixo, reproduzida de Campos (2013), sintetiza as mudanças:
+
+| Censo | Nome da variável | Categorias |
+|---|---|---|
+| 1872 | Raça | Branca, Preta, Parda, Cabocla |
+| 1890 | Raça | Branca, Preta, Mestiça, Cabocla |
+| 1920 | *(ausente)* | — |
+| 1940 | Cor | Branca, Preta, Amarela |
+| 1950 / 1960 | Cor | Branca, Preta, Parda, Amarela |
+| 1970 | *(ausente)* | — |
+| 1980 | Cor | Branca, Preta, Parda, Amarela |
+| 1991 / 2000 / 2010 | Cor ou raça | Branca, Preta, Parda, Amarela, Indígena |
+
+*Fonte: IBGE; reproduzido de Campos (2013, Tabela 1).*
+
+<div class="callout-aviso">
+**Descontinuidades históricas**
+As categorias mudaram entre 1872, 1890, 1940 e 1991. Comparações diretas entre censos exigem atenção: "pardo" em 1872 não capturava o mesmo fenômeno social que "parda" em 2022. O [pacote `censobr`](https://ipeagit.github.io/censobr/) (IPEA) dá acesso direto aos questionários e dicionários de variáveis de cada edição do Censo, incluindo os formulários de 1960 em diante -- o que permite verificar, por exemplo, quais categorias estavam disponíveis em cada rodada e como as instruções de preenchimento foram formuladas.
+</div>
+
+### Origem sociológica da agregação
+
+O ponto de partida está nos trabalhos de Carlos Hasenbalg e Nelson do Valle Silva, publicados no final dos anos 1970. Ao estudar mobilidade social com dados censitários, os dois pesquisadores precisaram lidar com um problema prático: os autodeclarados "pretos" correspondiam a apenas 7--8% da população, o que tornava as estimativas estatisticamente frágeis. Ao agregar pretos e pardos como "não brancos", descobriram que os dois grupos tinham **trajetórias socioeconômicas semelhantes** -- chances de mobilidade ascendente comparáveis, e ambas muito abaixo das de brancos, independente da classe de origem.
+
+Esse achado foi confirmado por pesquisas subsequentes -- entre elas Henriques (2001) -- que reproduziram a análise com diferentes períodos e encontraram o mesmo padrão. A consistência dos resultados consolidou a agregação como prática metodológica padrão na literatura de estratificação racial no Brasil.
+
+### Evidência empírica
+
+Os gráficos abaixo mostram rendimento médio mensal e percentual com ensino superior para cada uma das cinco categorias do IBGE -- sem colapsar preto e pardo. A proximidade entre pretos e pardos em ambos os indicadores é o que justifica empiricamente a agregação.
+
+```{r graficos-desigualdade-racial, echo=FALSE, cache=TRUE, message=FALSE, fig.width=10, fig.height=4.5}
+suppressPackageStartupMessages({
+  library(PNADcIBGE); library(survey); library(ggplot2); library(scales); library(patchwork)
+})
+
+pnadc_raw <- readRDS("dados/pnadc_raw.rds")
+pnadc_ds  <- PNADcIBGE::pnadc_design(data_pnadc = pnadc_raw)
+pnadc_ds  <- update(pnadc_ds, tem_superior = as.numeric(VD3004 == "Superior completo"))
+
+renda_raca <- as.data.frame(svyby(
+  ~VD4017, ~V2010,
+  design = subset(pnadc_ds, !is.na(V2010) & !is.na(VD4017) & as.character(V2010) != "Ignorado"),
+  FUN = svymean, na.rm = TRUE
+))
+names(renda_raca)[1:3] <- c("cor_raca", "renda_media", "se")
+renda_raca$cor_raca <- reorder(renda_raca$cor_raca, renda_raca$renda_media)
+
+escol_raca <- as.data.frame(svyby(
+  ~tem_superior, ~V2010,
+  design = subset(pnadc_ds, !is.na(V2010) & !is.na(VD3004) & as.character(V2010) != "Ignorado"),
+  FUN = svymean, na.rm = TRUE
+))
+names(escol_raca)[1:3] <- c("cor_raca", "prop_superior", "se")
+escol_raca$cor_raca <- reorder(escol_raca$cor_raca, escol_raca$prop_superior)
+
+rm(pnadc_ds, pnadc_raw)
+
+.cores <- c("Branca"="#5baad4", "Amarela"="#e6a817", "Preta"="#0f2a4a",
+            "Parda"="#2a6496", "Indígena"="#7fb3d3")
+
+.tema <- theme_minimal(base_family = "sans") +
+  theme(plot.title    = element_text(color = "#0f2a4a", face = "bold", size = 12),
+        plot.subtitle = element_text(color = "#4a6580", size = 9),
+        plot.caption  = element_text(color = "#888888", size = 8, hjust = 0),
+        axis.text.y   = element_text(color = "#0f2a4a", face = "bold"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor   = element_blank(),
+        plot.background    = element_rect(fill = "#f8f9fb", color = NA),
+        panel.background   = element_rect(fill = "#f8f9fb", color = NA))
+
+p1 <- ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = paste0("R$ ", formatC(round(renda_media), format = "d", big.mark = "."))),
+            hjust = -0.1, size = 3.5, color = "#0f2a4a") +
+  coord_flip(clip = "off") +
+  scale_y_continuous(limits = c(0, 7200),
+    labels = function(x) paste0("R$ ", formatC(x, format = "d", big.mark = "."))) +
+  scale_fill_manual(values = .cores) +
+  labs(title    = "Rendimento médio (R$)",
+       subtitle = "Trabalho principal · PNADC 2024, 4T",
+       x = NULL, y = NULL,
+       caption  = "Fonte: IBGE, PNADC 2024.") +
+  .tema
+
+p2 <- ggplot(escol_raca, aes(x = cor_raca, y = prop_superior, fill = cor_raca)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_text(aes(label = percent(prop_superior, accuracy = 0.1, decimal.mark = ",")),
+            hjust = -0.1, size = 3.5, color = "#0f2a4a") +
+  coord_flip(clip = "off") +
+  scale_y_continuous(limits = c(0, 0.45), labels = percent_format(accuracy = 1)) +
+  scale_fill_manual(values = .cores) +
+  labs(title    = "Ensino superior completo (%)",
+       subtitle = "Pessoas de 14 anos ou mais · PNADC 2024, 4T",
+       x = NULL, y = NULL,
+       caption  = "Fonte: IBGE, PNADC 2024.") +
+  .tema
+
+p1 + p2
+```
+
+Em ambos os indicadores, pretos e pardos apresentam valores próximos entre si e sistematicamente inferiores aos de brancos. A diferença dentro do grupo negro (preto × pardo) é menor do que entre negros e brancos -- o que sustenta empiricamente a agregação. As seções **4.3** e **4.4** mostram como calcular essas estimativas com o desenho amostral correto.
+
+### O debate político
+
+A sociologia produziu a evidência; o movimento negro criou o vocabulário. Ao longo dos anos 1980 e 1990, as organizações negras passaram a defender que pretos e pardos fossem denominados "negros" -- não apenas por conveniência analítica, mas como projeto político de construção de identidade. A redenominação invertia a carga negativa historicamente associada à palavra e criava uma base demográfica expressiva (aproximadamente metade da população) para demandar políticas públicas.
+
+Para Campos (2013), o pardo "deixou de ser um simples obstáculo epistemológico para as ciências sociais para se tornar dilema político para o Estado brasileiro". Em sondagem aberta feita pelo IBGE em 1998, brasileiros usaram 136 categorias diferentes para descrever sua cor ou raça (Petruccelli, 2000) -- mas cerca de 90% das pessoas se classificaram usando apenas 14 termos. Essa variedade terminológica, frequentemente citada para questionar a viabilidade de políticas raciais, contrasta com a estabilidade das desigualdades observadas entre os grupos.
+
+Quando as universidades implementaram cotas nos anos 2000, o debate ganhou contornos práticos: quem eram os beneficiários? O estado do Rio de Janeiro usou inicialmente "pardos e negros"; a UnB exigiu que o candidato "se declare negro"; a lei federal de 2012 adotou o modelo do IBGE (pretos e pardos). A tabela abaixo, reproduzida de Campos (2013), documenta a variedade de critérios adotados pelas universidades públicas até 2011:
+
+| Terminologia adotada | N | % |
+|---|---:|---:|
+| Negros | 15 | 38,5% |
+| Negros (pretos + pardos) | 8 | 20,5% |
+| Pretos ou pardos | 8 | 20,5% |
+| Afrodescendentes | 7 | 17,9% |
+| Negros ou pardos | 1 | 2,6% |
+| **Total** | **39** | **100%** |
+
+*Fonte: Grupo de Estudos Multidisciplinares da Ação Afirmativa (GEMAA/IESP-UERJ); reproduzido de Campos (2013, Tabela 2).*
+
+## 1.3 Marcos legais relevantes
+
+- **PL n. 1.332/1983** (Abdias do Nascimento) -- primeiro projeto legislativo federal de ação compensatória para negros: propunha 20% de homens negros e 20% de mulheres negras em todos os órgãos públicos e incentivos ao setor privado
+- **Lei n. 10.639/2003** -- obrigatoriedade do ensino de história e cultura afro-brasileira
+- **Política Nacional de Saúde Integral da População Negra -- PNSIPN (2009)**
+- **Estatuto da Igualdade Racial (Lei n. 12.288/2010)** -- define a população negra e institui obrigações do Estado
+- **Lei de Cotas (Lei n. 12.711/2012)** -- reserva de vagas em universidades e institutos federais
+- **2014** -- obrigatoriedade de autodeclaração de cor ou raça no registro de candidaturas (TSE)
+- **Lei n. 12.990/2014** -- cotas raciais no serviço público federal (20% das vagas em concursos)
+- **Resolução TSE n. 23.610/2019 e atualizações** -- financiamento proporcional para candidaturas negras (2020)
+
+---
+
+# 2 · De onde vêm os dados raciais no Brasil?
+
+Antes de entrar no código, vale ter uma visão geral de quando e onde a variável racial está disponível nas principais bases públicas.
+
+## 2.1 Linha do tempo das fontes de dados raciais
+
+| Fonte | Descrição | Dado racial desde | Unidade de análise |
+|---|---|---|---|
+| [Censo Demográfico](#censo-demográfico-2022) | Retrato completo da população, realizado a cada dez anos pelo IBGE | 1940 (com intervalos) | Pessoa |
+| [PNAD Contínua](#pnad-contínua) | Pesquisa trimestral do IBGE sobre trabalho, renda e escolaridade | 2012 | Pessoa |
+| [TSE -- candidatos](#dados-eleitorais-tse) | Registro de candidaturas e resultados eleitorais | 2014 | Candidato |
+| [Censo Escolar (INEP)](#outros-recursos) | Levantamento anual de matrículas e infraestrutura escolar | 2005 | Escola (ver nota) |
+| [SUS -- SINASC e SIM](#outros-recursos) | Registro de nascimentos e óbitos | 1996 | Evento vital |
+| [RAIS](#outros-recursos) | Registro anual de vínculos formais de trabalho (MTE) | 2006 (acesso público) | Vínculo |
+
+<div class="callout-aviso">
+**Censo Escolar: acesso restrito aos microdados individuais**
+Os microdados do Censo Escolar têm variável de cor ou raça por aluno (`TP_COR_RACA`) desde 2005. O INEP restringiu o acesso a dados individuais por conta da LGPD: o dado granular está disponível via [Sala de Acesso Controlado do INEP](https://www.gov.br/pt-br/servicos/usar-o-servico-de-acesso-a-dados-protegidos-do-inep), um serviço presencial para pesquisadores. Para o público geral, o acesso é a dados agregados por escola.
+
+**RAIS: dado racial de cobertura desigual**
+A RAIS tem variável de cor ou raça desde 1999, com acesso público a partir da edição de 2006. O preenchimento é feito pelo empregador -- portanto, heteroidentificação, não autodeclaração. A cobertura varia muito por setor: no setor privado, cerca de 13% dos vínculos não têm raça informada; no setor público estatutário, esse percentual chegou a 100% em 2019. Para este último grupo, Silveira (2022) propõe uma estratégia de imputação combinando registros históricos e imputação múltipla (MICE), disponível como nota técnica do IPEA ([repositorio.ipea.gov.br](https://repositorio.ipea.gov.br/entities/publication/f712b1d5-e0bf-4399-acce-0d5c22797464)).
+</div>
+
+## 2.2 Documentação e dicionários
+
+### Censo Demográfico 2022
+
+O Censo 2022 foi o primeiro após doze anos de intervalo (o anterior foi em 2010). Para acesso via R, há dois caminhos principais: microdados pelo pacote `censobr` e tabelas agregadas pelo pacote `sidrar`. Ambos são apresentados na seção prática.
+
+| Recurso | Link |
+|---|---|
+| SIDRA -- Sistema IBGE de Recuperação Automática | [sidra.ibge.gov.br](https://sidra.ibge.gov.br/) |
+| Tabela 9605 -- população por cor ou raça | [sidra.ibge.gov.br/tabela/9605](https://sidra.ibge.gov.br/tabela/9605) |
+| Microdados do Censo 2022 | [censo2022.ibge.gov.br/resultados.html](https://censo2022.ibge.gov.br/resultados.html) |
+| Dicionário de variáveis | [ftp.ibge.gov.br -- Documentação Censo 2022](https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Microdados/Documentacao/) |
+| Pacote censobr (IPEA) | [ipeagit.github.io/censobr](https://ipeagit.github.io/censobr/) |
+| Pacote sidrar | [CRAN -- sidrar](https://cran.r-project.org/web/packages/sidrar/vignettes/Introduction_to_sidrar.html) |
+
+### PNAD Contínua
+
+A PNADC substituiu a PNAD anual a partir de 2012 e é coletada todo trimestre. É a principal fonte para acompanhar renda, escolaridade e ocupação por raça nos anos entre censos. Trabalha com amostra probabilística e exige uso de pesos para estimativas representativas.
+
+| Recurso | Link |
+|---|---|
+| Página da pesquisa (IBGE) | [ibge.gov.br -- PNAD Contínua](https://www.ibge.gov.br/estatisticas/sociais/trabalho/17270-pnad-continua.html) |
+| Microdados e documentação | [ftp.ibge.gov.br -- PNADC Trimestral](https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Trimestral/Microdados/Documentacao/) |
+| Pacote PNADcIBGE | [GitHub -- PNADcIBGE](https://github.com/cran/PNADcIBGE) |
+
+### Dados eleitorais (TSE)
+
+O TSE passou a coletar autodeclaração de cor ou raça de candidatos nas eleições de 2014. Os dados são abertos e cobrem todas as eleições desde então. A partir de 2020, a distribuição do fundo eleitoral passou a ser vinculada à proporção de candidaturas negras.
+
+| Recurso | Link |
+|---|---|
+| Repositório de dados eleitorais | [dadosabertos.tse.jus.br](https://dadosabertos.tse.jus.br/) |
+| Resultados eleições 2022 | [dadosabertos.tse.jus.br -- Resultados 2022](https://dadosabertos.tse.jus.br/dataset/resultados-2022) |
+| Relatório racial TSE 2014-2024 | [Análise por perfil racial (PDF)](https://www.tse.jus.br/institucional/catalogo-de-publicacoes/arquivos/analise-da-distribuicao-de-candidaturas-vagas-de-eleitos-e-recursos-de-financiamento-por-perfil-racial/@@display-file/file/Relatorio_estatistico_digital.pdf) |
+
+### Outros recursos
+
+| Fonte | Recurso |
+|---|---|
+| INEP -- Censo Escolar | [gov.br/inep -- Microdados](https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados) |
+| DataSUS -- SINASC e SIM | [datasus.saude.gov.br](https://datasus.saude.gov.br/transferencia-de-arquivos/) |
+| IPEA -- imputação racial na RAIS | [repositorio.ipea.gov.br](https://repositorio.ipea.gov.br/entities/publication/f712b1d5-e0bf-4399-acce-0d5c22797464) |
+
+## 2.3 A Base dos Dados
+
+A [Base dos Dados](https://basedosdados.org/) é uma plataforma que disponibiliza dados públicos brasileiros tratados e padronizados no Google BigQuery. Em vez de baixar arquivos brutos, tratar incompatibilidades de formato e fazer joins manualmente entre diferentes fontes, você escreve SQL diretamente no R e recebe os dados já limpos.
+
+As principais vantagens são: (1) dados de fontes distintas com chaves compatíveis entre si, o que facilita muito os cruzamentos; (2) sem necessidade de baixar arquivos grandes -- as consultas rodam na nuvem e você recebe só o resultado; (3) cobertura ampla, incluindo Censo, TSE, PNADC, RAIS e muitas outras bases.
+
+A limitação principal é que nem toda base está lá, e nem sempre a versão mais recente já foi processada. Por isso vamos aprender o caminho direto a cada fonte primeiro -- se a Base dos Dados um dia não tiver o que você precisa, você sabe como buscar na origem.
+
+| Recurso | Link |
+|---|---|
+| Plataforma (catálogo de bases) | [basedosdados.org](https://basedosdados.org/) |
+| Censo 2022 na Base dos Dados | [br-ibge-censo-demografico](https://basedosdados.org/dataset/br-ibge-censo-demografico) |
+| TSE na Base dos Dados | [br-tse-eleicoes](https://basedosdados.org/dataset/br-tse-eleicoes) |
+| Documentação do pacote R | [github.com/basedosdados/mais](https://github.com/basedosdados/mais) |
+
+---
+
+# Pergunta de pesquisa
+
+Para ilustrar como trabalhar com essas bases, vamos usar uma pergunta concreta ao longo da aula:
+
+> **Municípios com maior proporção de população negra elegem mais candidatos negros?**
+
+Responder a ela exige o **Censo 2022** (composição racial por município) e os **dados do TSE 2024** (candidatos por raça e município). A **PNADC** entra como recurso complementar: como o Censo só acontece a cada dez anos, é ela que permite acompanhar as desigualdades raciais nos anos entre um censo e outro.
+
+A pergunta funciona como instrumento didático -- ela nos força a passar pelas três bases e entender como cada uma contribui. Primeiro respondemos com as fontes diretas (seções 3, 4 e 5), ao nível da grande região. Depois mostramos como a Base dos Dados permite descer ao nível do município com muito menos código (seção 7). Respondê-la de forma rigorosa exigiria controles e testes que estão além do escopo da aula, mas o caminho metodológico que percorremos para chegar perto já é o objetivo.
+
+```{r instalacao, eval=FALSE}
+# Rode este bloco UMA VEZ antes da aula para instalar todos os pacotes.
+# Depois, não é necessário rodar novamente.
+if (!require("pacman", quietly = TRUE)) install.packages("pacman")
+
+pacman::p_load(
+  tidyverse,    # dplyr, ggplot2, forcats e afins
+  scales,       # formatação de eixos e valores
+  sidrar,       # tabelas agregadas do IBGE via SIDRA
+  censobr,      # microdados do Censo 2022 via IPEA
+  arrow,        # necessário para coletar dados do censobr
+  PNADcIBGE,   # microdados da PNADC
+  survey,       # estimativas com desenho amostral complexo
+  electionsBR,  # dados eleitorais do TSE
+  basedosdados, # Base dos Dados (BigQuery)
+  DBI,          # interface de banco de dados
+  bigrquery     # conector Google BigQuery
+)
+```
+
+```{r configuracao, error=TRUE}
+# Locale garante leitura correta de acentos e datas em português
+Sys.setlocale(category = "LC_ALL", locale = "pt_BR.UTF-8")
+
+# Configuracao global dos blocos de código:
+# echo = TRUE mostra o código; warning/message = FALSE omite avisos técnicos
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+# Diretório de trabalho -- ajuste para a pasta da aula
+# setwd("~/Downloads")
+setwd("C:/Users/Amsatou Diop/Downloads")
+
+# Criar subpastas para organizar arquivos da aula
+# showWarnings = FALSE evita erro se a pasta já existir
+dir.create("dados",    showWarnings = FALSE)
+dir.create("graficos", showWarnings = FALSE)
+
+# Pacotes de uso geral (usados ao longo de toda a aula)
+library(tidyverse)   # dplyr, ggplot2, forcats e afins
+library(scales)      # formatacao de eixos e valores
+```
+
+---
+
+# 3 · Parte 1 -- Censo 2022
+
+Para o Censo 2022, temos dois caminhos complementares em R:
+
+- **`censobr`** ([ipeagit.github.io/censobr](https://ipeagit.github.io/censobr/)): desenvolvido pelo IPEA, acessa dados do Censo diretamente. Para o Censo 2022, os microdados individuais (`read_population`) chegam em breve; por ora, `read_tracts()` dá os totais agregados por setor censitário -- útil para análises no nível do município.
+- **`sidrar`** ([CRAN](https://cran.r-project.org/web/packages/sidrar/vignettes/Introduction_to_sidrar.html)): acessa tabelas agregadas do SIDRA via API. É mais direto para consultas que o IBGE já disponibiliza prontas.
+
+Vamos aprender os dois.
+
+```{r pacote-censo}
+library(sidrar)
+```
+
+```{r pacote-censobr, eval=FALSE}
+# install.packages(c("censobr", "arrow"))
+library(censobr)
+library(arrow)   # necessario para coletar dados do censobr
+```
+
+## 3.1 Principais variáveis e parâmetros
+
+### Censo via censobr (microdados)
+
+| Variável | Descrição |
+|---|---|
+| `V0606` | Cor ou raça (1 = Branca, 2 = Preta, 3 = Amarela, 4 = Parda, 5 = Indígena) |
+| `V0010` | Peso amostral -- usar em somas ponderadas |
+| `V0601` | Sexo (1 = Homem, 2 = Mulher) |
+| `name_region` | Nome da grande região (adicionado pelo censobr) |
+| `abbrev_state` | Sigla do estado (adicionado pelo censobr) |
+| `code_muni` | Código IBGE do município (adicionado pelo censobr) |
+
+### Censo via sidrar (tabela agregada)
+
+| Parâmetro | Valor | Descrição |
+|---|---|---|
+| `x` | 9605 | Tabela: pessoas residentes por cor ou raça |
+| `variable` | 93 | Variável: contagem de pessoas residentes |
+| `geo` | "Region" / "State" / "City" | Nível geográfico |
+
+## 3.2 Baixando os dados de raça por região {.tabset}
+
+### Via censobr (setores censitários)
+
+`read_tracts()` baixa dados agregados por setor censitário diretamente do repositório do IPEA. Para o Censo 2022, é o caminho disponível agora -- `read_population()` (microdados individuais) chega em breve. O retorno é um dataset Arrow; `collect()` traz para o R.
+
+<div class="callout-aviso">
+**Microdados do Censo 2022 em breve**
+`read_population()` está disponível para os censos de 1960 a 2010. Para 2022, use `read_tracts()` (setor censitário) ou `sidrar` (tabelas regionais agregadas). Acompanhe a disponibilidade em [ipeagit.github.io/censobr](https://ipeagit.github.io/censobr/).
+</div>
+
+```{r censo-censobr, eval=FALSE}
+# Dados agregados por setor censitário -- Censo 2022
+censo_setores <- read_tracts(
+  year         = 2022,
+  dataset      = "Basico",
+  showProgress = FALSE
+) %>%
+  collect()  # Arrow retorna um dataset "lazy"; collect() traz os dados para a memória do R
+
+# Cada linha = um setor censitário
+# Variáveis de cor/raça: consulte o dicionário em ipeagit.github.io/censobr
+glimpse(censo_setores)
+```
+
+### Via sidrar (tabela agregada)
+
+`get_sidra()` consulta a API do SIDRA diretamente. É mais rápido, mas retorna apenas os totais que o IBGE já calculou -- sem acesso às variáveis individuais.
+
+```{r censo-sidrar, cache=TRUE}
+pop_raca_raw <- get_sidra(
+  x        = 9605,
+  variable = 93,
+  geo      = "Region"
+)
+
+glimpse(pop_raca_raw)
+```
+
+```{r censo-sidrar-limpa}
+pop_grupo <- pop_raca_raw %>%
+  dplyr::select(
+    regiao    = `Grande Região`,
+    cor_raca  = `Cor ou raça`,
+    populacao = Valor
+  ) %>%
+  filter(cor_raca != "Total", !is.na(populacao)) %>%
+  mutate(
+    grupo = case_when(
+      cor_raca %in% c("Preta", "Parda") ~ "Negros",
+      cor_raca == "Branca"              ~ "Brancos",
+      cor_raca == "Amarela"             ~ "Amarelos",
+      cor_raca == "Indígena"            ~ "Indígenas",
+      TRUE                              ~ NA_character_
+    )
+  ) %>%
+  group_by(regiao, grupo) %>%
+  summarise(populacao = sum(populacao, na.rm = TRUE), .groups = "drop") %>%
+  group_by(regiao) %>%
+  mutate(proporcao = populacao / sum(populacao)) %>%
+  ungroup() %>%
+  filter(!is.na(grupo))
+
+pop_grupo
+```
+
+## 3.3 Quando usar cada um?
+
+<div class="callout-pratica">
+Use o **censobr** quando precisar cruzar variáveis individuais (ex: raça + sexo + renda dentro do Censo) ou trabalhar no nível do município. Use o **sidrar** quando a tabela que você precisa já existe no SIDRA -- é mais rápido e simples para análises regionais e nacionais.
+</div>
+
+---
+
+# 4 · Parte 2 -- PNADC nos anos intercensitários
+
+```{r pacote-pnadc, eval=FALSE}
+# install.packages("PNADcIBGE")  # instalar se necessário
+library(PNADcIBGE)
+```
+
+O Censo acontece a cada dez anos. Entre 2010 e 2022, por exemplo, não havia como saber como a renda e a escolaridade da população negra estavam mudando usando só o Censo. A **PNAD Contínua** preenche esse intervalo: é coletada todo trimestre e permite acompanhar essas mesmas variáveis ao longo do tempo. Os códigos desta seção podem ser replicados para qualquer ano entre 2012 e hoje.
+
+O Censo 2022 tem variáveis de rendimento, mas a PNADC é a fonte de referência do IBGE para estatísticas de renda e mercado de trabalho. É com ela que o IBGE publica anualmente os indicadores de desigualdade de renda por cor ou raça -- o Censo serve, principalmente, para composição populacional e cruzamentos geográficos detalhados. Por isso, usamos o Censo para saber quem é a população negra e onde ela está, e a PNADC para saber como ela vive no mercado de trabalho.
+
+## 4.1 Variáveis de interesse
+
+| Variável | Descrição |
+|---|---|
+| `V1028` | Peso amostral -- obrigatório em qualquer estimativa |
+| `V2007` | Sexo (1 = Homem, 2 = Mulher) |
+| `V2010` | Cor ou raça: Branca, Preta, Amarela, Parda, Indígena |
+| `VD3004` | Nível de instrução mais elevado alcançado (categorias) |
+| `VD3005` | Anos de estudo (0 a 16 ou mais) |
+| `VD4008` | Posição no trabalho principal (setor público, privado etc.) |
+| `VD4017` | Rendimento mensal habitual do trabalho principal (R$) |
+
+<div class="callout-conceito">
+**Por que usar desenho amostral?**
+A PNADC não é uma amostra aleatória simples: ela usa conglomerados (UPAs -- unidades primárias de amostragem), estratificação e pesos de expansão. Ignorar essa estrutura ao calcular médias produz estimativas pontuais parecidas, mas **erros padrão incorretos** -- o que compromete testes de hipóteses e intervalos de confiança.
+
+O pacote `survey` é o padrão em R para lidar com esse tipo de desenho amostral. O `PNADcIBGE` fornece a função `pnadc_design()`, que configura automaticamente o objeto de desenho a partir dos dados baixados.
+</div>
+
+## 4.2 Baixando e aplicando o desenho amostral
+
+```{r pnadc-download, eval=FALSE}
+# design=TRUE configura automaticamente estratos, UPAs e pesos amostrais
+pnadc_ds <- PNADcIBGE::get_pnadc(year = 2024, quarter = 4, design = TRUE)
+# saveRDS(pnadc_ds, "dados/pnadc_ds.rds")   # opcional: salvar para reuso offline
+# pnadc_ds <- readRDS("dados/pnadc_ds.rds")
+```
+
+```{r pnadc-design, eval=FALSE}
+# Com design=TRUE, pnadc_ds já vem configurado (ver pnadc-download)
+
+# update() é o equivalente do mutate() para objetos de survey:
+# adiciona ou recalcula variáveis sem perder os metadados do desenho
+# amostral (estratos, UPAs, pesos). Usar mutate() diretamente apagaria
+# essa estrutura e produziria erros padrão errados nas estimativas.
+pnadc_ds <- update(pnadc_ds,
+  tem_superior = as.numeric(VD3004 == "Superior completo")  # 1 se sim, 0 se não
+)
+```
+
+## 4.3 Rendimento médio por cor ou raça
+
+Calculamos o rendimento médio do trabalho principal para cada uma das **cinco categorias censitárias** (sem colapsar preto e pardo), o que permite visualizar diretamente a proximidade entre os dois grupos -- justificativa empírica para a agregação como "negros".
+
+```{r pnadc-renda, eval=FALSE}
+# svyby() é o equivalente de group_by() + summarise() para objetos de survey.
+# Calcula a estatística indicada em FUN para cada grupo de 'by',
+# levando em conta estratos, UPAs e pesos — o que garante erros padrão corretos.
+#
+# subset() aqui filtra o objeto de survey (como filter() no tidyverse),
+# mas preserva todos os metadados do desenho amostral.
+# Filtramos: sem NA em raça, sem NA em renda, e excluímos "Ignorado"
+# (categoria que aparece nos dados mas não é uma resposta válida).
+#
+# FUN = svymean: função aplicada a cada grupo.
+# svymean() é o mean() com consciência amostral — produz média ponderada
+# e desvio padrão correto dado o desenho complexo.
+#
+# O resultado tem uma coluna por variável + uma coluna "se" (standard error).
+renda_raca <- survey::svyby(
+  formula = ~VD4017,                   # variável a resumir: rendimento
+  by      = ~V2010,                    # variável de grupo: cor ou raça
+  design  = subset(pnadc_ds,
+              !is.na(V2010) & !is.na(VD4017) &
+              as.character(V2010) != "Ignorado"),
+  FUN     = survey::svymean,
+  na.rm   = TRUE
+)
+renda_raca <- as.data.frame(renda_raca)
+names(renda_raca)[1:3] <- c("cor_raca", "renda_media", "se")  # renomeia colunas geradas pelo svyby
+```
+
+```{r grafico-renda-pnadc, fig.height=5}
+cores_raca <- c(
+  "Branca"   = "#5baad4",
+  "Amarela"  = "#e6a817",
+  "Preta"    = "#0f2a4a",
+  "Parda"    = "#2a6496",
+  "Indígena" = "#7fb3d3"
+)
+
+ggplot(renda_raca, aes(x = cor_raca, y = renda_media, fill = cor_raca)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  # geom_errorbar: desenha as barras de intervalo de confiança de 95%.
+  # IC 95% = estimativa ± 1,96 × erro padrão (se vem do svyby).
+  geom_errorbar(
+    aes(ymin = renda_media - 1.96 * se, ymax = renda_media + 1.96 * se),
+    width = 0.2, color = "#555555", linewidth = 0.5
+  ) +
+  # hjust = -0.15 empurra o rótulo para a direita da barra (após coord_flip, "direita" = acima)
+  geom_text(
+    aes(label = dollar(renda_media, prefix = "R$ ",
+                       big.mark = ".", decimal.mark = ",")),
+    hjust = -0.15, size = 3.8, color = "#0f2a4a", fontface = "bold"
+  ) +
+  # coord_flip: gira o gráfico 90°, transformando barras verticais em horizontais
+  coord_flip(clip = "off") +
+  scale_y_continuous(
+    limits = c(0, 7000),
+    labels = dollar_format(prefix = "R$ ", big.mark = ".", decimal.mark = ",")
+  ) +
+  scale_fill_manual(values = cores_raca) +
+  labs(
+    title    = "Rendimento médio mensal por cor ou raça -- Brasil, 2024",
+    subtitle = "Trabalho principal · pessoas de 14 anos ou mais com rendimento informado\nBarras de erro: intervalo de confiança de 95% (desenho amostral)",
+    x = NULL, y = "Rendimento médio (R$)",
+    caption  = "Fonte: IBGE, PNAD Contínua 2024, 4º trimestre. Estimativas com desenho amostral complexo (pacote survey)."
+  ) +
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
+    plot.subtitle      = element_text(color = "#4a6580", size = 10),
+    plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
+    axis.text.y        = element_text(color = "#0f2a4a", face = "bold", size = 12),
+    axis.text.x        = element_text(color = "#555555"),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor   = element_blank(),
+    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
+    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+  )
+```
+
+Pretos e pardos apresentam rendimentos sistematicamente próximos entre si e distantes do rendimento de brancos -- padrão que se mantém mesmo quando se controlam idade, escolaridade e setor de atividade (Hasenbalg e Silva, 1988; Henriques, 2001). Amarelos têm rendimento acima de brancos, e indígenas abaixo de pretos e pardos.
+
+## 4.4 Escolaridade por cor ou raça
+
+O mesmo padrão se replica na escolaridade. O gráfico abaixo mostra o percentual de pessoas com **ensino superior completo** em cada grupo racial -- indicador sensível às políticas de cotas raciais implementadas a partir de 2003 nas universidades estaduais e de 2012 nas federais.
+
+```{r pnadc-escolaridade, eval=FALSE}
+# Mesma lógica de 4.3, mas agora a variável resumida é tem_superior (0/1).
+# svymean() de uma variável 0/1 retorna a proporção de 1s no grupo —
+# ou seja, a proporção de pessoas com ensino superior em cada raça.
+escol_raca <- survey::svyby(
+  formula = ~tem_superior,             # variável a resumir: indicador de superior
+  by      = ~V2010,                    # variável de grupo: cor ou raça
+  design  = subset(pnadc_ds,
+              !is.na(V2010) & !is.na(VD3004) &
+              as.character(V2010) != "Ignorado"),
+  FUN     = survey::svymean,
+  na.rm   = TRUE
+)
+escol_raca <- as.data.frame(escol_raca)
+names(escol_raca)[1:3] <- c("cor_raca", "prop_superior", "se")
+```
+
+```{r grafico-escolaridade, fig.height=5}
+ggplot(escol_raca, aes(x = cor_raca, y = prop_superior, fill = cor_raca)) +
+  geom_col(width = 0.65, show.legend = FALSE) +
+  geom_errorbar(
+    aes(ymin = prop_superior - 1.96 * se, ymax = prop_superior + 1.96 * se),
+    width = 0.2, color = "#555555", linewidth = 0.5
+  ) +
+  geom_text(
+    aes(label = percent(prop_superior, accuracy = 0.1, decimal.mark = ",")),
+    hjust = -0.15, size = 3.8, color = "#0f2a4a", fontface = "bold"
+  ) +
+  coord_flip(clip = "off") +
+  scale_y_continuous(
+    limits = c(0, 0.55),
+    labels = percent_format(accuracy = 1)
+  ) +
+  scale_fill_manual(values = cores_raca) +
+  labs(
+    title    = "Percentual com ensino superior completo por cor ou raça -- Brasil, 2024",
+    subtitle = "Pessoas de 25 anos ou mais · barras de erro: IC 95% (desenho amostral)",
+    x = NULL, y = "% com ensino superior",
+    caption  = "Fonte: IBGE, PNAD Contínua 2024, 4º trimestre. Estimativas com desenho amostral complexo (pacote survey)."
+  ) +
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
+    plot.subtitle      = element_text(color = "#4a6580", size = 10),
+    plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
+    axis.text.y        = element_text(color = "#0f2a4a", face = "bold", size = 12),
+    axis.text.x        = element_text(color = "#555555"),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor   = element_blank(),
+    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
+    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+  )
+```
+
+O hiato entre brancos e negros no acesso ao ensino superior é um dos indicadores mais diretamente relacionados à política de cotas. A PNADC permite acompanhar a evolução desse indicador ano a ano -- basta trocar `quarter = 4, year = 2024` no chunk de download por outros períodos.
+
+<div class="callout-pratica">
+**Para ir além**
+Replique os gráficos 4.3 e 4.4 com dados do 1º trimestre de 2015 e compare com 2024. O hiato de renda entre pretos/pardos e brancos diminuiu? E o de escolaridade? O que esse resultado diz sobre a efetividade (ou os limites) das políticas de cotas?
+</div>
+
+---
+
+# 5 · Parte 3 -- TSE: dados eleitorais
+
+```{r pacote-tse, eval=FALSE}
+# install.packages("electionsBR")
+library(electionsBR)
+```
+
+Os dados eleitorais estão disponíveis no [Portal de Dados Abertos do TSE](https://dadosabertos.tse.jus.br/) em arquivos `.csv` por eleição e por tipo de dado (candidatos, resultados, receitas, gastos). O [pacote `electionsBR`](https://cran.r-project.org/package=electionsBR) faz o download desses mesmos arquivos diretamente do repositório do tribunal, sem necessidade de baixar e descompactar manualmente.
+
+A coleta sistemática de cor ou raça nas candidaturas é relativamente recente: o TSE passou a exigir a declaração apenas **a partir das eleições de 2014**. Antes disso, pesquisadores interessados na composição racial do campo político precisavam produzir esse dado e recorriam a três estratégias metodológicas (Campos e Machado, 2020, cap. 3):
+
+- **Autoclassificação**: os pesquisadores entram em contato com os próprios políticos e perguntam como se identificam. Respeita a autonomia individual e é comparável aos dados do IBGE, mas raramente obtém resposta de todos os candidatos, e parte da classe política resiste a se declarar racialmente.
+- **Heteroclassificação**: fotos dos candidatos são avaliadas por terceiros. Capta a percepção social, mas levanta questões éticas e de validade comparativa. Campos (2015) aplicou esse método nas eleições municipais de 2012 em São Paulo e Rio de Janeiro, documentando como a composição racial dos candidatos variava sistematicamente por partido.
+- **Dados secundários de burocracias partidárias**: mais acessíveis, mas de difícil validação.
+
+O dado disponível no TSE a partir de 2014 é nominalmente autodeclarado, mas ainda guarda incógnitas. As fichas de registro de candidatura podem ser preenchidas pelos próprios candidatos, seus assessores ou pela burocracia do partido -- e a politização da questão racial pode induzir tanto sub-declaração como declarações estratégicas (Campos e Machado, 2020).
+
+<div class="callout-aviso">
+**Autodeclaração no TSE ≠ autodeclaração no IBGE**
+No Censo e na PNADC, a pessoa se classifica sem que a resposta gere consequências institucionais diretas. No TSE, a declaração é um ato jurídico-eleitoral: o candidato (ou seu partido) sabe que a informação será usada para fins de financiamento proporcional desde 2020. Esse incentivo pode distorcer as declarações em direção ao "negro". Campos e Machado (2020) comparam a autodeclaração no TSE com a classificação feita por observadores externos e identificam uma divergência relevante entre os dois métodos, sugerindo que parte das mudanças de categoria racial observadas após 2014 reflete o novo enquadramento eleitoral -- e não apenas transformações de identidade.
+</div>
+
+## 5.1 Principais variáveis
+
+| Variável | Descrição |
+|---|---|
+| `DS_CARGO` | Cargo disputado (VEREADOR, PREFEITO, DEPUTADO ESTADUAL...) |
+| `DS_COR_RACA` | Cor ou raça autodeclarada (BRANCA, PRETA, PARDA, AMARELA, INDÍGENA) |
+| `DS_SIT_TOT_TURNO` | Resultado (ELEITO POR QP, ELEITO POR MÉDIA, NÃO ELEITO...) |
+| `SG_UF` | Estado |
+| `CD_MUNICIPIO` | Código TSE do município -- **diferente do código IBGE** |
+| `NM_MUNICIPIO` | Nome do município |
+
+O TSE disponibiliza um segundo arquivo, `consulta_cand_complementar`, que precisa ser lido separadamente e cruzado pelo `SQ_CANDIDATO`. Ele contém variáveis que não estão no arquivo principal, entre elas `ST_QUILOMBOLA` (se o candidato se declarou quilombola) e `DS_ETNIA_INDIGENA` (etnia específica para candidatos indígenas). Para análises que incluam essas populações, o join entre os dois arquivos é necessário.
+
+Após o join, o padrão de filtragem é:
+
+```r
+indigenas <- vereadores %>%
+  filter(DS_COR_RACA == "INDÍGENA")
+
+quilombolas <- vereadores %>%
+  filter(ST_QUILOMBOLA == "S")
+```
+
+<div class="callout-aviso">
+**Códigos de município incompatíveis**
+O TSE usa um sistema próprio de códigos de município, diferente dos códigos IBGE usados pelo Censo e pela PNADC. Para cruzar as bases ao nível do município, é preciso uma tabela de correspondência. Veremos como a Base dos Dados resolve esse problema na seção 7.
+</div>
+
+## 5.2 Baixando e preparando os dados
+
+```{r tse-download, eval=FALSE}
+# Execute apenas uma vez para baixar e salvar os dados brutos
+cand_2024 <- candidate_local(2024)
+saveRDS(cand_2024, "dados/cand_2024.rds")
+```
+
+```{r tse-analise, cache=TRUE}
+cand_2024 <- readRDS("dados/cand_2024.rds")
+
+# SG_UE = código TSE do município; NM_UE = nome do município
+vereadores <- cand_2024 %>%
+  filter(
+    DS_CARGO == "VEREADOR",
+    !DS_COR_RACA %in% c("NÃO INFORMADO", "NAO INFORMADO", "NÃO DIVULGÁVEL")
+  ) %>%
+  select(SG_UF, CD_MUNICIPIO = SG_UE, NM_MUNICIPIO = NM_UE, DS_COR_RACA, DS_SIT_TOT_TURNO) %>%
+  mutate(
+    grupo  = case_when(
+      DS_COR_RACA %in% c("PRETA", "PARDA") ~ "Negros",
+      DS_COR_RACA == "BRANCA"              ~ "Brancos",
+      DS_COR_RACA == "AMARELA"             ~ "Amarelos",
+      DS_COR_RACA == "INDÍGENA"            ~ "Indígenas"
+    ),
+    eleito = DS_SIT_TOT_TURNO %in% c("ELEITO POR QP", "ELEITO POR MÉDIA", "ELEITO"),
+    regiao = case_when(
+      SG_UF %in% c("AC","AM","AP","PA","RO","RR","TO")           ~ "Norte",
+      SG_UF %in% c("AL","BA","CE","MA","PB","PE","PI","RN","SE") ~ "Nordeste",
+      SG_UF %in% c("DF","GO","MS","MT")                          ~ "Centro-Oeste",
+      SG_UF %in% c("ES","MG","RJ","SP")                          ~ "Sudeste",
+      SG_UF %in% c("PR","RS","SC")                               ~ "Sul"
+    )
+  ) %>%
+  filter(!is.na(grupo))
+
+# Proporção de candidatos e eleitos negros por grande região
+tse_regioes <- vereadores %>%
+  group_by(regiao, grupo) %>%
+  summarise(candidatos = n(), eleitos = sum(eleito), .groups = "drop") %>%
+  group_by(regiao) %>%
+  mutate(
+    prop_cand_negros    = candidatos / sum(candidatos),
+    prop_eleitos_negros = eleitos    / sum(eleitos, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  filter(grupo == "Negros") %>%
+  select(regiao, prop_cand_negros, prop_eleitos_negros)
+
+tse_regioes
+```
+
+## 5.3 Candidatos e eleitos negros por grande região
+
+O gráfico abaixo compara a proporção de candidatos negros com a proporção de eleitos negros por grande região. A diferença entre as duas colunas mostra se negros chegam ao cargo na mesma proporção em que disputam -- ou se há uma perda no caminho das candidaturas para os mandatos.
+
+```{r grafico-tse, fig.height=5}
+tse_regioes %>%
+  # pivot_longer: transforma duas colunas em duas linhas por região.
+  # Antes: uma linha por região com colunas prop_cand e prop_eleitos.
+  # Depois: duas linhas por região, coluna "tipo" indica qual é qual.
+  # Necessário porque ggplot espera uma coluna para o eixo Y e outra para a cor/fill.
+  tidyr::pivot_longer(
+    cols      = c(prop_cand_negros, prop_eleitos_negros),
+    names_to  = "tipo",
+    values_to = "proporcao"
+  ) %>%
+  mutate(tipo = ifelse(tipo == "prop_cand_negros", "Candidatos", "Eleitos")) %>%
+  ggplot(aes(x = regiao, y = proporcao, fill = tipo)) +
+  # position = "dodge": coloca as barras dos dois grupos lado a lado (não empilhadas)
+  geom_col(position = "dodge", width = 0.65) +
+  geom_text(
+    aes(label = percent(proporcao, accuracy = 1)),
+    position = position_dodge(width = 0.65),  # alinha os rótulos com suas respectivas barras
+    vjust = -0.5, size = 3.5, color = "#0f2a4a", fontface = "bold"
+  ) +
+  scale_y_continuous(labels = percent_format(), limits = c(0, 0.85)) +
+  scale_fill_manual(values = c("Candidatos" = "#5baad4", "Eleitos" = "#0f2a4a"), name = NULL) +
+  labs(
+    title    = "Candidatos e eleitos negros a vereador por grande região -- 2024",
+    subtitle = "Negros = pretos + pardos (autodeclaração TSE)",
+    x = NULL, y = "Proporção",
+    caption  = "Fonte: TSE, Repositório de Dados Eleitorais 2024."
+  ) +
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
+    plot.subtitle      = element_text(color = "#4a6580", size = 10.5),
+    plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
+    axis.text.x        = element_text(color = "#0f2a4a", face = "bold", size = 11),
+    legend.position    = "top",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
+    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+  )
+```
+
+Em todas as regiões, a proporção de eleitos negros fica abaixo da proporção de candidatos. O padrão sugere que a barreira não está apenas no acesso à candidatura, mas também na conversão de candidaturas em mandatos.
+
+---
+
+# 6 · Visualização e resposta à pergunta
+
+## 6.1 Paleta de cores
+
+```{r paleta}
+cores_grupo <- c(
+  "Negros"    = "#0f2a4a",
+  "Brancos"   = "#5baad4",
+  "Indígenas" = "#7fb3d3",
+  "Amarelos"  = "#a8c8e8"
+)
+
+cores_censo <- c(
+  "Branca"    = "#5baad4",
+  "Amarela"   = "#a8c8e8",
+  "Preta"     = "#0f2a4a",
+  "Parda"     = "#1d3557",
+  "Indígena"  = "#7fb3d3"
+)
+```
+
+## 6.2 Composição racial por grande região (Censo 2022)
+
+O gráfico mostra a distribuição das categorias censitárias em cada grande região. A proporção de negros varia bastante entre regiões, o que já sugere que cruzar esse dado com representação política precisará levar o recorte geográfico em conta.
+
+```{r grafico-distribuicao, fig.height=5.5}
+ordem_regioes <- c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")
+
+pop_grupo %>%
+  filter(grupo %in% names(cores_grupo)) %>%
+  mutate(
+    regiao = factor(regiao, levels = ordem_regioes),
+    grupo  = factor(grupo,  levels = names(cores_grupo))
+  ) %>%
+  ggplot(aes(x = regiao, y = proporcao, fill = grupo)) +
+  # position = "fill": empilha as barras e normaliza para 100%,
+  # ignorando o valor absoluto de y — cada barra representa a composição percentual
+  geom_col(position = "fill", width = 0.72) +
+  geom_text(
+    aes(label = percent(proporcao, accuracy = 0.1)),
+    position = position_fill(vjust = 0.5),  # centraliza o rótulo dentro de cada segmento
+    color = "white", size = 3.5, fontface = "bold"
+  ) +
+  scale_y_continuous(labels = percent_format()) +
+  scale_fill_manual(values = cores_grupo, name = NULL) +
+  labs(
+    title    = "Composição racial por grande região -- Censo 2022",
+    subtitle = "Negros = pretos + pardos (categorias censitárias IBGE)",
+    x = NULL, y = "Proporção da população",
+    caption  = "Fonte: IBGE, Censo Demográfico 2022 (Tabela 9605 / SIDRA)."
+  ) +
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 14),
+    plot.subtitle      = element_text(color = "#4a6580", size = 11.5),
+    plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
+    axis.text.x        = element_text(color = "#0f2a4a", face = "bold", size = 12),
+    axis.text.y        = element_text(color = "#555555"),
+    legend.position    = "right",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
+    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+  )
+```
+
+## 6.3 Respondendo à pergunta: Censo + TSE por grande região
+
+Temos agora os ingredientes para dar uma primeira resposta à pergunta da aula. Usamos `pop_grupo` (Censo, seção 3) para a composição racial da população e `tse_regioes` (TSE, seção 5) para a representação política. A pergunta é: regiões com mais negros elegem proporcionalmente mais vereadores negros?
+
+```{r resposta-regional, fig.height=5.5}
+ordem_regioes <- c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")
+
+# Proporção de negros na população (Censo)
+pop_negros_regiao <- pop_grupo %>%
+  filter(grupo == "Negros") %>%
+  select(regiao, prop_pop_negra = proporcao) %>%
+  mutate(regiao = factor(regiao, levels = ordem_regioes))
+
+# left_join: combina os dois data frames pelo campo "regiao".
+# "left" = mantém todas as linhas do lado esquerdo (pop_negros_regiao)
+# mesmo que não haja correspondência no lado direito (tse_regioes).
+df_resposta <- pop_negros_regiao %>%
+  left_join(tse_regioes, by = "regiao") %>%
+  # pivot_longer: reestrutura de wide para long — necessário para o ggplot
+  # comparar as duas métricas (população e eleitos) lado a lado
+  tidyr::pivot_longer(
+    cols      = c(prop_pop_negra, prop_eleitos_negros),
+    names_to  = "dimensao",
+    values_to = "proporcao"
+  ) %>%
+  # recode: renomeia valores de uma coluna (como case_when para substituições simples)
+  mutate(dimensao = recode(dimensao,
+    prop_pop_negra       = "População negra (Censo 2022)",
+    prop_eleitos_negros  = "Vereadores negros eleitos (TSE 2024)"
+  ))
+
+ggplot(df_resposta, aes(x = regiao, y = proporcao, fill = dimensao)) +
+  geom_col(position = "dodge", width = 0.65) +
+  geom_text(
+    aes(label = percent(proporcao, accuracy = 1)),
+    position = position_dodge(width = 0.65),
+    vjust = -0.5, size = 3.5, color = "#0f2a4a", fontface = "bold"
+  ) +
+  scale_y_continuous(labels = percent_format(), limits = c(0, 0.90)) +
+  scale_fill_manual(
+    values = c(
+      "População negra (Censo 2022)"         = "#5baad4",
+      "Vereadores negros eleitos (TSE 2024)" = "#0f2a4a"
+    ),
+    name = NULL
+  ) +
+  labs(
+    title    = "População negra e representação política por grande região",
+    subtitle = "Negros = pretos + pardos | população: Censo 2022; vereadores: TSE 2024",
+    x = NULL, y = "Proporção",
+    caption  = "Fontes: IBGE, Censo Demográfico 2022 (SIDRA); TSE, Repositório de Dados Eleitorais 2024."
+  ) +
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title         = element_text(color = "#0f2a4a", face = "bold", size = 13),
+    plot.subtitle      = element_text(color = "#4a6580", size = 10.5),
+    plot.caption       = element_text(color = "#888888", size = 9, hjust = 0),
+    axis.text.x        = element_text(color = "#0f2a4a", face = "bold", size = 11),
+    legend.position    = "top",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    plot.background    = element_rect(fill = "#f8f9fb", color = NA),
+    panel.background   = element_rect(fill = "#f8f9fb", color = NA)
+  )
+```
+
+Em todas as regiões, a proporção de vereadores negros eleitos fica bem abaixo da proporção de negros na população. A resposta descritiva à pergunta da aula é: não -- mesmo nas regiões com maior concentração de população negra, a representação política não acompanha a composição demográfica.
+
+Essa análise, porém, está no nível da grande região. Para descer ao nível do município -- onde a pergunta ganha mais sentido -- precisamos cruzar o Censo e o TSE usando o código do município como chave. E aqui está o problema: o Censo usa o código IBGE; o TSE usa um código próprio. Fazer esse join manualmente exige uma tabela de correspondência e algum trabalho de limpeza. É exatamente aí que a Base dos Dados entra.
+
+---
+
+# 7 · Parte 4 -- Base dos Dados: o mesmo cruzamento com menos código
+
+```{r pacote-bq, eval=FALSE}
+# install.packages(c("basedosdados", "DBI", "bigrquery"))
+library(basedosdados)
+library(DBI)
+library(bigrquery)
+```
+
+Na seção anterior, vimos o padrão no nível da grande região. Agora descemos ao nível do município -- cruzando o Censo 2022 (proporção de negros por município) com o TSE 2024 (candidatos e eleitos por raça). Na Base dos Dados, ambas as fontes estão disponíveis com chaves de município compatíveis no sistema IBGE, o que elimina o problema de correspondência de códigos que encontramos ao trabalhar com as fontes diretas.
+
+## 7.1 Principais campos das tabelas TSE (Base dos Dados)
+
+### Tabela `candidatos`
+
+| Campo | Descrição |
+|---|---|
+| `ano` | Ano da eleição |
+| `cargo` | Cargo disputado (Vereador, Prefeito, Deputado...) |
+| `raca` | Cor ou raça autodeclarada pelo candidato |
+| `resultado` | Eleito / Não eleito / Suplente |
+| `id_municipio` | Código IBGE de 6 dígitos do município |
+| `sigla_uf` | Estado |
+| `ds_genero` | Gênero |
+
+### Tabela `resultados_candidato`
+
+A tabela de resultados contém os totais de votos por candidato e permite análises de votação, não apenas de elegibilidade.
+
+| Campo | Descrição |
+|---|---|
+| `ano` | Ano da eleição |
+| `id_candidato_bd` | Chave para join com a tabela `candidatos` |
+| `votos` | Total de votos recebidos |
+| `proporcao_votos` | Proporção dos votos válidos |
+| `turno` | Turno da eleição |
+
+## 7.2 Configuração inicial
+
+<div class="callout-aviso">
+**Pré-requisito**
+Você precisa de: (1) conta Google; (2) projeto no [Google Cloud Platform](https://console.cloud.google.com/) -- o nível gratuito dá 1 TB/mês de consultas sem custo; (3) `install.packages("basedosdados")`.
+</div>
+
+```{r bq-config, eval=FALSE}
+bigrquery::bq_auth()
+
+meu_projeto_gcp <- "amsa-queries"   # <-- substitua pelo ID do seu projeto GCP
+basedosdados::set_billing_id(meu_projeto_gcp)
+
+con <- DBI::dbConnect(
+  bigrquery::bigquery(),
+  billing = meu_projeto_gcp,
+  project = "basedosdados"
+)
+```
+
+## 7.3 Cruzamento Censo + TSE por município
+
+Nas seções anteriores trabalhamos com cada base separadamente. A vantagem da Base dos Dados é que o Censo 2022 e o TSE já estão no mesmo projeto BigQuery, com `id_municipio` usando o código IBGE em ambas as tabelas. Uma única query SQL faz o cruzamento que antes exigiria download, limpeza e join manual.
+
+```{r cruzamento-bq, eval=FALSE}
+
+query_cruzamento <- "
+  -- WITH ... AS (...): CTE (Common Table Expression).
+  -- Cria uma tabela temporária nomeada que pode ser referenciada depois na mesma query.
+  -- Aqui temos duas CTEs: censo_mun e tse_mun. O SELECT final as cruza.
+
+  -- CTE 1: proporção de negros por município (Censo 2022)
+  WITH censo_mun AS (
+    SELECT
+      id_municipio,
+      SUM(populacao) AS pop_total,
+      -- CASE WHEN: equivale ao if_else() do R — soma apenas pretos e pardos
+      -- * 1.0 força divisão em ponto flutuante (sem isso, divisão inteira trunca p/ 0)
+      -- NULLIF(expr, 0): retorna NULL se o denominador for 0, evitando erro de divisão
+      SUM(CASE WHEN cor_raca IN ('Preta', 'Parda') THEN populacao ELSE 0 END) * 1.0
+        / NULLIF(SUM(populacao), 0) AS prop_negros
+    FROM `basedosdados.br_ibge_censo_2022.populacao_grupo_idade_sexo_raca`
+    WHERE cor_raca IS NOT NULL
+    GROUP BY id_municipio      -- equivale ao group_by(id_municipio) do dplyr
+  ),
+
+  -- CTE 2: proporção de eleitos negros a vereador por município (TSE 2024)
+  tse_mun AS (
+    SELECT
+      c.id_municipio,
+      -- COUNTIF(): função BigQuery que conta apenas linhas que satisfazem a condição
+      -- equivale a sum(if(condicao, 1, 0)) — não existe em SQL padrão, é específico do BigQuery
+      -- UPPER() normaliza maiúsculas para evitar falhas de match por capitalização
+      COUNTIF(UPPER(c.raca) IN ('PRETA', 'PARDA')) * 1.0
+        / NULLIF(COUNT(*), 0) AS prop_eleitos_negros
+    -- JOIN entre as tabelas de resultados e de candidatos para ter raça + resultado juntos
+    -- r = resultados_candidato (quem foi eleito); c = candidatos (dados do candidato, incl. raça)
+    FROM `basedosdados.br_tse_eleicoes.resultados_candidato` r
+    JOIN `basedosdados.br_tse_eleicoes.candidatos` c
+      ON  r.sequencial_candidato = c.sequencial   -- chave de ligação entre as duas tabelas
+      AND r.ano        = c.ano
+      AND r.sigla_uf   = c.sigla_uf
+      AND r.id_municipio = c.id_municipio
+    WHERE r.ano    = 2024
+      AND r.cargo  = 'vereador'
+      AND r.resultado IN ('eleito por qp', 'eleito por media')
+      AND c.raca IS NOT NULL
+    GROUP BY c.id_municipio
+  )
+
+  -- SELECT final: cruza as duas CTEs pelo código IBGE do município
+  -- INNER JOIN: mantém apenas municípios que aparecem em AMBAS as tabelas
+  -- USING (id_municipio): atalho para ON a.id_municipio = b.id_municipio
+  SELECT
+    c.id_municipio,
+    c.pop_total,
+    c.prop_negros,
+    t.prop_eleitos_negros
+  FROM censo_mun c
+  INNER JOIN tse_mun t USING (id_municipio)
+  WHERE t.prop_eleitos_negros IS NOT NULL
+"
+
+censo_tse_municipios <- DBI::dbGetQuery(con, query_cruzamento)
+
+saveRDS(censo_tse_municipios, "dados/censo_tse_municipios.rds")
+# censo_tse_municipios <- readRDS("dados/censo_tse_municipios.rds")
+```
+
+## 7.5 Cruzamento e visualização {.tabset}
+
+```{r load-cruzado}
+censo_tse_municipios <- readRDS("dados/censo_tse_municipios.rds")
+```
+
+A linha pontilhada diagonal representa a representação proporcional perfeita: municípios nessa linha elegem vereadores negros exatamente na proporção da população negra local. Municípios abaixo da linha -- a maioria -- têm representação menor do que a composição da população sugeriria.
+
+### Todos os municípios
+
+```{r grafico-cruzamento-todos}
+ggplot(censo_tse_municipios, aes(x = prop_negros, y = prop_eleitos_negros)) +
+  geom_point(alpha = 0.25, color = "#0f2a4a", size = 1.2) +
+  # geom_smooth(method = "lm"): linha de regressão linear (OLS) com banda de confiança (se=TRUE).
+  # Mostra a tendência empírica: à medida que a proporção negra aumenta, a representação sobe?
+  geom_smooth(method = "lm", color = "#1a6fa8", se = TRUE) +
+  # geom_abline(slope=1, intercept=0): desenha a linha y = x (diagonal).
+  # Representa a representação proporcional perfeita: vereadores negros = % negros na população.
+  # Pontos abaixo dessa linha = sub-representação; acima = sobre-representação.
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed",
+              color = "#e6a817", linewidth = 0.9) +
+  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
+  labs(
+    title    = "População negra e vereadores negros eleitos por município",
+    subtitle = "Todos os municípios | Linha pontilhada = representação proporcional perfeita",
+    x        = "Proporção de negros na população (Censo 2022)",
+    y        = "Proporção de vereadores negros eleitos (TSE 2024)",
+    caption  = "Fonte: IBGE, Censo Demográfico 2022; TSE, Repositório de Dados Eleitorais 2024."
+  ) +
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title       = element_text(color = "#0f2a4a", face = "bold", size = 13),
+    plot.subtitle    = element_text(color = "#4a6580", size = 10.5),
+    plot.caption     = element_text(color = "#888888", size = 9, hjust = 0),
+    plot.background  = element_rect(fill = "#f8f9fb", color = NA),
+    panel.background = element_rect(fill = "#f8f9fb", color = NA)
+  )
+```
+
+As listras horizontais são um artefato do tamanho das câmaras: municípios pequenos elegem apenas 9 vereadores, então a proporção de negros eleitos só pode assumir valores discretos (0%, 11%, 22%, 33%...).
+
+```{r correlacao-todos}
+cor_todos <- cor(censo_tse_municipios$prop_negros, censo_tse_municipios$prop_eleitos_negros)
+print(paste("Correlação — todos os municípios:", round(cor_todos, 3)))
+```
+
+### Municípios com +100 mil habitantes
+
+```{r grafico-cruzamento-grandes}
+censo_tse_municipios %>%
+  filter(pop_total >= 100000) %>%
+  ggplot(aes(x = prop_negros, y = prop_eleitos_negros)) +
+  geom_point(alpha = 0.45, color = "#0f2a4a", size = 1.8) +
+  geom_smooth(method = "lm", color = "#1a6fa8", se = TRUE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed",
+              color = "#e6a817", linewidth = 0.9) +
+  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
+  labs(
+    title    = "População negra e vereadores negros eleitos por município",
+    subtitle = "Municípios com +100 mil habitantes | Linha pontilhada = representação proporcional perfeita",
+    x        = "Proporção de negros na população (Censo 2022)",
+    y        = "Proporção de vereadores negros eleitos (TSE 2024)",
+    caption  = "Fonte: IBGE, Censo Demográfico 2022; TSE, Repositório de Dados Eleitorais 2024."
+  ) +
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title       = element_text(color = "#0f2a4a", face = "bold", size = 13),
+    plot.subtitle    = element_text(color = "#4a6580", size = 10.5),
+    plot.caption     = element_text(color = "#888888", size = 9, hjust = 0),
+    plot.background  = element_rect(fill = "#f8f9fb", color = NA),
+    panel.background = element_rect(fill = "#f8f9fb", color = NA)
+  )
+```
+
+Com câmaras maiores (30 a 55 vereadores), as proporções se tornam contínuas e o padrão fica mais nítido.
+
+```{r correlacao-grandes}
+grandes <- censo_tse_municipios %>% filter(pop_total >= 100000)
+cor_grandes <- cor(grandes$prop_negros, grandes$prop_eleitos_negros)
+print(paste("Correlação — municípios com +100 mil hab.:", round(cor_grandes, 3)))
+```
+
+## 7.6 Interpretação {-}
+
+O eixo X mostra a proporção de negros na população de cada município (Censo 2022). O eixo Y mostra a proporção de vereadores negros eleitos (TSE 2024). Se a representação fosse proporcional, todos os pontos estariam sobre a linha pontilhada.
+
+A correlação indica a direção e intensidade da associação entre as duas variáveis -- mas é um passo descritivo, não uma resposta à pergunta. Para fazer afirmações sobre causalidade ou controlar por outras variáveis (porte do município, região, partido), seriam necessários modelos estatísticos mais robustos. O que fazemos aqui é aprender a montar o dado: saber de onde vem cada variável e como cruzá-las já é o objetivo central da aula.
+
+<div class="callout-pratica">
+**Para ir além**
+Filtre `censo_tse_municipios` para uma única região e refaça o gráfico. O padrão de sub-representação é homogêneo no país, ou varia entre Norte, Nordeste e Sul?
+</div>
+
+---
+
+# 8 · Boas práticas
+
+Antes de publicar ou apresentar resultados com dados raciais, vale revisar os itens abaixo.
+
+- A variável é autodeclaração ou heteroidentificação? Isso deve estar explícito no texto.
+- A categoria "negros" está definida como pretos + pardos, com menção na primeira ocorrência?
+- Os valores ausentes foram tratados de forma transparente, não removidos silenciosamente?
+- O tamanho amostral de cada grupo está reportado?
+- O ano de referência e a edição da pesquisa estão citados?
+- Se usou peso amostral (como `V1028` na PNADC), isso está documentado na metodologia?
+- Os gráficos têm legenda, fonte e nota explicando o que é "negros"?
+
+## 8.1 Referências
+
+- Almeida, R. S. R. (2025). *Entre o espelho e a fotografia: classificação racial, desigualdades e eleições no Brasil*. Tese (Doutorado em Ciência Política) -- Universidade de Brasília. [Disponível aqui](https://repositorio.unb.br/handle/10482/54284).
+- Campos, L. A. (2015). Socialismo moreno, conservadorismo pálido? Cor e recrutamento partidário em São Paulo e Rio de Janeiro nas eleições de 2012. *Dados — Revista de Ciências Sociais*, v. 58, n. 2, p. 361-400.
+- Campos, L. A. e Machado, C. (2020). *Raça e Eleições no Brasil*. Porto Alegre: Zouk.
+- Camargo, A. de P. R. (2009). Mensuração racial e campo estatístico nos censos brasileiros (1872-1940): uma abordagem convergente. *Boletim do Museu Paraense Emílio Goeldi. Ciências Humanas*, v. 4, n. 3, p. 361-385. [Disponível aqui](https://www.scielo.br/j/bgoeldi/a/QdfttwCdT5hvcTLdFMndfXn/?format=html&lang=pt).
+- Campos, L. A. (2013). O pardo como dilema político. *Insight Inteligência*, n. 63, out./dez. 2013, p. 80-91.
+- Gomes, N. L. (2011). O movimento negro no Brasil: ausências, emergências e a produção dos saberes. *Política & Sociedade*, v. 10, n. 18, p. 133-154. [Disponível aqui](https://periodicos.ufsc.br/index.php/politica/article/view/2175-7984.2011v10n18p133).
+- Guimarães, A. S. A. (2003). Como trabalhar com "raça" em sociologia. *Educação e Pesquisa*, v. 29, n. 1, p. 93-107. [Disponível aqui](https://www.scielo.br/j/ep/a/DYxSGJgkwVyFJ8jfT8wxWxC/abstract/?lang=pt).
+- Hasenbalg, C. (1979). *Discriminação e Desigualdades Raciais no Brasil*. Graal.
+- Hasenbalg, C. e Silva, N. do V. (1988). *Estrutura Social, Mobilidade e Raça*. IUPERJ.
+- Lima, M. (2010). Desigualdades raciais e políticas públicas: ações afirmativas no governo Lula. *Novos Estudos CEBRAP*, n. 87, p. 77-95. [Disponível aqui](https://www.scielo.br/j/nec/a/P7jQbyjZbNLcfvRFFjgCkCp/?lang=pt).
+- Lima, M., Hasenbalg, C. e Silva, N. do V. (1999). *Cor e estratificação social*. Rio de Janeiro: Contra Capa.
+- Petruccelli, J. L. (2000). *A cor denominada: estudo do suplemento da PME de julho/1998*. Rio de Janeiro: IBGE.
+- Henriques, R. (2001). Desigualdade racial no Brasil: evolução das condições de vida na década de 90. *Texto para Discussão IPEA*, n. 807. [Disponível aqui](https://repositorio.ipea.gov.br/bitstream/11058/2284/1/TD_0807.pdf).
+- IBGE (2022). [Desigualdades Sociais por Cor ou Raça no Brasil](https://biblioteca.ibge.gov.br/index.php/biblioteca-catalogo?view=detalhes&id=2101935).
+- Moraes, B. (2025). Os levantes contra os registros de 1852. Arquivo Nacional. [Disponível aqui](https://www.gov.br/arquivonacional/pt-br/sites_eventos/sites-tematicos-1/brasil-oitocentista/temas-oitocentistas/os-levantes-contra-os-registros-de-1852).
+- Telles, E. (2004). *Race in Another America*. Princeton University Press.
+- TSE (2025). [Análise da distribuição de candidaturas por perfil racial, 2014-2024](https://www.tse.jus.br/institucional/catalogo-de-publicacoes/arquivos/analise-da-distribuicao-de-candidaturas-vagas-de-eleitos-e-recursos-de-financiamento-por-perfil-racial/@@display-file/file/Relatorio_estatistico_digital.pdf).
+- Westin, R. (2022). 1º Censo do Brasil, feito há 150 anos, contou 1,5 milhão de escravizados. *Senado Notícias*. [Disponível aqui](https://www12.senado.leg.br/noticias/especiais/arquivo-s/1o-censo-do-brasil-feito-ha-150-anos-contou-1-5-milhao-de-escravizados).
+- Pacote [`censobr`](https://ipeagit.github.io/censobr/) -- IPEA
+- Pacote [`electionsBR`](https://cran.r-project.org/package=electionsBR) -- dados eleitorais do TSE
+- Pacote [`PNADcIBGE`](https://github.com/cran/PNADcIBGE)
+- Pacote [`sidrar`](https://cran.r-project.org/web/packages/sidrar/vignettes/Introduction_to_sidrar.html)
