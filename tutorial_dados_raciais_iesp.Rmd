@@ -192,7 +192,7 @@ As categorias mudaram entre 1872, 1890, 1940 e 1991. Comparações diretas entre
 
 O ponto de partida está nos trabalhos de Carlos Hasenbalg e Nelson do Valle Silva, publicados no final dos anos 1970. Ao estudar mobilidade social com dados censitários, os dois pesquisadores precisaram lidar com um problema prático: os autodeclarados "pretos" correspondiam a apenas 7--8% da população, o que tornava as estimativas estatisticamente frágeis. Ao agregar pretos e pardos como "não brancos", descobriram que os dois grupos tinham **trajetórias socioeconômicas semelhantes** -- chances de mobilidade ascendente comparáveis, e ambas muito abaixo das de brancos, independente da classe de origem.
 
-Esse achado foi confirmado por pesquisas subsequentes: Henriques (2001), Soares (2000), Ribeiro (2006) e outros reproduziram a análise com diferentes períodos e encontraram o mesmo padrão. A consistência dos resultados consolidou a agregação como prática metodológica padrão na literatura de estratificação racial no Brasil.
+Esse achado foi confirmado por pesquisas subsequentes -- entre elas Henriques (2001) -- que reproduziram a análise com diferentes períodos e encontraram o mesmo padrão. A consistência dos resultados consolidou a agregação como prática metodológica padrão na literatura de estratificação racial no Brasil.
 
 ### Evidência empírica
 
@@ -274,7 +274,7 @@ Em ambos os indicadores, pretos e pardos apresentam valores próximos entre si e
 
 A sociologia produziu a evidência; o movimento negro criou o vocabulário. Ao longo dos anos 1980 e 1990, as organizações negras passaram a defender que pretos e pardos fossem denominados "negros" -- não apenas por conveniência analítica, mas como projeto político de construção de identidade. A redenominação invertia a carga negativa historicamente associada à palavra e criava uma base demográfica expressiva (aproximadamente metade da população) para demandar políticas públicas.
 
-Para Campos (2013), o pardo "deixou de ser um simples obstáculo epistemológico para as ciências sociais para se tornar dilema político para o Estado brasileiro". Em pesquisa aberta do IBGE (1998), 134 categorias espontâneas foram usadas por brasileiros para descrever sua cor -- mas 90% se concentraram em apenas 14 termos, e quase metade escolheu apenas dois: "branca" e "parda". Essa variedade terminológica contrasta com a estabilidade das desigualdades observadas entre os grupos.
+Para Campos (2013), o pardo "deixou de ser um simples obstáculo epistemológico para as ciências sociais para se tornar dilema político para o Estado brasileiro". O autor cita pesquisa aberta do IBGE (1998) em que brasileiros usaram 134 categorias espontâneas para descrever sua cor -- mas a grande maioria se concentrou em um número muito menor de termos, o que revela que a aparente fluidez coexiste com padrões relativamente estáveis de auto-classificação. Essa variedade terminológica, por sua vez, contrasta com a estabilidade das desigualdades observadas entre os grupos.
 
 Quando as universidades implementaram cotas nos anos 2000, o debate ganhou contornos práticos: quem eram os beneficiários? O estado do Rio de Janeiro usou inicialmente "pardos e negros"; a UnB exigiu que o candidato "se declare negro"; a lei federal de 2012 adotou o modelo do IBGE (pretos e pardos). A tabela abaixo, reproduzida de Campos (2013), documenta a variedade de critérios adotados pelas universidades públicas até 2011:
 
@@ -319,7 +319,7 @@ Antes de entrar no código, vale ter uma visão geral de quando e onde a variáv
 
 <div class="callout-aviso">
 **Censo Escolar: acesso restrito aos microdados individuais**
-Os microdados do Censo Escolar têm variável de cor ou raça por aluno (`TP_COR_RACA`) desde 2005. O INEP restringiu o acesso a dados individuais por conta da LGPD: o dado granular está disponível apenas via canais controlados (pesquisadores credenciados). Para o público geral, o acesso é a dados agregados por escola.
+Os microdados do Censo Escolar têm variável de cor ou raça por aluno (`TP_COR_RACA`) desde 2005. O INEP restringiu o acesso a dados individuais por conta da LGPD: o dado granular está disponível via [Sala de Acesso Controlado do INEP](https://www.gov.br/pt-br/servicos/usar-o-servico-de-acesso-a-dados-protegidos-do-inep), um serviço presencial para pesquisadores. Para o público geral, o acesso é a dados agregados por escola.
 
 **RAIS: dado racial de cobertura desigual**
 A RAIS tem variável de cor ou raça desde 1999, com acesso público a partir da edição de 2006. O preenchimento é feito pelo empregador -- portanto, heteroidentificação, não autodeclaração. A cobertura varia muito por setor: no setor privado, cerca de 13% dos vínculos não têm raça informada; no setor público estatutário, esse percentual chegou a 100% em 2019. Para este último grupo, Silveira (2022) propõe uma estratégia de imputação combinando registros históricos e imputação múltipla (MICE), disponível como nota técnica do IPEA ([repositorio.ipea.gov.br](https://repositorio.ipea.gov.br/entities/publication/f712b1d5-e0bf-4399-acce-0d5c22797464)).
