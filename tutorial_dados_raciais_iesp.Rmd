@@ -375,6 +375,11 @@ A PNADC substituiu a PNAD anual a partir de 2012 e é coletada todo trimestre. E
 Os dicionários de variáveis ficam na pasta `Documentacao/Documentacao_Geral/` do FTP. O arquivo `LEIA-ME.pdf` descreve a estrutura completa dos arquivos e links para os dicionários de variáveis, cadernos metodológicos e notas técnicas. Os microdados trimestrais ficam em subpastas por ano e trimestre (`2024/04/`, por exemplo). Os microdados anuais ficam na pasta `Anual/`. Para cada edição, há um arquivo de dados (`.txt` compactado) e um arquivo de inputs SAS ou R para leitura. O pacote `PNADcIBGE` faz esse processo automaticamente e já configura o desenho amostral -- o caminho manual é útil para quem precisar de variáveis não cobertas pelo pacote ou versões anteriores.
 </div>
 
+<div class="callout-conceito">
+**Módulos suplementares da PNAD e da PNADC**
+Além das variáveis regulares, tanto a PNAD antiga (anual, encerrada em 2015) quanto a PNADC publicaram ao longo dos anos módulos temáticos sobre tópicos como mobilidade social, condições de vida e acesso a serviços. Esses suplementos ampliam consideravelmente o escopo analítico disponível. O suplemento de Mobilidade Social da PNAD 2014, por exemplo, incluía perguntas sobre escolaridade dos pais -- informação que não está disponível nas edições regulares da PNADC. Os arquivos dos suplementos seguem a mesma estrutura de FTP, com dicionários próprios. A lista completa pode ser consultada na página da pesquisa no IBGE ou navegando diretamente pelo FTP.
+</div>
+
 ### Dados eleitorais (TSE)
 
 O TSE passou a coletar autodeclaração de cor ou raça de candidatos nas eleições de 2014. Os dados são abertos e cobrem todas as eleições desde então. A partir de 2020, a distribuição do fundo eleitoral passou a ser vinculada à proporção de candidaturas negras.
@@ -620,6 +625,17 @@ pop_grupo
 Use o **censobr** quando precisar cruzar variáveis individuais (ex: raça + sexo + renda dentro do Censo) ou trabalhar no nível do município. Use o **sidrar** quando a tabela que você precisa já existe no SIDRA -- é mais rápido e simples para análises regionais e nacionais.
 </div>
 
+<div class="callout-pratica">
+**Populações por raça por UF**
+Para obter a população por cor ou raça desagregada por estado, basta trocar o parâmetro `geo` na chamada do `sidrar`:
+
+```r
+pop_raca_uf <- get_sidra(9605, variable = 93, geo = "State", period = "2022")
+```
+
+O parâmetro `geo` aceita `"Brazil"` (nacional), `"Region"` (grandes regiões), `"State"` (UF) e `"City"` (município). Para selecionar um estado específico, use `geo = list("State" = "33")` -- onde o número é o código IBGE da UF (33 = Rio de Janeiro, 35 = São Paulo, etc.).
+</div>
+
 ## 3.4 Populações quilombolas e indígenas no Censo 2022
 
 O Censo 2022 foi o primeiro a coletar dados abrangentes sobre **populações indígenas** e **quilombolas** como recortes específicos -- não apenas como categorias de cor ou raça, mas como grupos com territórios identificados.
@@ -641,9 +657,9 @@ library(PNADcIBGE)
 
 O Censo acontece a cada dez anos. Entre 2010 e 2022, por exemplo, não havia como saber como a renda e a escolaridade da população negra estavam mudando usando só o Censo. A **PNAD Contínua** preenche esse intervalo: é coletada todo trimestre e permite acompanhar essas mesmas variáveis ao longo do tempo. Os códigos desta seção podem ser replicados para qualquer ano entre 2012 e hoje.
 
-O Censo 2022 tem variáveis de rendimento, mas a PNADC é a fonte de referência do IBGE para estatísticas de renda e mercado de trabalho. É com ela que o IBGE publica anualmente os indicadores de desigualdade de renda por cor ou raça -- o Censo serve, principalmente, para composição populacional e cruzamentos geográficos detalhados. Por isso, usamos o Censo para saber quem é a população negra e onde ela está, e a PNADC para saber como ela vive no mercado de trabalho.
+O Censo 2022 tem variáveis de rendimento, mas a PNADC é a principal fonte utilizada para estatísticas de renda e mercado de trabalho entre censos -- publicações como a Síntese de Indicadores Sociais do IBGE recorrem a ela para os indicadores anuais de desigualdade por cor ou raça. O Censo, por sua vez, é insubstituível para composição populacional detalhada e cruzamentos no nível do município. Na prática, as duas fontes se complementam: o Censo para saber quem é a população negra e onde ela está; a PNADC para acompanhar como essa situação evolui ao longo do tempo.
 
-O próprio IBGE desenvolveu o pacote `PNADcIBGE` para facilitar o acesso e a análise correta dos dados. Isso é relevante: ao disponibilizar uma ferramenta oficial em R, o IBGE reconhece que o uso adequado da pesquisa requer lidar com o desenho amostral -- e que ignorá-lo é um erro metodológico, não uma simplificação aceitável. Para uma introdução em vídeo ao pacote e ao desenho amostral da PNADC, recomendamos a [videoaula do IBGE no YouTube](https://www.youtube.com/watch?v=LWiU5HDwu0Q).
+O pacote `PNADcIBGE` foi desenvolvido por técnicos do IBGE e facilita o acesso e a leitura dos dados diretamente no R. Para uma introdução em vídeo ao pacote e ao desenho amostral da PNADC, recomendamos a [videoaula apresentada por um pesquisador do IBGE na PPGE-UNESP](https://www.youtube.com/watch?v=LWiU5HDwu0Q).
 
 ## 4.1 Variáveis de interesse
 
