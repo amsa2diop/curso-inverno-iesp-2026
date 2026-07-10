@@ -348,19 +348,32 @@ O Censo 2022 foi o primeiro após doze anos de intervalo (o anterior foi em 2010
 | SIDRA -- Sistema IBGE de Recuperação Automática | [sidra.ibge.gov.br](https://sidra.ibge.gov.br/) |
 | Tabela 9605 -- população por cor ou raça | [sidra.ibge.gov.br/tabela/9605](https://sidra.ibge.gov.br/tabela/9605) |
 | Microdados do Censo 2022 | [censo2022.ibge.gov.br/resultados.html](https://censo2022.ibge.gov.br/resultados.html) |
-| Dicionário de variáveis | [ftp.ibge.gov.br -- Documentação Censo 2022](https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Microdados/Documentacao/) |
+| Dicionário de variáveis | [ftp.ibge.gov.br -- Censo 2022](https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/) |
 | Pacote censobr (IPEA) | [ipeagit.github.io/censobr](https://ipeagit.github.io/censobr/) |
 | Pacote sidrar | [CRAN -- sidrar](https://cran.r-project.org/web/packages/sidrar/vignettes/Introduction_to_sidrar.html) |
 
+<div class="callout-conceito">
+**Estrutura do dicionário de variáveis do Censo 2022**
+O dicionário dos microdados de setores censitários está disponível no FTP acima, em `Microdados/Documentacao/`. Ele vem em formato Excel com cinco abas: *Básico* (variáveis presentes em todos os setores), *Siglas* (abreviações usadas nos arquivos), *não-PCT* (variáveis de domicílios e entorno para setores comuns), *Indígenas* (1.029 variáveis específicas para setores em territórios indígenas) e *Quilombolas* (951 variáveis para setores em territórios quilombolas). O Censo 2022 não é um único arquivo nem um único dicionário: os questionários variavam por tipo de território, o que resulta em arquivos e dicionários distintos dependendo da população investigada.
+</div>
+
 ### PNAD Contínua
 
-A PNADC substituiu a PNAD anual a partir de 2012 e é coletada todo trimestre. É a principal fonte para acompanhar renda, escolaridade e ocupação por raça nos anos entre censos. Trabalha com amostra probabilística e exige uso de pesos para estimativas representativas.
+A PNADC substituiu a PNAD anual a partir de 2012 e é coletada todo trimestre. Existe em duas versões: a **trimestral** (foco em emprego e trabalho) e a **anual** (inclui módulos temáticos como educação, habitação e saúde). Ambas têm variável de cor ou raça. É a principal fonte para acompanhar renda, escolaridade e ocupação por raça nos anos entre censos. Trabalha com amostra probabilística e exige uso de pesos para estimativas representativas.
 
 | Recurso | Link |
 |---|---|
-| Página da pesquisa (IBGE) | [ibge.gov.br -- PNAD Contínua](https://www.ibge.gov.br/estatisticas/sociais/trabalho/17270-pnad-continua.html) |
-| Microdados e documentação | [ftp.ibge.gov.br -- PNADC Trimestral](https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Trimestral/Microdados/Documentacao/) |
+| Página da pesquisa (IBGE) | [ibge.gov.br -- PNAD Contínua Trimestral](https://www.ibge.gov.br/estatisticas/sociais/populacao/9173-pesquisa-nacional-por-amostra-de-domicilios-continua-trimestral.html) |
+| FTP -- microdados trimestrais | [ftp.ibge.gov.br -- PNADC Trimestral](https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Trimestral/Microdados/) |
+| FTP -- microdados anuais | [ftp.ibge.gov.br -- PNADC Anual](https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Anual/Microdados/) |
+| Dicionários (Documentacao_Geral) | [ftp.ibge.gov.br -- Documentação Geral](https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Anual/Microdados/Documentacao/Documentacao_Geral/) |
+| LEIA-ME (estrutura dos arquivos) | [LEIA-ME PNADC (PDF)](https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Anual/Microdados/LEIA-ME.pdf) |
 | Pacote PNADcIBGE | [GitHub -- PNADcIBGE](https://github.com/cran/PNADcIBGE) |
+
+<div class="callout-conceito">
+**Como navegar na documentação da PNADC**
+Os dicionários de variáveis ficam na pasta `Documentacao/Documentacao_Geral/` do FTP. O arquivo `LEIA-ME.pdf` descreve a estrutura completa dos arquivos e links para os dicionários de variáveis, cadernos metodológicos e notas técnicas. Os microdados trimestrais ficam em subpastas por ano e trimestre (`2024/04/`, por exemplo). Os microdados anuais ficam na pasta `Anual/`. Para cada edição, há um arquivo de dados (`.txt` compactado) e um arquivo de inputs SAS ou R para leitura. O pacote `PNADcIBGE` faz esse processo automaticamente e já configura o desenho amostral -- o caminho manual é útil para quem precisar de variáveis não cobertas pelo pacote ou versões anteriores.
+</div>
 
 ### Dados eleitorais (TSE)
 
@@ -371,6 +384,24 @@ O TSE passou a coletar autodeclaração de cor ou raça de candidatos nas eleiç
 | Repositório de dados eleitorais | [dadosabertos.tse.jus.br](https://dadosabertos.tse.jus.br/) |
 | Resultados eleições 2022 | [dadosabertos.tse.jus.br -- Resultados 2022](https://dadosabertos.tse.jus.br/dataset/resultados-2022) |
 | Relatório racial TSE 2014-2024 | [Análise por perfil racial (PDF)](https://www.tse.jus.br/institucional/catalogo-de-publicacoes/arquivos/analise-da-distribuicao-de-candidaturas-vagas-de-eleitos-e-recursos-de-financiamento-por-perfil-racial/@@display-file/file/Relatorio_estatistico_digital.pdf) |
+
+<div class="callout-conceito">
+**Estrutura e codificação dos arquivos do TSE**
+Os arquivos de candidatos são nomeados `consulta_cand_AAAA_UF.csv` (por estado) ou `consulta_cand_AAAA_BRASIL.csv` (consolidado). São delimitados por ponto-e-vírgula (`;`) e codificados em **Latin-1** (ISO-8859-1) -- ao importar no R, use `read.csv2(..., fileEncoding = "Latin-1")` ou o pacote `electionsBR` já faz isso automaticamente.
+
+A variável de cor ou raça nos microdados é `CD_COR_RACA` (código numérico) ou `DS_COR_RACA` (descrição):
+
+| Código | Descrição |
+|---|---|
+| 01 | Branca |
+| 02 | Preta |
+| 03 | Parda |
+| 04 | Amarela |
+| 05 | Indígena |
+| 06 | Não Informado |
+
+Valores ausentes aparecem como `#NULO#` nos arquivos brutos. A variável `NM_SOCIAL_CANDIDATO` registra o nome social de candidatos trans quando informado. Desde a Resolução TSE nº 23.729/2024, o CPF dos candidatos não é mais disponibilizado publicamente nos arquivos de microdados.
+</div>
 
 ### Outros recursos
 
@@ -464,6 +495,16 @@ suppressPackageStartupMessages({
   library(PNADcIBGE); library(survey); library(electionsBR)
 })
 ```
+
+## Para aprender R
+
+Se você nunca usou R antes ou quer consolidar o que sabe, recomendamos nesta ordem:
+
+1. **[Ciência de Dados em R](https://livro.curso-r.com/)** -- livro gratuito em português da Curso-R. Cobre desde a instalação até visualização e modelagem. Bom ponto de partida para ler no seu ritmo.
+
+2. **[Vídeo-aula de introdução ao R](https://www.youtube.com/watch?v=zOXmT_Pdn-8)** -- introdução em português no YouTube. Útil para quem prefere aprender assistindo antes de ler.
+
+3. **[Escola Virtual Gov -- Introdução ao R](https://www.escolavirtual.gov.br/curso/325)** -- curso de 20 horas com certificado gratuito, oferecido pela Escola Nacional de Administração Pública (ENAP). Indicado para quem quiser uma formação mais estruturada.
 
 ---
 
@@ -601,6 +642,8 @@ library(PNADcIBGE)
 O Censo acontece a cada dez anos. Entre 2010 e 2022, por exemplo, não havia como saber como a renda e a escolaridade da população negra estavam mudando usando só o Censo. A **PNAD Contínua** preenche esse intervalo: é coletada todo trimestre e permite acompanhar essas mesmas variáveis ao longo do tempo. Os códigos desta seção podem ser replicados para qualquer ano entre 2012 e hoje.
 
 O Censo 2022 tem variáveis de rendimento, mas a PNADC é a fonte de referência do IBGE para estatísticas de renda e mercado de trabalho. É com ela que o IBGE publica anualmente os indicadores de desigualdade de renda por cor ou raça -- o Censo serve, principalmente, para composição populacional e cruzamentos geográficos detalhados. Por isso, usamos o Censo para saber quem é a população negra e onde ela está, e a PNADC para saber como ela vive no mercado de trabalho.
+
+O próprio IBGE desenvolveu o pacote `PNADcIBGE` para facilitar o acesso e a análise correta dos dados. Isso é relevante: ao disponibilizar uma ferramenta oficial em R, o IBGE reconhece que o uso adequado da pesquisa requer lidar com o desenho amostral -- e que ignorá-lo é um erro metodológico, não uma simplificação aceitável. Para uma introdução em vídeo ao pacote e ao desenho amostral da PNADC, recomendamos a [videoaula do IBGE no YouTube](https://www.youtube.com/watch?v=LWiU5HDwu0Q).
 
 ## 4.1 Variáveis de interesse
 
