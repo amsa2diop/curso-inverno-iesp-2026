@@ -505,7 +505,7 @@ suppressPackageStartupMessages({
 
 Se você nunca usou R antes ou quer consolidar o que sabe, recomendamos nesta ordem:
 
-1. **[Ciência de Dados em R](https://livro.curso-r.com/)** -- livro gratuito em português da Curso-R. Cobre desde a instalação até visualização e modelagem. Bom ponto de partida para ler no seu ritmo.
+1. **[Ciência de Dados em R](https://curso-r.github.io/livro-material/index.html)** -- livro gratuito em português da Curso-R. Cobre desde a instalação até visualização e modelagem. Bom ponto de partida para ler no seu ritmo.
 
 2. **[Vídeo-aula de introdução ao R](https://www.youtube.com/watch?v=zOXmT_Pdn-8)** -- introdução em português no YouTube. Útil para quem prefere aprender assistindo antes de ler.
 
@@ -907,7 +907,7 @@ O TSE usa um sistema próprio de códigos de município, diferente dos códigos 
 ```{r tse-download, eval=FALSE}
 # Execute apenas uma vez para baixar e salvar os dados brutos
 cand_2024 <- candidate_local(2024)
-saveRDS(cand_2024, "dados/cand_2024.rds")
+# saveRDS(cand_2024, "dados/cand_2024.rds")
 ```
 
 ```{r tse-analise, cache=TRUE}
