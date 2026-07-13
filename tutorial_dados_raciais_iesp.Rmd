@@ -129,7 +129,7 @@ $(document).ready(function() {
 </script>
 
 <div style="font-size: 0.85rem; color: #5a1530; margin: -0.3em 0 1.5em 0;">
-<a href="mailto:amsatoudiop@iesp.uerj.br">amsatoudiop@iesp.uerj.br</a> &nbsp;|&nbsp; <a href="mailto:julianamarques@iesp.uerj.br">julianamarques@iesp.uerj.br</a>
+<a href="mailto:julianamarques@iesp.uerj.br">julianamarques@iesp.uerj.br</a> &nbsp;|&nbsp; <a href="mailto:amsatoudiop@iesp.uerj.br">amsatoudiop@iesp.uerj.br</a>
 </div>
 
 ```{r setup, include=FALSE}
@@ -1369,7 +1369,9 @@ Filtre `censo_tse_municipios` para uma única região e refaça o gráfico. O pa
 
 ---
 
-# 8 · Boas práticas
+# Para encerrar
+
+## Boas práticas
 
 Antes de publicar ou apresentar resultados com dados raciais, vale revisar os itens abaixo.
 
@@ -1381,7 +1383,7 @@ Antes de publicar ou apresentar resultados com dados raciais, vale revisar os it
 - Se usou peso amostral (como `V1028` na PNADC), isso está documentado na metodologia?
 - Os gráficos têm legenda, fonte e nota explicando o que é "negros"?
 
-## 8.1 Materiais complementares
+## Materiais complementares
 
 ### Para aprender R
 
@@ -1401,14 +1403,16 @@ A [Base dos Dados](https://basedosdados.org/) padroniza e disponibiliza dados p�
 | Documentação oficial e primeiros passos | [basedosdados.org/docs/home](https://basedosdados.org/docs/home) |
 | Videoaula prática: dados educacionais no R | [youtube.com/watch?v=qTcixmtDQCg](https://www.youtube.com/watch?v=qTcixmtDQCg) |
 
-## 8.2 Contato
+## Contato
 
 Dúvidas sobre o conteúdo ou os dados? Entre em contato com os instrutores:
 
-- **Amsatou Diop** -- [amsatoudiop@iesp.uerj.br](mailto:amsatoudiop@iesp.uerj.br)
 - **Juliana Marques** -- [julianamarques@iesp.uerj.br](mailto:julianamarques@iesp.uerj.br)
+- **Amsatou Diop** -- [amsatoudiop@iesp.uerj.br](mailto:amsatoudiop@iesp.uerj.br)
 
-## 8.3 Referências
+---
+
+# Referências
 
 - Almeida, R. S. R. (2025). *Entre o espelho e a fotografia: classificação racial, desigualdades e eleições no Brasil*. Tese (Doutorado em Ciência Política) -- Universidade de Brasília. [Disponível aqui](https://repositorio.unb.br/handle/10482/54284).
 - Camargo, A. de P. R. (2009). Mensuração racial e campo estatístico nos censos brasileiros (1872-1940): uma abordagem convergente. *Boletim do Museu Paraense Emílio Goeldi. Ciências Humanas*, v. 4, n. 3, p. 361-385. [Disponível aqui](https://www.scielo.br/j/bgoeldi/a/QdfttwCdT5hvcTLdFMndfXn/?format=html&lang=pt).
@@ -1419,13 +1423,14 @@ Dúvidas sobre o conteúdo ou os dados? Entre em contato com os instrutores:
 - Guimarães, A. S. A. (2003). Como trabalhar com "raça" em sociologia. *Educação e Pesquisa*, v. 29, n. 1, p. 93-107. [Disponível aqui](https://www.scielo.br/j/ep/a/DYxSGJgkwVyFJ8jfT8wxWxC/abstract/?lang=pt).
 - Hasenbalg, C. (1979). *Discriminação e Desigualdades Raciais no Brasil*. Graal.
 - Hasenbalg, C. e Silva, N. do V. (1988). *Estrutura Social, Mobilidade e Raça*. IUPERJ.
-- Henriques, R. (2001). Desigualdade racial no Brasil: evolução das condições de vida na década de 90. *Texto para Discussão IPEA*, n. 807. [Disponível aqui](https://repositorio.ipea.gov.br/bitstream/11058/2284/1/TD_0807.pdf).
+- Henriques, R. (2001). Desigualdade racial no Brasil: evolução das condições de vida na década de 90. *Texto para Discussão IPEA*, n. 807. [Disponível aqui](https://repositorio.ipea.gov.br/items/c0142dc7-2f5d-4c52-8736-118840cd85c9).
 - IBGE (2022). [Desigualdades Sociais por Cor ou Raça no Brasil](https://biblioteca.ibge.gov.br/index.php/biblioteca-catalogo?view=detalhes&id=2101935).
 - Lima, M. (2010). Desigualdades raciais e políticas públicas: ações afirmativas no governo Lula. *Novos Estudos CEBRAP*, n. 87, p. 77-95. [Disponível aqui](https://www.scielo.br/j/nec/a/P7jQbyjZbNLcfvRFFjgCkCp/?lang=pt).
 - Lima, M., Hasenbalg, C. e Silva, N. do V. (1999). *Cor e estratificação social*. Rio de Janeiro: Contra Capa.
 - Moraes, B. (2025). Os levantes contra os registros de 1852. Arquivo Nacional. [Disponível aqui](https://www.gov.br/arquivonacional/pt-br/sites_eventos/sites-tematicos-1/brasil-oitocentista/temas-oitocentistas/os-levantes-contra-os-registros-de-1852).
 - Petruccelli, J. L. (2000). *A cor denominada: estudo do suplemento da PME de julho/1998*. Rio de Janeiro: IBGE.
 - Schwartzman, S. (1999). Fora de foco: diversidade e identidades étnicas no Brasil. *Novos Estudos CEBRAP*, n. 55, p. 83-96.
+- Silveira, F. G. et al. (2022). *Imputação da informação de raça/cor na RAIS para o setor público brasileiro*. Nota Técnica IPEA. [Disponível aqui](https://repositorio.ipea.gov.br/entities/publication/f712b1d5-e0bf-4399-acce-0d5c22797464).
 - Telles, E. (2004). *Race in Another America*. Princeton University Press.
 - TSE (2025). [Análise da distribuição de candidaturas por perfil racial, 2014-2024](https://www.tse.jus.br/institucional/catalogo-de-publicacoes/arquivos/analise-da-distribuicao-de-candidaturas-vagas-de-eleitos-e-recursos-de-financiamento-por-perfil-racial/@@display-file/file/Relatorio_estatistico_digital.pdf).
 - Westin, R. (2022). 1º Censo do Brasil, feito há 150 anos, contou 1,5 milhão de escravizados. *Senado Notícias*. [Disponível aqui](https://www12.senado.leg.br/noticias/especiais/arquivo-s/1o-censo-do-brasil-feito-ha-150-anos-contou-1-5-milhao-de-escravizados).
