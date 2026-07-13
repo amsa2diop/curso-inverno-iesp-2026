@@ -158,7 +158,7 @@ A aula está dividida em duas partes. Primeiro, discutimos os desafios metodoló
 
 ## 1.1 Autodeclaração e heteroidentificação
 
-Nas pesquisas do IBGE, cor ou raça é coletada por **autodeclaração**: cada pessoa escolhe, entre cinco categorias (branca, preta, amarela, parda ou indígena), aquela com que se identifica. Esse modelo foi consolidado no Censo de 1991, depois de ter ficado fora dos censos de 1970 e 1980, período em que o regime militar resistia à visibilidade estatística das desigualdades raciais.
+Nas pesquisas do IBGE, cor ou raça é coletada por **autodeclaração**: cada pessoa escolhe, entre cinco categorias (branca, preta, amarela, parda ou indígena), aquela com que se identifica. Esse modelo foi consolidado no Censo de 1991, depois de ter ficado fora do Censo de 1970 -- o único suprimido durante o regime militar.
 
 A autodeclaração contrasta com a **heteroidentificação**, em que um terceiro classifica a pessoa com base na aparência. Os dois métodos capturam coisas diferentes: o primeiro mede identidade subjetiva; o segundo, percepção social. Essa distinção importa na hora de interpretar os dados.
 
