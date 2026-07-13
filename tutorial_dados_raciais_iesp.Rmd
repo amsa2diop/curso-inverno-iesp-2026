@@ -128,6 +128,10 @@ $(document).ready(function() {
 });
 </script>
 
+<div style="font-size: 0.85rem; color: #5a1530; margin: -0.3em 0 1.5em 0;">
+<a href="mailto:amsatoudiop@iesp.uerj.br">amsatoudiop@iesp.uerj.br</a> &nbsp;|&nbsp; <a href="mailto:julianamarques@iesp.uerj.br">julianamarques@iesp.uerj.br</a>
+</div>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   echo      = TRUE,
@@ -195,12 +199,12 @@ A tabela abaixo, reproduzida de Campos (2013), sintetiza as mudanças:
 
 <div class="callout-aviso">
 **Descontinuidades históricas**
-As categorias mudaram entre 1872, 1890, 1940 e 1991. Comparações diretas entre censos exigem atenção: "pardo" em 1872 não capturava o mesmo fenômeno social que "parda" em 2022. O [pacote `censobr`](https://ipeagit.github.io/censobr/) (IPEA) dá acesso direto aos questionários e dicionários de variáveis de cada edição do Censo, incluindo os formulários de 1960 em diante -- o que permite verificar, por exemplo, quais categorias estavam disponíveis em cada rodada e como as instruções de preenchimento foram formuladas.
+As categorias mudaram entre 1872, 1890, 1940 e 1991. O quesito de cor ou raça esteve ausente nos censos de 1900, 1920 e 1970. Para este último, não houve justificativa oficial para a supressão -- Schwartzman (1999, p. 2) conjectura que a omissão pode ter relação com a adoção, pelo regime militar, da ideologia da democracia racial como ideologia nacional. Comparações diretas entre censos exigem atenção: "pardo" em 1872 não capturava o mesmo fenômeno social que "parda" em 2022. O [pacote `censobr`](https://ipeagit.github.io/censobr/) (IPEA) dá acesso direto aos questionários e dicionários de variáveis de cada edição do Censo, incluindo os formulários de 1960 em diante -- o que permite verificar, por exemplo, quais categorias estavam disponíveis em cada rodada e como as instruções de preenchimento foram formuladas.
 </div>
 
 ### Origem sociológica da agregação
 
-O ponto de partida está nos trabalhos de Carlos Hasenbalg e Nelson do Valle Silva, publicados no final dos anos 1970. Ao estudar mobilidade social com dados censitários, os dois pesquisadores precisaram lidar com um problema prático: os autodeclarados "pretos" correspondiam a apenas 7--8% da população, o que tornava as estimativas estatisticamente frágeis. Ao agregar pretos e pardos como "não brancos", descobriram que os dois grupos tinham **trajetórias socioeconômicas semelhantes** -- chances de mobilidade ascendente comparáveis, e ambas muito abaixo das de brancos, independente da classe de origem.
+O ponto de partida está nos trabalhos de Carlos Hasenbalg e Nelson do Valle Silva, publicados no final dos anos 1970 e ao longo dos anos 1980. Ao estudar mobilidade social com microdados do IBGE, os dois pesquisadores precisaram lidar com um problema prático: os autodeclarados "pretos" correspondiam a apenas 7--8% da população, o que tornava as estimativas estatisticamente frágeis. Ao agregar pretos e pardos como "não brancos", descobriram que os dois grupos tinham **trajetórias socioeconômicas semelhantes** -- chances de mobilidade ascendente comparáveis, e ambas muito abaixo das de brancos, independente da classe de origem.
 
 Esse achado foi confirmado por pesquisas subsequentes -- entre elas Henriques (2001) -- que reproduziram a análise com diferentes períodos e encontraram o mesmo padrão. A consistência dos resultados consolidou a agregação como prática metodológica padrão na literatura de estratificação racial no Brasil.
 
@@ -1377,45 +1381,18 @@ Antes de publicar ou apresentar resultados com dados raciais, vale revisar os it
 - Se usou peso amostral (como `V1028` na PNADC), isso está documentado na metodologia?
 - Os gráficos têm legenda, fonte e nota explicando o que é "negros"?
 
-## 8.1 Referências
+## 8.1 Materiais complementares
 
-- Almeida, R. S. R. (2025). *Entre o espelho e a fotografia: classificação racial, desigualdades e eleições no Brasil*. Tese (Doutorado em Ciência Política) -- Universidade de Brasília. [Disponível aqui](https://repositorio.unb.br/handle/10482/54284).
-- Campos, L. A. (2015). Socialismo moreno, conservadorismo pálido? Cor e recrutamento partidário em São Paulo e Rio de Janeiro nas eleições de 2012. *Dados — Revista de Ciências Sociais*, v. 58, n. 2, p. 361-400.
-- Campos, L. A. e Machado, C. (2020). *Raça e Eleições no Brasil*. Porto Alegre: Zouk.
-- Camargo, A. de P. R. (2009). Mensuração racial e campo estatístico nos censos brasileiros (1872-1940): uma abordagem convergente. *Boletim do Museu Paraense Emílio Goeldi. Ciências Humanas*, v. 4, n. 3, p. 361-385. [Disponível aqui](https://www.scielo.br/j/bgoeldi/a/QdfttwCdT5hvcTLdFMndfXn/?format=html&lang=pt).
-- Campos, L. A. (2013). O pardo como dilema político. *Insight Inteligência*, n. 63, out./dez. 2013, p. 80-91.
-- Gomes, N. L. (2011). O movimento negro no Brasil: ausências, emergências e a produção dos saberes. *Política & Sociedade*, v. 10, n. 18, p. 133-154. [Disponível aqui](https://periodicos.ufsc.br/index.php/politica/article/view/2175-7984.2011v10n18p133).
-- Guimarães, A. S. A. (2003). Como trabalhar com "raça" em sociologia. *Educação e Pesquisa*, v. 29, n. 1, p. 93-107. [Disponível aqui](https://www.scielo.br/j/ep/a/DYxSGJgkwVyFJ8jfT8wxWxC/abstract/?lang=pt).
-- Hasenbalg, C. (1979). *Discriminação e Desigualdades Raciais no Brasil*. Graal.
-- Hasenbalg, C. e Silva, N. do V. (1988). *Estrutura Social, Mobilidade e Raça*. IUPERJ.
-- Lima, M. (2010). Desigualdades raciais e políticas públicas: ações afirmativas no governo Lula. *Novos Estudos CEBRAP*, n. 87, p. 77-95. [Disponível aqui](https://www.scielo.br/j/nec/a/P7jQbyjZbNLcfvRFFjgCkCp/?lang=pt).
-- Lima, M., Hasenbalg, C. e Silva, N. do V. (1999). *Cor e estratificação social*. Rio de Janeiro: Contra Capa.
-- Petruccelli, J. L. (2000). *A cor denominada: estudo do suplemento da PME de julho/1998*. Rio de Janeiro: IBGE.
-- Henriques, R. (2001). Desigualdade racial no Brasil: evolução das condições de vida na década de 90. *Texto para Discussão IPEA*, n. 807. [Disponível aqui](https://repositorio.ipea.gov.br/bitstream/11058/2284/1/TD_0807.pdf).
-- IBGE (2022). [Desigualdades Sociais por Cor ou Raça no Brasil](https://biblioteca.ibge.gov.br/index.php/biblioteca-catalogo?view=detalhes&id=2101935).
-- Moraes, B. (2025). Os levantes contra os registros de 1852. Arquivo Nacional. [Disponível aqui](https://www.gov.br/arquivonacional/pt-br/sites_eventos/sites-tematicos-1/brasil-oitocentista/temas-oitocentistas/os-levantes-contra-os-registros-de-1852).
-- Telles, E. (2004). *Race in Another America*. Princeton University Press.
-- TSE (2025). [Análise da distribuição de candidaturas por perfil racial, 2014-2024](https://www.tse.jus.br/institucional/catalogo-de-publicacoes/arquivos/analise-da-distribuicao-de-candidaturas-vagas-de-eleitos-e-recursos-de-financiamento-por-perfil-racial/@@display-file/file/Relatorio_estatistico_digital.pdf).
-- Westin, R. (2022). 1º Censo do Brasil, feito há 150 anos, contou 1,5 milhão de escravizados. *Senado Notícias*. [Disponível aqui](https://www12.senado.leg.br/noticias/especiais/arquivo-s/1o-censo-do-brasil-feito-ha-150-anos-contou-1-5-milhao-de-escravizados).
-- Pacote [`censobr`](https://ipeagit.github.io/censobr/) -- IPEA
-- Pacote [`electionsBR`](https://cran.r-project.org/package=electionsBR) -- dados eleitorais do TSE
-- Pacote [`PNADcIBGE`](https://github.com/cran/PNADcIBGE)
-- Pacote [`sidrar`](https://cran.r-project.org/web/packages/sidrar/vignettes/Introduction_to_sidrar.html)
-
----
-
-# Para continuar
-
-## Aprender R
+### Para aprender R
 
 | Recurso | Formato | Link |
 |---|---|---|
 | Ciência de Dados em R (Curso-R) | Livro gratuito, PT | [curso-r.github.io/livro-material](https://curso-r.github.io/livro-material/index.html) |
 | Ciência de Dados com R (IBPAD) | Livro gratuito, PT | [cdr.ibpad.com.br](https://cdr.ibpad.com.br/) |
-| Introdução ao R (YouTube) | Vídeo, PT | [youtube.com/watch?v=zOXmT_Pdn-8](https://www.youtube.com/watch?v=zOXmT_Pdn-8) |
+| Introdução ao R – Curso-R (YouTube) | Vídeo, PT | [youtube.com/watch?v=zOXmT_Pdn-8](https://www.youtube.com/watch?v=zOXmT_Pdn-8) |
 | Escola Virtual Gov -- Introdução ao R | Curso 20h, certificado gratuito | [escolavirtual.gov.br/curso/325](https://www.escolavirtual.gov.br/curso/325) |
 
-## Base dos Dados
+### Base dos Dados
 
 A [Base dos Dados](https://basedosdados.org/) padroniza e disponibiliza dados públicos brasileiros no Google BigQuery, facilitando cruzamentos entre fontes.
 
@@ -1424,9 +1401,35 @@ A [Base dos Dados](https://basedosdados.org/) padroniza e disponibiliza dados p�
 | Documentação oficial e primeiros passos | [basedosdados.org/docs/home](https://basedosdados.org/docs/home) |
 | Videoaula prática: dados educacionais no R | [youtube.com/watch?v=qTcixmtDQCg](https://www.youtube.com/watch?v=qTcixmtDQCg) |
 
-## Contato
+## 8.2 Contato
 
-Dúvidas sobre o conteúdo ou os dados? Entre em contato com as instrutoras:
+Dúvidas sobre o conteúdo ou os dados? Entre em contato com os instrutores:
 
 - **Amsatou Diop** -- [amsatoudiop@iesp.uerj.br](mailto:amsatoudiop@iesp.uerj.br)
 - **Juliana Marques** -- [julianamarques@iesp.uerj.br](mailto:julianamarques@iesp.uerj.br)
+
+## 8.3 Referências
+
+- Almeida, R. S. R. (2025). *Entre o espelho e a fotografia: classificação racial, desigualdades e eleições no Brasil*. Tese (Doutorado em Ciência Política) -- Universidade de Brasília. [Disponível aqui](https://repositorio.unb.br/handle/10482/54284).
+- Camargo, A. de P. R. (2009). Mensuração racial e campo estatístico nos censos brasileiros (1872-1940): uma abordagem convergente. *Boletim do Museu Paraense Emílio Goeldi. Ciências Humanas*, v. 4, n. 3, p. 361-385. [Disponível aqui](https://www.scielo.br/j/bgoeldi/a/QdfttwCdT5hvcTLdFMndfXn/?format=html&lang=pt).
+- Campos, L. A. (2013). O pardo como dilema político. *Insight Inteligência*, n. 63, out./dez. 2013, p. 80-91. [Disponível aqui](https://gemaa.iesp.uerj.br/wp-content/uploads/2018/03/O-pardo-como-dilema-poli%CC%81tico.pdf).
+- Campos, L. A. (2015). Socialismo moreno, conservadorismo pálido? Cor e recrutamento partidário em São Paulo e Rio de Janeiro nas eleições de 2012. *Dados -- Revista de Ciências Sociais*, v. 58, n. 2, p. 361-400.
+- Campos, L. A. e Machado, C. (2020). *Raça e Eleições no Brasil*. Porto Alegre: Zouk.
+- Gomes, N. L. (2011). O movimento negro no Brasil: ausências, emergências e a produção dos saberes. *Política & Sociedade*, v. 10, n. 18, p. 133-154. [Disponível aqui](https://periodicos.ufsc.br/index.php/politica/article/view/2175-7984.2011v10n18p133).
+- Guimarães, A. S. A. (2003). Como trabalhar com "raça" em sociologia. *Educação e Pesquisa*, v. 29, n. 1, p. 93-107. [Disponível aqui](https://www.scielo.br/j/ep/a/DYxSGJgkwVyFJ8jfT8wxWxC/abstract/?lang=pt).
+- Hasenbalg, C. (1979). *Discriminação e Desigualdades Raciais no Brasil*. Graal.
+- Hasenbalg, C. e Silva, N. do V. (1988). *Estrutura Social, Mobilidade e Raça*. IUPERJ.
+- Henriques, R. (2001). Desigualdade racial no Brasil: evolução das condições de vida na década de 90. *Texto para Discussão IPEA*, n. 807. [Disponível aqui](https://repositorio.ipea.gov.br/bitstream/11058/2284/1/TD_0807.pdf).
+- IBGE (2022). [Desigualdades Sociais por Cor ou Raça no Brasil](https://biblioteca.ibge.gov.br/index.php/biblioteca-catalogo?view=detalhes&id=2101935).
+- Lima, M. (2010). Desigualdades raciais e políticas públicas: ações afirmativas no governo Lula. *Novos Estudos CEBRAP*, n. 87, p. 77-95. [Disponível aqui](https://www.scielo.br/j/nec/a/P7jQbyjZbNLcfvRFFjgCkCp/?lang=pt).
+- Lima, M., Hasenbalg, C. e Silva, N. do V. (1999). *Cor e estratificação social*. Rio de Janeiro: Contra Capa.
+- Moraes, B. (2025). Os levantes contra os registros de 1852. Arquivo Nacional. [Disponível aqui](https://www.gov.br/arquivonacional/pt-br/sites_eventos/sites-tematicos-1/brasil-oitocentista/temas-oitocentistas/os-levantes-contra-os-registros-de-1852).
+- Petruccelli, J. L. (2000). *A cor denominada: estudo do suplemento da PME de julho/1998*. Rio de Janeiro: IBGE.
+- Schwartzman, S. (1999). Fora de foco: diversidade e identidades étnicas no Brasil. *Novos Estudos CEBRAP*, n. 55, p. 83-96.
+- Telles, E. (2004). *Race in Another America*. Princeton University Press.
+- TSE (2025). [Análise da distribuição de candidaturas por perfil racial, 2014-2024](https://www.tse.jus.br/institucional/catalogo-de-publicacoes/arquivos/analise-da-distribuicao-de-candidaturas-vagas-de-eleitos-e-recursos-de-financiamento-por-perfil-racial/@@display-file/file/Relatorio_estatistico_digital.pdf).
+- Westin, R. (2022). 1º Censo do Brasil, feito há 150 anos, contou 1,5 milhão de escravizados. *Senado Notícias*. [Disponível aqui](https://www12.senado.leg.br/noticias/especiais/arquivo-s/1o-censo-do-brasil-feito-ha-150-anos-contou-1-5-milhao-de-escravizados).
+- Pacote [`censobr`](https://ipeagit.github.io/censobr/) -- IPEA
+- Pacote [`electionsBR`](https://cran.r-project.org/package=electionsBR) -- dados eleitorais do TSE
+- Pacote [`PNADcIBGE`](https://github.com/cran/PNADcIBGE)
+- Pacote [`sidrar`](https://cran.r-project.org/web/packages/sidrar/vignettes/Introduction_to_sidrar.html)
