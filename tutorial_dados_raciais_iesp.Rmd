@@ -1136,7 +1136,7 @@ ggplot(df_resposta, aes(x = regiao, y = proporcao, fill = dimensao)) +
   )
 ```
 
-Em todas as regiões, a proporção de vereadores negros eleitos fica bem abaixo da proporção de negros na população. A resposta descritiva à pergunta da aula é: não -- mesmo nas regiões com maior concentração de população negra, a representação política não acompanha a composição demográfica.
+Na maioria das regiões, a proporção de vereadores negros eleitos fica abaixo da proporção de negros na população -- com exceção do Norte, onde as duas proporções são praticamente equivalentes (76% e 77%, respectivamente). A resposta descritiva à pergunta da aula é: em geral, não -- a representação política tende a não acompanhar a composição demográfica, mas o padrão não é uniforme entre as regiões.
 
 Essa análise, porém, está no nível da grande região. Para descer ao nível do município -- onde a pergunta ganha mais sentido -- precisamos cruzar o Censo e o TSE usando o código do município como chave. E aqui está o problema: o Censo usa o código IBGE; o TSE usa um código próprio. Fazer esse join manualmente exige uma tabela de correspondência e algum trabalho de limpeza. É exatamente aí que a Base dos Dados entra.
 
@@ -1189,7 +1189,7 @@ Você precisa de: (1) conta Google; (2) projeto no [Google Cloud Platform](https
 ```{r bq-config, eval=FALSE}
 bigrquery::bq_auth()
 
-meu_projeto_gcp <- "amsa-queries"   # <-- substitua pelo ID do seu projeto GCP
+meu_projeto_gcp <- "seu-projeto-gcp"   # <-- substitua pelo ID do seu projeto GCP
 basedosdados::set_billing_id(meu_projeto_gcp)
 
 con <- DBI::dbConnect(
@@ -1401,3 +1401,32 @@ Antes de publicar ou apresentar resultados com dados raciais, vale revisar os it
 - Pacote [`electionsBR`](https://cran.r-project.org/package=electionsBR) -- dados eleitorais do TSE
 - Pacote [`PNADcIBGE`](https://github.com/cran/PNADcIBGE)
 - Pacote [`sidrar`](https://cran.r-project.org/web/packages/sidrar/vignettes/Introduction_to_sidrar.html)
+
+---
+
+# Para continuar
+
+## Aprender R
+
+| Recurso | Formato | Link |
+|---|---|---|
+| Ciência de Dados em R (Curso-R) | Livro gratuito, PT | [curso-r.github.io/livro-material](https://curso-r.github.io/livro-material/index.html) |
+| Ciência de Dados com R (IBPAD) | Livro gratuito, PT | [cdr.ibpad.com.br](https://cdr.ibpad.com.br/) |
+| Introdução ao R (YouTube) | Vídeo, PT | [youtube.com/watch?v=zOXmT_Pdn-8](https://www.youtube.com/watch?v=zOXmT_Pdn-8) |
+| Escola Virtual Gov -- Introdução ao R | Curso 20h, certificado gratuito | [escolavirtual.gov.br/curso/325](https://www.escolavirtual.gov.br/curso/325) |
+
+## Base dos Dados
+
+A [Base dos Dados](https://basedosdados.org/) padroniza e disponibiliza dados públicos brasileiros no Google BigQuery, facilitando cruzamentos entre fontes.
+
+| Recurso | Link |
+|---|---|
+| Documentação oficial e primeiros passos | [basedosdados.org/docs/home](https://basedosdados.org/docs/home) |
+| Videoaula prática: dados educacionais no R | [youtube.com/watch?v=qTcixmtDQCg](https://www.youtube.com/watch?v=qTcixmtDQCg) |
+
+## Contato
+
+Dúvidas sobre o conteúdo ou os dados? Entre em contato com as instrutoras:
+
+- **Amsatou Diop** -- [amsatoudiop@iesp.uerj.br](mailto:amsatoudiop@iesp.uerj.br)
+- **Juliana Marques** -- [julianamarques@iesp.uerj.br](mailto:julianamarques@iesp.uerj.br)
